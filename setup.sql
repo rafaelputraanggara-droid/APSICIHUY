@@ -92,6 +92,18 @@ CREATE TABLE IF NOT EXISTS stok_opname_details (
     FOREIGN KEY (kode_barang, no_urut_pendaft) REFERENCES barangs(kode_barang, no_urut_pendaft) ON DELETE CASCADE
 );
 
+-- Table untuk pendaftaran akun mahasiswa
+CREATE TABLE IF NOT EXISTS pendaftaran_akun (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email_sso VARCHAR(255) UNIQUE NOT NULL,
+    nim VARCHAR(50) UNIQUE NOT NULL,
+    foto_ktm LONGTEXT,
+    status_pendaftaran ENUM('Menunggu', 'Disetujui', 'Ditolak') DEFAULT 'Menunggu',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Insert sample admin user
 INSERT IGNORE INTO users (name, email, password, role) VALUES 
 ('Administrator', 'admin@siprabu.ft.uns.ac.id', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin');
