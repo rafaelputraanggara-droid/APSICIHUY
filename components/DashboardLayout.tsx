@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
+import { menuItems, subMenus, getMappedRole } from './navigationData';
 
 export default function DashboardLayout({
   children,
@@ -75,6 +76,9 @@ export default function DashboardLayout({
   const isAdminBMN =
     currentUser.role === "Admin BMN" &&
     currentUser.email.endsWith("@staff.uns.ac.id");
+
+  const activeRole = getMappedRole(currentUser.role);
+  const visibleMenuItems = menuItems.filter(item => item.roles.includes(activeRole));
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900 transition-colors duration-300">
@@ -191,81 +195,74 @@ export default function DashboardLayout({
 
               <div className="flex-1 h-0 overflow-y-auto px-3">
                 <nav className="space-y-1">
-                  <Link
-                    href="/"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
-                      pathname === "/" ? "bg-indigo-50 text-indigo-600" : "text-neutral-650"
-                    }`}
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    href="/laboran"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
-                      pathname === "/laboran" ? "bg-indigo-50 text-indigo-600" : "text-neutral-650"
-                    }`}
-                  >
-                    Dashboard Laboran
-                  </Link>
+                  {visibleMenuItems.map((item, idx) => {
+                    if (item.name === "Master Barang") {
+                      return (
+                        <div key={idx} className="space-y-1">
+                          <button
+                            onClick={() => setIsMobileMasterOpen(!isMobileMasterOpen)}
+                            className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
+                              pathname && pathname.startsWith("/admin/master-barang") ? "bg-indigo-50/50 text-indigo-600" : "text-neutral-650"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className={pathname && pathname.startsWith("/admin/master-barang") ? "text-indigo-600" : "text-neutral-405"}>
+                                {item.icon}
+                              </span>
+                              <span>{item.name}</span>
+                            </div>
+                            <svg
+                              className={`w-4 h-4 text-neutral-400 transition-transform ${isMobileMasterOpen ? "transform rotate-180" : ""}`}
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
 
-                  {isAdminBMN && (
-                    <div className="space-y-1">
-                      <button
-                        onClick={() => setIsMobileMasterOpen(!isMobileMasterOpen)}
-                        className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
-                          pathname && pathname.startsWith("/admin/master-barang") ? "bg-indigo-50/50 text-indigo-600" : "text-neutral-650"
+                          {isMobileMasterOpen && (
+                            <div className="pl-9 space-y-1">
+                              {subMenus.map((sub, sIdx) => {
+                                const isSubActive = pathname === sub.href;
+                                return (
+                                  <Link
+                                    key={sIdx}
+                                    href={sub.href}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={`flex items-center py-2 px-3 rounded-lg text-xs font-semibold tracking-wide border-l-2 ${
+                                      isSubActive
+                                        ? "border-indigo-600 bg-indigo-50/60 text-indigo-600"
+                                        : "border-transparent text-neutral-500 hover:text-neutral-900"
+                                    }`}
+                                  >
+                                    {sub.name}
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+
+                    const isActive = pathname === item.href;
+                    return (
+                      <Link
+                        key={idx}
+                        href={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
+                          isActive ? "bg-indigo-50 text-indigo-600" : "text-neutral-650"
                         }`}
                       >
-                        <span>Master Barang</span>
-                        <svg
-                          className={`w-4 h-4 text-neutral-400 transition-transform ${isMobileMasterOpen ? "transform rotate-180" : ""}`}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-
-                      {isMobileMasterOpen && (
-                        <div className="pl-6 space-y-1">
-                          <Link
-                            href="/admin/master-barang/tambah"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block py-2 px-3 text-xs font-semibold text-neutral-500 rounded-lg hover:bg-neutral-50"
-                          >
-                            Tambah Data Barang
-                          </Link>
-                          <Link
-                            href="/admin/master-barang/import"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block py-2 px-3 text-xs font-semibold text-neutral-500 rounded-lg hover:bg-neutral-50"
-                          >
-                            Import SAKTI CSV
-                          </Link>
-                          <Link
-                            href="/admin/master-barang/cetak-qr"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block py-2 px-3 text-xs font-semibold text-neutral-500 rounded-lg hover:bg-neutral-50"
-                          >
-                            Cetak Label QR Code
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <Link
-                    href="/about"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
-                      pathname === "/about" ? "bg-indigo-50 text-indigo-600" : "text-neutral-650"
-                    }`}
-                  >
-                    About
-                  </Link>
+                        <span className={isActive ? "text-indigo-600" : "text-neutral-405"}>
+                          {item.icon}
+                        </span>
+                        {item.name}
+                      </Link>
+                    );
+                  })}
                 </nav>
               </div>
 
