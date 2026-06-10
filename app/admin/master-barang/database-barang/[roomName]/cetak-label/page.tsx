@@ -60,7 +60,7 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center text-neutral-500 bg-white">
+      <div className="flex h-screen items-center justify-center text-[var(--text-muted)] bg-[var(--bg-panel)] transition-colors duration-400">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin"></div>
           <p className="font-semibold text-sm">Mempersiapkan dokumen cetak...</p>
@@ -70,17 +70,17 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
   }
 
   return (
-    <div className="bg-neutral-100 min-h-screen font-sans text-black print:bg-white">
+    <div className="bg-neutral-100 min-h-screen font-sans text-black print:bg-[var(--bg-panel)] transition-colors duration-400">
       {/* Print Controls (Hidden when actually printing) */}
-      <div className="print:hidden p-4 bg-white shadow-sm border-b border-neutral-200 flex justify-between items-center fixed top-0 w-full z-50">
+      <div className="print:hidden p-4 bg-[var(--bg-panel)] transition-colors duration-400 shadow-sm border-b border-[var(--border-panel)] flex justify-between items-center fixed top-0 w-full z-50">
         <div>
           <h1 className="text-lg font-bold">Cetak Label - {decodedRoomName}</h1>
-          <p className="text-sm text-neutral-500">Total {filteredItems.length} label siap dicetak.</p>
+          <p className="text-sm text-[var(--text-muted)]">Total {filteredItems.length} label siap dicetak.</p>
         </div>
         <div className="flex gap-3">
           <button 
             onClick={() => router.back()} 
-            className="px-4 py-2 bg-white border border-neutral-300 rounded-lg text-sm font-medium hover:bg-neutral-50 cursor-pointer"
+            className="px-4 py-2 bg-[var(--bg-panel)] transition-colors duration-400 border border-neutral-300 rounded-lg text-sm font-medium hover:bg-[var(--bg-app)] transition-colors duration-400 cursor-pointer"
           >
             Tutup
           </button>
@@ -97,9 +97,9 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
       </div>
 
       {/* Printable Area */}
-      <div className="print:pt-0 pt-24 p-8 max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none min-h-[297mm]">
+      <div className="print:pt-0 pt-24 p-8 max-w-[210mm] mx-auto bg-[var(--bg-panel)] transition-colors duration-400 shadow-xl print:shadow-none min-h-[297mm]">
         {filteredItems.length === 0 ? (
-          <div className="text-center py-20 text-neutral-500 print:hidden">
+          <div className="text-center py-20 text-[var(--text-muted)] print:hidden">
             Aset tidak ditemukan.
           </div>
         ) : (
@@ -112,7 +112,7 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
               return (
                 <div 
                   key={idx} 
-                  className="border-[1.5px] border-black rounded-lg p-3 flex flex-row items-center gap-3 bg-white print:break-inside-avoid relative overflow-hidden"
+                  className="border-[1.5px] border-black rounded-lg p-3 flex flex-row items-center gap-3 bg-[var(--bg-panel)] transition-colors duration-400 print:break-inside-avoid relative overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-600 print:bg-black"></div>
                   
@@ -135,7 +135,7 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
                   </div>
                   
                   <div className="flex-shrink-0 flex flex-col items-center gap-1 justify-center border-l-[1.5px] border-dashed border-neutral-300 pl-3">
-                    <div className="p-1 bg-white">
+                    <div className="p-1 bg-[var(--bg-panel)] transition-colors duration-400">
                       <QRCodeSVG 
                         value={scanUrl} 
                         size={64}

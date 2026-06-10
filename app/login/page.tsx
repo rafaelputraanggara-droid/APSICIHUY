@@ -108,7 +108,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-neutral-900 via-indigo-950 to-neutral-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--bg-banner)] transition-colors duration-400 p-4">
       <div className="w-full max-w-md bg-white/10 dark:bg-black/35 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
         {/* Decorative background lights */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-600/20 rounded-full blur-2xl pointer-events-none"></div>
@@ -116,7 +116,7 @@ export default function LoginPage() {
 
         <div className="text-center mb-8 relative z-10">
           <div className="flex justify-center mb-4">
-            <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center shadow-lg border border-neutral-100">
+            <div className="h-16 w-16 bg-[var(--bg-panel)] transition-colors duration-400 rounded-2xl flex items-center justify-center shadow-lg border border-[var(--border-panel)]">
               <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="50" cy="50" r="48" stroke="#003566" strokeWidth="4" fill="#ffffff" />
                 <circle cx="50" cy="50" r="38" fill="#003566" />
@@ -127,7 +127,7 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="text-2xl font-black tracking-tight text-white">SIPRABU FT UNS</h1>
-          <p className="text-xs text-neutral-400 mt-1 uppercase font-bold tracking-wider">
+          <p className="text-xs text-[var(--text-muted)] mt-1 uppercase font-bold tracking-wider">
             Masuk ke Sistem
           </p>
         </div>
@@ -232,7 +232,7 @@ export default function LoginPage() {
                   setLoginMode("none");
                   setErrorMsg(null);
                 }} 
-                className="text-xs text-neutral-400 hover:text-white underline mt-2"
+                className="text-xs text-[var(--text-muted)] hover:text-white underline mt-2"
               >
                 Kembali ke pilihan login
               </button>
@@ -309,7 +309,7 @@ export default function LoginPage() {
                   setLoginMode("none");
                   setErrorMsg(null);
                 }} 
-                className="text-xs text-neutral-400 hover:text-white underline mt-2"
+                className="text-xs text-[var(--text-muted)] hover:text-white underline mt-2"
               >
                 Kembali ke pilihan login
               </button>

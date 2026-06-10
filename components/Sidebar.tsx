@@ -90,10 +90,10 @@ export default function Sidebar() {
   const visibleMenuItems = menuItems.filter(item => item.roles.includes(activeRole));
 
   return (
-    <aside className="w-64 border-r border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950 flex flex-col h-[calc(100vh-4rem)] sticky top-16 hidden lg:flex transition-colors duration-300 z-20">
+    <aside className="w-64 border-r border-[var(--border-sidebar)] bg-[var(--bg-sidebar)] flex flex-col h-[calc(100vh-4rem)] sticky top-16 hidden lg:flex transition-colors duration-400 z-20">
       <div className="flex-1 py-6 px-4 space-y-7 overflow-y-auto">
         <div className="space-y-1">
-          <p className="px-3 text-xs font-semibold text-neutral-450 dark:text-neutral-500 uppercase tracking-wider">Navigation</p>
+          <p className="px-3 text-xs font-semibold text-[var(--text-sidebar-default)] opacity-80 uppercase tracking-wider">Navigation</p>
           <nav className="space-y-1">
             {visibleMenuItems.map((item, idx) => {
               // Master Barang dropdown rendering
@@ -104,24 +104,24 @@ export default function Sidebar() {
                       onClick={() => setIsMasterBarangOpen(!isMasterBarangOpen)}
                       className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group cursor-pointer text-left focus:outline-none ${
                         pathname && pathname.startsWith("/admin/master-barang")
-                          ? "bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:text-indigo-400"
-                          : "text-neutral-600 hover:bg-neutral-55 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-900/60 dark:hover:text-white"
+                          ? "bg-[var(--bg-sidebar-active)] text-[var(--text-sidebar-active)] shadow-sm"
+                          : "text-[var(--text-sidebar-default)] hover:bg-[var(--bg-sidebar-hover)] hover:text-[var(--text-sidebar-hover)]"
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className={`transition-colors duration-200 ${
                           pathname && pathname.startsWith("/admin/master-barang")
-                            ? "text-indigo-600 dark:text-indigo-400"
-                            : "text-neutral-450 group-hover:text-neutral-900 dark:group-hover:text-white"
+                            ? "text-[var(--text-sidebar-active)]"
+                            : "text-[var(--text-sidebar-default)] opacity-80 group-hover:opacity-100 group-hover:text-[var(--text-sidebar-hover)]"
                         }`}>
                           {item.icon}
                         </span>
                         <span>{item.name}</span>
                       </div>
                       <svg
-                        className={`w-4 h-4 text-neutral-400 transition-transform duration-250 ${
-                          isMasterBarangOpen ? "transform rotate-180" : ""
-                        }`}
+                        className={`w-4 h-4 transition-transform duration-250 ${
+                          pathname && pathname.startsWith("/admin/master-barang") ? "text-[var(--text-sidebar-active)]" : "text-[var(--text-sidebar-default)]"
+                        } ${isMasterBarangOpen ? "transform rotate-180" : ""}`}
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -145,8 +145,8 @@ export default function Sidebar() {
                             href={sub.href}
                             className={`flex items-center py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all border-l-2 ${
                               isSubActive
-                                ? "border-indigo-600 bg-indigo-50/60 text-indigo-600 dark:border-indigo-500 dark:bg-indigo-950/30 dark:text-indigo-400"
-                                : "border-transparent text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+                                ? "border-text-sidebar-active bg-[var(--bg-sidebar-active)]/30 text-[var(--text-sidebar-active)]"
+                                : "border-transparent text-[var(--text-sidebar-default)] hover:bg-[var(--bg-sidebar-hover)]/50 hover:text-[var(--text-sidebar-hover)]"
                             }`}
                           >
                             {sub.name}
@@ -165,13 +165,13 @@ export default function Sidebar() {
                   href={item.href}
                   className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all group cursor-pointer ${
                     isActive
-                      ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400"
-                      : "text-neutral-600 hover:bg-neutral-55 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-900/60 dark:hover:text-white"
+                      ? "bg-[var(--bg-sidebar-active)] text-[var(--text-sidebar-active)] shadow-sm"
+                      : "text-[var(--text-sidebar-default)] hover:bg-[var(--bg-sidebar-hover)] hover:text-[var(--text-sidebar-hover)]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className={`transition-colors duration-200 ${
-                      isActive ? "text-indigo-600 dark:text-indigo-400" : "text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
+                      isActive ? "text-[var(--text-sidebar-active)]" : "text-[var(--text-sidebar-default)] opacity-80 group-hover:opacity-100 group-hover:text-[var(--text-sidebar-hover)]"
                     }`}>
                       {item.icon}
                     </span>
@@ -190,21 +190,21 @@ export default function Sidebar() {
       </div>
 
       {/* Simulated User Profile Footer with Toggle Button */}
-      <div className="p-4 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-950/40">
+      <div className="p-4 border-t border-[var(--border-sidebar)] bg-[var(--bg-sidebar-hover)]/30">
         <div className="flex flex-col gap-3.5">
           <div className="flex items-center gap-3">
             <div className={`h-9.5 w-9.5 rounded-full flex items-center justify-center font-bold text-sm border transition-colors duration-300 ${
               currentUser.role === "Admin Fakultas"
-                ? "bg-indigo-100 border-indigo-200 text-indigo-700 dark:bg-indigo-950 dark:border-indigo-900 dark:text-indigo-400"
-                : "bg-neutral-100 border-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300"
+                ? "bg-indigo-600 border-indigo-500 text-white shadow-sm"
+                : "bg-white/20 border-white/30 text-[var(--text-sidebar-default)]"
             }`}>
               {currentUser.role === "Admin Fakultas" ? "A" : "L"}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-neutral-900 dark:text-white truncate">
+              <p className="text-sm font-bold text-[var(--text-sidebar-active)] truncate">
                 {currentUser.name}
               </p>
-              <p className="text-xs text-neutral-500 dark:text-neutral-455 truncate">
+              <p className="text-xs text-[var(--text-sidebar-default)] opacity-80 truncate">
                 {currentUser.email}
               </p>
             </div>
@@ -212,9 +212,9 @@ export default function Sidebar() {
           
           <button
             onClick={handleToggleUser}
-            className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-850 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-800 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer hover:shadow"
+            className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white/10 hover:bg-white/20 text-[var(--text-sidebar-active)] border border-white/10 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer hover:shadow"
           >
-            <svg className="w-3.5 h-3.5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="w-3.5 h-3.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
             </svg>
             Simulasi: {currentUser.role === "Admin Fakultas" ? "PJ Ruangan" : "Admin Fakultas"}

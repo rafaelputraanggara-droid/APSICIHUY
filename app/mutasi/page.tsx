@@ -247,9 +247,9 @@ export default function MutasiPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
-      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-800 to-teal-900 p-8 rounded-3xl text-white shadow-xl">
+      <div className="relative overflow-hidden bg-[var(--bg-banner)] p-8 rounded-3xl text-white shadow-xl transition-colors duration-400">
         <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--bg-panel)] transition-colors duration-400/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
             Mutasi BMN
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -262,7 +262,7 @@ export default function MutasiPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-neutral-200">
+      <div className="border-b border-[var(--border-panel)]">
         <nav className="flex space-x-8 overflow-x-auto" aria-label="Tabs">
           {!isAdmin && (
             <button
@@ -270,7 +270,7 @@ export default function MutasiPage() {
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all ${
                 activeTab === "ajukan"
                   ? "border-emerald-600 text-emerald-600"
-                  : "border-transparent text-neutral-500 hover:text-neutral-700"
+                  : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
               }`}
             >
               Ajukan Mutasi Baru
@@ -282,7 +282,7 @@ export default function MutasiPage() {
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all flex items-center gap-2 ${
                 activeTab === "antrean"
                   ? "border-emerald-600 text-emerald-600"
-                  : "border-transparent text-neutral-500 hover:text-neutral-700"
+                  : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
               }`}
             >
               Antrean Persetujuan
@@ -298,7 +298,7 @@ export default function MutasiPage() {
             className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all ${
               activeTab === "riwayat"
                 ? "border-emerald-600 text-emerald-600"
-                : "border-transparent text-neutral-500 hover:text-neutral-700"
+                : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
             Riwayat Mutasi
@@ -309,11 +309,11 @@ export default function MutasiPage() {
       {/* TAB CONTENT: AJUKAN BARU */}
       {activeTab === "ajukan" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm">
-            <h3 className="text-lg font-bold text-neutral-900 mb-4">1. Cari Barang</h3>
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl p-6 border border-[var(--border-panel)] shadow-sm">
+            <h3 className="text-lg font-bold text-[var(--text-main)] mb-4">1. Cari Barang</h3>
             <form onSubmit={handleSearchBarang} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--text-main)] mb-2">
                   Kode Barang & NUP
                 </label>
                 <div className="flex flex-col gap-3">
@@ -326,11 +326,11 @@ export default function MutasiPage() {
                       onKeyDown={(e) => handleKeyDown(e, null)}
                       maxLength={1}
                       inputMode="numeric"
-                      className="w-12 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-12 text-center text-sm font-mono font-bold bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       placeholder="X"
                       required
                     />
-                    <span className="text-neutral-400 font-bold select-none">.</span>
+                    <span className="text-[var(--text-muted)] font-bold select-none">.</span>
                     <input
                       id="mutasi_part2"
                       type="text"
@@ -339,11 +339,11 @@ export default function MutasiPage() {
                       onKeyDown={(e) => handleKeyDown(e, 'mutasi_part1')}
                       maxLength={2}
                       inputMode="numeric"
-                      className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-14 text-center text-sm font-mono font-bold bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       placeholder="XX"
                       required
                     />
-                    <span className="text-neutral-400 font-bold select-none">.</span>
+                    <span className="text-[var(--text-muted)] font-bold select-none">.</span>
                     <input
                       id="mutasi_part3"
                       type="text"
@@ -352,11 +352,11 @@ export default function MutasiPage() {
                       onKeyDown={(e) => handleKeyDown(e, 'mutasi_part2')}
                       maxLength={2}
                       inputMode="numeric"
-                      className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-14 text-center text-sm font-mono font-bold bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       placeholder="XX"
                       required
                     />
-                    <span className="text-neutral-400 font-bold select-none">.</span>
+                    <span className="text-[var(--text-muted)] font-bold select-none">.</span>
                     <input
                       id="mutasi_part4"
                       type="text"
@@ -365,11 +365,11 @@ export default function MutasiPage() {
                       onKeyDown={(e) => handleKeyDown(e, 'mutasi_part3')}
                       maxLength={2}
                       inputMode="numeric"
-                      className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-14 text-center text-sm font-mono font-bold bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       placeholder="XX"
                       required
                     />
-                    <span className="text-neutral-400 font-bold select-none">.</span>
+                    <span className="text-[var(--text-muted)] font-bold select-none">.</span>
                     <input
                       id="mutasi_part5"
                       type="text"
@@ -378,7 +378,7 @@ export default function MutasiPage() {
                       onKeyDown={(e) => handleKeyDown(e, 'mutasi_part4')}
                       maxLength={3}
                       inputMode="numeric"
-                      className="w-16 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-16 text-center text-sm font-mono font-bold bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       placeholder="XXX"
                       required
                     />
@@ -386,7 +386,7 @@ export default function MutasiPage() {
                   <div className="flex gap-3">
                     <div className="relative w-1/2">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span className="text-neutral-500 font-semibold text-sm">NUP:</span>
+                        <span className="text-[var(--text-muted)] font-semibold text-sm">NUP:</span>
                       </div>
                       <input
                         id="mutasi_nup"
@@ -395,7 +395,7 @@ export default function MutasiPage() {
                         onChange={(e) => setNup(e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e, 'mutasi_part5')}
                         min="1"
-                        className="w-full pl-12 pr-4 text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-12 pr-4 text-sm font-mono font-bold bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                         placeholder="NUP Barang"
                         required
                       />
@@ -403,7 +403,7 @@ export default function MutasiPage() {
                     <button
                       type="button"
                       onClick={handleSimulateScan}
-                      className="w-1/2 px-4 py-3 bg-white hover:bg-neutral-50 text-neutral-800 rounded-xl flex items-center justify-center gap-2 transition-colors border border-emerald-300 hover:border-emerald-500 shadow-sm"
+                      className="w-1/2 px-4 py-3 bg-[var(--bg-panel)] transition-colors duration-400 hover:bg-[var(--bg-app)] transition-colors duration-400 text-neutral-800 rounded-xl flex items-center justify-center gap-2 transition-colors border border-emerald-300 hover:border-emerald-500 shadow-sm"
                       title="Buka Kamera untuk Scan QR"
                     >
                       <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -432,9 +432,9 @@ export default function MutasiPage() {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-neutral-900">{foundItem.nama_barang}</h4>
-                    <p className="text-sm text-neutral-600 mt-1">{foundItem.merk_type}</p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-emerald-200 text-xs font-semibold text-emerald-700">
+                    <h4 className="font-bold text-[var(--text-main)]">{foundItem.nama_barang}</h4>
+                    <p className="text-sm text-[var(--text-muted)] mt-1">{foundItem.merk_type}</p>
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--bg-panel)] transition-colors duration-400 rounded-lg border border-emerald-200 text-xs font-semibold text-emerald-700">
                       Lokasi Saat Ini: {foundItem.lokasi_ruangan}
                     </div>
                   </div>
@@ -443,11 +443,11 @@ export default function MutasiPage() {
             )}
           </div>
 
-          <div className={`bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm transition-opacity duration-300 ${!foundItem ? 'opacity-50 pointer-events-none' : ''}`}>
-            <h3 className="text-lg font-bold text-neutral-900 mb-4">2. Detail Mutasi</h3>
+          <div className={`bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl p-6 border border-[var(--border-panel)] shadow-sm transition-opacity duration-300 ${!foundItem ? 'opacity-50 pointer-events-none' : ''}`}>
+            <h3 className="text-lg font-bold text-[var(--text-main)] mb-4">2. Detail Mutasi</h3>
             <form onSubmit={handleSubmitPengajuan} className="space-y-5">
               <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--text-main)] mb-2">
                   Ruangan Tujuan Mutasi <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -456,7 +456,7 @@ export default function MutasiPage() {
                   value={ruanganTujuan}
                   onChange={(e) => setRuanganTujuan(e.target.value)}
                   placeholder="Ketik untuk mencari ruangan... (Contoh: LAB-RPL-101)"
-                  className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+                  className="w-full bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                   required
                 />
                 <datalist id="ruanganList">
@@ -466,7 +466,7 @@ export default function MutasiPage() {
                 </datalist>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--text-main)] mb-2">
                   Alasan Mutasi <span className="text-rose-500">*</span>
                 </label>
                 <textarea
@@ -474,7 +474,7 @@ export default function MutasiPage() {
                   onChange={(e) => setAlasanMutasi(e.target.value)}
                   rows={4}
                   placeholder="Jelaskan alasan pemindahan barang secara detail..."
-                  className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none resize-none"
+                  className="w-full bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none resize-none"
                   required
                 ></textarea>
               </div>
@@ -492,54 +492,54 @@ export default function MutasiPage() {
 
       {/* TAB CONTENT: ANTREAN PERSETUJUAN */}
       {activeTab === "antrean" && (
-        <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden animate-fade-in">
+        <div className="bg-[var(--bg-panel)] transition-colors duration-400 border border-[var(--border-panel)] rounded-2xl shadow-sm overflow-hidden animate-fade-in">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-neutral-200">
-              <thead className="bg-neutral-50">
+              <thead className="bg-[var(--bg-app)] transition-colors duration-400">
                 <tr>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Data Barang
                   </th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Detail Mutasi
                   </th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Pengaju
                   </th>
-                  <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Aksi
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-neutral-200">
+              <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-neutral-200">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-neutral-500 text-sm">Memuat data...</td>
+                    <td colSpan={4} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">Memuat data...</td>
                   </tr>
                 ) : antreanData.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-neutral-500 text-sm">Tidak ada antrean mutasi yang menunggu persetujuan.</td>
+                    <td colSpan={4} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">Tidak ada antrean mutasi yang menunggu persetujuan.</td>
                   </tr>
                 ) : (
                   antreanData.map((m) => (
-                    <tr key={m.id_mutasi} className="hover:bg-neutral-50">
+                    <tr key={m.id_mutasi} className="hover:bg-[var(--bg-app)] transition-colors duration-400">
                       <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-neutral-900">{m.nama_barang}</p>
-                        <p className="text-xs text-neutral-500 font-mono mt-1">{m.kode_barang}_{m.no_urut_pendaft}</p>
+                        <p className="text-sm font-bold text-[var(--text-main)]">{m.nama_barang}</p>
+                        <p className="text-xs text-[var(--text-muted)] font-mono mt-1">{m.kode_barang}_{m.no_urut_pendaft}</p>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 text-sm">
                           <span className="font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">{m.ruangan_asal}</span>
-                          <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                           <span className="font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">{m.id_ruangan_tujuan}</span>
                         </div>
-                        <p className="text-xs text-neutral-600 mt-2 italic">"{m.alasan_mutasi}"</p>
+                        <p className="text-xs text-[var(--text-muted)] mt-2 italic">"{m.alasan_mutasi}"</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm text-neutral-900">{m.id_user_pengaju}</p>
-                        <p className="text-xs text-neutral-500">{new Date(m.tanggal_mutasi).toLocaleDateString('id-ID')}</p>
+                        <p className="text-sm text-[var(--text-main)]">{m.id_user_pengaju}</p>
+                        <p className="text-xs text-[var(--text-muted)]">{new Date(m.tanggal_mutasi).toLocaleDateString('id-ID')}</p>
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button
@@ -560,53 +560,53 @@ export default function MutasiPage() {
 
       {/* TAB CONTENT: RIWAYAT MUTASI */}
       {activeTab === "riwayat" && (
-        <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden animate-fade-in">
+        <div className="bg-[var(--bg-panel)] transition-colors duration-400 border border-[var(--border-panel)] rounded-2xl shadow-sm overflow-hidden animate-fade-in">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-neutral-200">
-              <thead className="bg-neutral-50">
+              <thead className="bg-[var(--bg-app)] transition-colors duration-400">
                 <tr>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Data Barang
                   </th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Pergerakan
                   </th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Pengaju
                   </th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Status Validasi
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-neutral-200">
+              <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-neutral-200">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={3} className="px-6 py-12 text-center text-neutral-500 text-sm">Memuat data...</td>
+                    <td colSpan={3} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">Memuat data...</td>
                   </tr>
                 ) : riwayatData.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="px-6 py-12 text-center text-neutral-500 text-sm">Belum ada riwayat mutasi.</td>
+                    <td colSpan={3} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">Belum ada riwayat mutasi.</td>
                   </tr>
                 ) : (
                   riwayatData.map((m) => (
-                    <tr key={m.id_mutasi} className="hover:bg-neutral-50">
+                    <tr key={m.id_mutasi} className="hover:bg-[var(--bg-app)] transition-colors duration-400">
                       <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-neutral-900">{m.nama_barang}</p>
-                        <p className="text-xs text-neutral-500 font-mono mt-1">{m.kode_barang}_{m.no_urut_pendaft}</p>
+                        <p className="text-sm font-bold text-[var(--text-main)]">{m.nama_barang}</p>
+                        <p className="text-xs text-[var(--text-muted)] font-mono mt-1">{m.kode_barang}_{m.no_urut_pendaft}</p>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="font-semibold text-neutral-600">{m.ruangan_asal}</span>
-                          <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <span className="font-semibold text-[var(--text-muted)]">{m.ruangan_asal}</span>
+                          <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
-                          <span className="font-semibold text-neutral-900">{m.id_ruangan_tujuan}</span>
+                          <span className="font-semibold text-[var(--text-main)]">{m.id_ruangan_tujuan}</span>
                         </div>
-                        <p className="text-xs text-neutral-500 mt-1">Diajukan: {new Date(m.tanggal_mutasi).toLocaleDateString('id-ID')}</p>
+                        <p className="text-xs text-[var(--text-muted)] mt-1">Diajukan: {new Date(m.tanggal_mutasi).toLocaleDateString('id-ID')}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm text-neutral-900">{m.id_user_pengaju}</p>
+                        <p className="text-sm text-[var(--text-main)]">{m.id_user_pengaju}</p>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col items-start gap-1">
@@ -616,7 +616,7 @@ export default function MutasiPage() {
                             {m.status_mutasi}
                           </span>
                           {m.catatan_validasi && (
-                            <p className="text-xs text-neutral-600 italic mt-1 max-w-[200px] truncate">
+                            <p className="text-xs text-[var(--text-muted)] italic mt-1 max-w-[200px] truncate">
                               "{m.catatan_validasi}"
                             </p>
                           )}
@@ -634,17 +634,17 @@ export default function MutasiPage() {
       {/* Modal Validasi Admin */}
       {validateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden relative">
-            <div className="p-6 border-b border-neutral-100 bg-neutral-50">
-              <h3 className="text-lg font-black text-neutral-900 tracking-tight">Validasi Mutasi Barang</h3>
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden relative">
+            <div className="p-6 border-b border-[var(--border-panel)] bg-[var(--bg-app)] transition-colors duration-400">
+              <h3 className="text-lg font-black text-[var(--text-main)] tracking-tight">Validasi Mutasi Barang</h3>
             </div>
             
             <div className="p-6 space-y-4">
-              <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-200">
-                <p className="text-sm font-bold text-neutral-900">{validateModal.nama_barang}</p>
-                <div className="mt-2 flex items-center gap-2 text-sm text-neutral-700">
+              <div className="bg-[var(--bg-app)] transition-colors duration-400 p-4 rounded-xl border border-[var(--border-panel)]">
+                <p className="text-sm font-bold text-[var(--text-main)]">{validateModal.nama_barang}</p>
+                <div className="mt-2 flex items-center gap-2 text-sm text-[var(--text-main)]">
                   Dari: <strong>{validateModal.ruangan_asal}</strong>
-                  <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                   Ke: <strong>{validateModal.id_ruangan_tujuan}</strong>
@@ -652,7 +652,7 @@ export default function MutasiPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--text-main)] mb-2">
                   Catatan Tambahan (Opsional)
                 </label>
                 <textarea
@@ -660,15 +660,15 @@ export default function MutasiPage() {
                   onChange={(e) => setCatatanValidasi(e.target.value)}
                   rows={3}
                   placeholder="Tambahkan pesan, alasan penolakan, atau catatan persetujuan..."
-                  className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
+                  className="w-full bg-[var(--bg-app)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
                 ></textarea>
               </div>
             </div>
 
-            <div className="p-6 border-t border-neutral-100 flex flex-col sm:flex-row gap-3 justify-end bg-neutral-50">
+            <div className="p-6 border-t border-[var(--border-panel)] flex flex-col sm:flex-row gap-3 justify-end bg-[var(--bg-app)] transition-colors duration-400">
               <button 
                 onClick={() => setValidateModal(null)}
-                className="px-6 py-2.5 bg-white border border-neutral-200 hover:bg-neutral-50 text-neutral-700 text-sm font-bold rounded-xl transition-colors"
+                className="px-6 py-2.5 bg-[var(--bg-panel)] transition-colors duration-400 border border-[var(--border-panel)] hover:bg-[var(--bg-app)] transition-colors duration-400 text-[var(--text-main)] text-sm font-bold rounded-xl transition-colors"
               >
                 Batal
               </button>
@@ -700,7 +700,7 @@ export default function MutasiPage() {
               </svg>
               Scan QR Code BMN
             </h3>
-            <button onClick={closeScanner} className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
+            <button onClick={closeScanner} className="p-2 bg-[var(--bg-panel)] transition-colors duration-400/10 hover:bg-[var(--bg-panel)] transition-colors duration-400/20 rounded-full transition-colors cursor-pointer">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>

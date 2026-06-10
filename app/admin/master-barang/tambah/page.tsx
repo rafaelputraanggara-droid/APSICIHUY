@@ -193,13 +193,13 @@ export default function TambahBarang() {
 
   if (!isAdminBMN) {
     return (
-      <div className="max-w-md mx-auto mt-12 bg-white dark:bg-neutral-900 p-8 border border-red-200 dark:border-red-900/40 rounded-3xl text-center shadow-md">
+      <div className="max-w-md mx-auto mt-12 bg-[var(--bg-panel)] transition-colors duration-400 p-8 border border-red-200 dark:border-red-900/40 rounded-3xl text-center shadow-md">
         <div className="w-16 h-16 bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
         </div>
-        <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Akses Ditolak</h2>
+        <h2 className="text-xl font-bold text-[var(--text-main)] transition-colors duration-400 mb-2">Akses Ditolak</h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-450 leading-relaxed mb-6">
           Halaman ini dibatasi hanya untuk <strong>Admin Fakultas</strong> dengan email resmi <strong>@staff.uns.ac.id</strong>. Silakan ubah simulasi role di sidebar untuk mengakses halaman ini.
         </p>
@@ -210,7 +210,7 @@ export default function TambahBarang() {
   return (
     <div className="space-y-8 pb-12 max-w-4xl mx-auto">
       {/* Title */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-indigo-650 to-violet-650 text-white p-8 rounded-3xl shadow-lg">
+      <div className="relative overflow-hidden bg-[var(--bg-banner)] text-white p-8 rounded-3xl shadow-lg transition-colors duration-400">
         <div className="relative z-10 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -224,8 +224,8 @@ export default function TambahBarang() {
       </div>
 
       {/* Form Card */}
-      <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-sm p-8">
-        <h2 className="text-lg font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-800 pb-4 mb-6">
+      <div className="bg-[var(--bg-panel)] rounded-3xl border border-[var(--border-panel)] shadow-sm p-8 transition-colors duration-400">
+        <h2 className="text-lg font-bold text-[var(--text-main)] border-b border-[var(--border-panel)] pb-4 mb-6 transition-colors duration-400">
           Registrasi Barang Baru
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -233,7 +233,7 @@ export default function TambahBarang() {
             
             {/* Split Kode Barang Input */}
             <div className="sm:col-span-3">
-              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+              <label className="block text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                 Kode Barang (Format SAKTI) <span className="text-rose-500">*</span>
               </label>
               <div className="mt-2 flex items-center space-x-1.5 sm:space-x-2">
@@ -245,11 +245,11 @@ export default function TambahBarang() {
                   onKeyDown={(e) => handleKeyDown(e, null)}
                   maxLength={1}
                   inputMode="numeric"
-                  className="w-12 text-center text-sm font-mono font-bold bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl py-3 text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-12 text-center text-sm font-mono font-bold bg-[var(--bg-app)] border border-[var(--border-panel)] rounded-xl py-3 text-[var(--text-main)] focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors duration-400"
                   placeholder="G"
                   required
                 />
-                <span className="text-neutral-400 font-bold select-none">.</span>
+                <span className="text-[var(--text-muted)] font-bold select-none">.</span>
                 <input
                   id="part2"
                   type="text"
@@ -258,11 +258,11 @@ export default function TambahBarang() {
                   onKeyDown={(e) => handleKeyDown(e, 'part1')}
                   maxLength={2}
                   inputMode="numeric"
-                  className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl py-3 text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-14 text-center text-sm font-mono font-bold bg-[var(--bg-app)] transition-colors duration-400 border border-neutral-200 dark:border-neutral-700 rounded-xl py-3 text-[var(--text-main)] transition-colors duration-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="Bi"
                   required
                 />
-                <span className="text-neutral-400 font-bold select-none">.</span>
+                <span className="text-[var(--text-muted)] font-bold select-none">.</span>
                 <input
                   id="part3"
                   type="text"
@@ -271,11 +271,11 @@ export default function TambahBarang() {
                   onKeyDown={(e) => handleKeyDown(e, 'part2')}
                   maxLength={2}
                   inputMode="numeric"
-                  className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl py-3 text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-14 text-center text-sm font-mono font-bold bg-[var(--bg-app)] transition-colors duration-400 border border-neutral-200 dark:border-neutral-700 rounded-xl py-3 text-[var(--text-main)] transition-colors duration-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="Ke"
                   required
                 />
-                <span className="text-neutral-400 font-bold select-none">.</span>
+                <span className="text-[var(--text-muted)] font-bold select-none">.</span>
                 <input
                   id="part4"
                   type="text"
@@ -284,11 +284,11 @@ export default function TambahBarang() {
                   onKeyDown={(e) => handleKeyDown(e, 'part3')}
                   maxLength={2}
                   inputMode="numeric"
-                  className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl py-3 text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-14 text-center text-sm font-mono font-bold bg-[var(--bg-app)] border border-[var(--border-panel)] rounded-xl py-3 text-[var(--text-main)] focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors duration-400"
                   placeholder="SK"
                   required
                 />
-                <span className="text-neutral-400 font-bold select-none">.</span>
+                <span className="text-[var(--text-muted)] font-bold select-none">.</span>
                 <input
                   id="part5"
                   type="text"
@@ -297,19 +297,19 @@ export default function TambahBarang() {
                   onKeyDown={(e) => handleKeyDown(e, 'part4')}
                   maxLength={3}
                   inputMode="numeric"
-                  className="w-18 text-center text-sm font-mono font-bold bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl py-3 text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-18 text-center text-sm font-mono font-bold bg-[var(--bg-app)] border border-[var(--border-panel)] rounded-xl py-3 text-[var(--text-main)] focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors duration-400"
                   placeholder="SSK"
                   required
                 />
               </div>
-              <p className="mt-2 text-xxs text-neutral-400 dark:text-neutral-500 uppercase tracking-wide">
+              <p className="mt-2 text-xxs text-neutral-400 dark:text-[var(--text-muted)] uppercase tracking-wide">
                 Golongan . Bidang . Kelompok . Sub-Kelompok . Sub-Sub Kelompok
               </p>
             </div>
 
             {/* NUP */}
             <div className="sm:col-span-3">
-              <label htmlFor="nup" className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+              <label htmlFor="nup" className="block text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                 No Urut Pendaftaran (NUP) <span className="text-rose-500">*</span>
               </label>
               <div className="mt-2">
@@ -320,7 +320,7 @@ export default function TambahBarang() {
                   onChange={(e) => setNup(e.target.value)}
                   required
                   min="1"
-                  className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full bg-[var(--bg-app)] border border-[var(--border-panel)] px-4 py-3 rounded-xl text-sm text-[var(--text-main)] focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors duration-400"
                   placeholder="Masukkan nomor urut (misal: 1)"
                 />
               </div>
@@ -328,7 +328,7 @@ export default function TambahBarang() {
 
             {/* Nama Barang */}
             <div className="sm:col-span-3">
-              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+              <label className="block text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                 Nama Barang BMN <span className="text-rose-500">*</span>
               </label>
               <div className="mt-2">
@@ -337,7 +337,7 @@ export default function TambahBarang() {
                   value={namaBarang}
                   onChange={(e) => setNamaBarang(e.target.value)}
                   required
-                  className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full bg-[var(--bg-app)] transition-colors duration-400 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-[var(--text-main)] transition-colors duration-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="Contoh: PC Desktop Lenovo ThinkCentre"
                 />
               </div>
@@ -345,7 +345,7 @@ export default function TambahBarang() {
 
             {/* Merk / Type */}
             <div className="sm:col-span-3">
-              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+              <label className="block text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                 Merk / Type / Spesifikasi <span className="text-rose-500">*</span>
               </label>
               <div className="mt-2">
@@ -354,7 +354,7 @@ export default function TambahBarang() {
                   value={merkType}
                   onChange={(e) => setMerkType(e.target.value)}
                   required
-                  className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full bg-[var(--bg-app)] transition-colors duration-400 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-[var(--text-main)] transition-colors duration-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="Contoh: Core i5 / RAM 16GB / SSD 512GB"
                 />
               </div>
@@ -362,7 +362,7 @@ export default function TambahBarang() {
 
             {/* Tahun Perolehan */}
             <div className="sm:col-span-2">
-              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+              <label className="block text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                 Tahun Perolehan <span className="text-rose-500">*</span>
               </label>
               <div className="mt-2">
@@ -373,14 +373,14 @@ export default function TambahBarang() {
                   required
                   min="1900"
                   max="2100"
-                  className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full bg-[var(--bg-app)] transition-colors duration-400 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-[var(--text-main)] transition-colors duration-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Lokasi Ruangan */}
             <div className="sm:col-span-2">
-              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+              <label className="block text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                 Kode Ruangan / Lokasi <span className="text-rose-500">*</span>
               </label>
               <div className="mt-2">
@@ -389,7 +389,7 @@ export default function TambahBarang() {
                   value={lokasiRuangan}
                   onChange={(e) => setLokasiRuangan(e.target.value)}
                   required
-                  className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full bg-[var(--bg-app)] transition-colors duration-400 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-[var(--text-main)] transition-colors duration-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   placeholder="Contoh: LAB-RPL-301"
                 />
               </div>
@@ -397,14 +397,14 @@ export default function TambahBarang() {
 
             {/* Kondisi */}
             <div className="sm:col-span-2">
-              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+              <label className="block text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                 Kondisi Aset <span className="text-rose-500">*</span>
               </label>
               <div className="mt-2">
                 <select
                   value={kondisi}
                   onChange={(e) => setKondisi(e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
+                  className="w-full bg-[var(--bg-app)] border border-[var(--border-panel)] px-4 py-3 rounded-xl text-sm text-[var(--text-main)] focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors duration-400"
                 >
                   <option value="Baik">Baik</option>
                   <option value="Rusak Ringan">Rusak Ringan</option>
@@ -415,7 +415,7 @@ export default function TambahBarang() {
 
             {/* Kategori */}
             <div className="sm:col-span-2">
-              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+              <label className="block text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                 Kategori Barang <span className="text-rose-500">*</span>
               </label>
               <div className="mt-2">
@@ -425,7 +425,7 @@ export default function TambahBarang() {
                   value={kategori}
                   onChange={(e) => setKategori(e.target.value)}
                   required
-                  className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full bg-[var(--bg-app)] border border-[var(--border-panel)] px-4 py-3 rounded-xl text-sm text-[var(--text-main)] focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors duration-400"
                   placeholder="Ketik/Pilih Kategori"
                 />
                 <datalist id="kategori-list">
@@ -438,7 +438,7 @@ export default function TambahBarang() {
 
           </div>
 
-          <div className="pt-6 border-t border-neutral-100 dark:border-neutral-800 flex justify-end">
+          <div className="pt-6 border-t border-neutral-100 border-[var(--border-panel)] flex justify-end">
             <button
               type="submit"
               disabled={saving}
@@ -453,15 +453,15 @@ export default function TambahBarang() {
       {/* Success Modal for Printing Label */}
       {successItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-neutral-200 dark:border-neutral-800 text-center p-6 space-y-4">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-[var(--border-panel)] text-center p-6 space-y-4">
             <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-neutral-900 dark:text-white">Data Tersimpan!</h3>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
-              Barang berhasil diregistrasi ke ruangan <span className="font-bold text-neutral-700 dark:text-neutral-300">{successItem.ruangan}</span>. Apakah Anda ingin langsung mencetak label QR untuk barang ini?
+            <h3 className="text-xl font-bold text-[var(--text-main)] transition-colors duration-400">Data Tersimpan!</h3>
+            <p className="text-sm text-[var(--text-muted)] transition-colors duration-400">
+              Barang berhasil diregistrasi ke ruangan <span className="font-bold text-[var(--text-main)] transition-colors duration-400">{successItem.ruangan}</span>. Apakah Anda ingin langsung mencetak label QR untuk barang ini?
             </p>
             <div className="pt-4 flex flex-col gap-3">
               <a 
@@ -474,7 +474,7 @@ export default function TambahBarang() {
               </a>
               <button 
                 onClick={() => setSuccessItem(null)}
-                className="w-full inline-flex justify-center items-center py-2.5 px-4 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-xl text-sm font-bold hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                className="w-full inline-flex justify-center items-center py-2.5 px-4 bg-neutral-100 dark:bg-neutral-800 text-[var(--text-main)] transition-colors duration-400 rounded-xl text-sm font-bold hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
               >
                 Tutup
               </button>

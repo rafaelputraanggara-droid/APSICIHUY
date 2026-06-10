@@ -255,13 +255,13 @@ export default function ImportBarang() {
 
   if (!isAdminBMN) {
     return (
-      <div className="max-w-md mx-auto mt-12 bg-white dark:bg-neutral-900 p-8 border border-red-200 dark:border-red-900/40 rounded-3xl text-center shadow-md">
+      <div className="max-w-md mx-auto mt-12 bg-[var(--bg-panel)] transition-colors duration-400 p-8 border border-red-200 dark:border-red-900/40 rounded-3xl text-center shadow-md">
         <div className="w-16 h-16 bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
         </div>
-        <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Akses Ditolak</h2>
+        <h2 className="text-xl font-bold text-[var(--text-main)] transition-colors duration-400 mb-2">Akses Ditolak</h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-450 leading-relaxed mb-6">
           Halaman ini dibatasi hanya untuk <strong>Admin Fakultas</strong> dengan email resmi <strong>@staff.uns.ac.id</strong>. Silakan ubah simulasi role di sidebar untuk mengakses halaman ini.
         </p>
@@ -272,7 +272,7 @@ export default function ImportBarang() {
   return (
     <div className="space-y-8 pb-12 max-w-5xl mx-auto">
       {/* Title Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-indigo-650 to-violet-650 text-white p-8 rounded-3xl shadow-lg">
+      <div className="relative overflow-hidden bg-[var(--bg-banner)] transition-colors duration-400 text-white p-8 rounded-3xl shadow-lg">
         <div className="relative z-10 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -286,17 +286,17 @@ export default function ImportBarang() {
       </div>
 
       {/* Main Action Card */}
-      <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-sm p-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-5 mb-6 gap-4">
+      <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-[var(--border-panel)] shadow-sm p-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-neutral-100 border-[var(--border-panel)] pb-5 mb-6 gap-4">
           <div>
-            <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Impor Massal Aset</h2>
-            <p className="text-xs text-neutral-500 mt-1">Unggah file .csv dan periksa datanya sebelum disimpan ke server database.</p>
+            <h2 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400">Impor Massal Aset</h2>
+            <p className="text-xs text-[var(--text-muted)] mt-1">Unggah file .csv dan periksa datanya sebelum disimpan ke server database.</p>
           </div>
           <button
             onClick={handleDownloadTemplate}
-            className="inline-flex items-center gap-1.5 px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl text-xs font-bold text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl text-xs font-bold text-neutral-600 dark:text-neutral-300 hover:bg-[var(--bg-app)] transition-colors duration-400 transition-all cursor-pointer"
           >
-            <svg className="w-4 h-4 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
             Unduh Template CSV
@@ -304,7 +304,7 @@ export default function ImportBarang() {
         </div>
 
         {/* Upload Zone */}
-        <div className="border-2 border-dashed border-neutral-200 dark:border-neutral-800 rounded-3xl p-8 text-center bg-neutral-50/40 dark:bg-neutral-950/20 hover:bg-neutral-55 dark:hover:bg-neutral-950/40 transition-all">
+        <div className="border-2 border-dashed border-[var(--border-panel)] rounded-3xl p-8 text-center bg-[var(--bg-app)] transition-colors duration-400/40 bg-[var(--bg-app)]/20 hover:bg-neutral-55 dark:hover:bg-neutral-950/40 transition-all">
           <div className="max-w-md mx-auto space-y-4">
             <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/50 rounded-2xl flex items-center justify-center mx-auto text-indigo-600 dark:text-indigo-400">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -312,7 +312,7 @@ export default function ImportBarang() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-neutral-800 dark:text-white">
+              <p className="text-sm font-bold text-neutral-800 text-[var(--text-main)]">
                 {csvFile ? `File Terpilih: ${csvFile.name}` : 'Pilih file SAKTI CSV Anda'}
               </p>
               <p className="text-xs text-neutral-450 mt-1">Hanya format dokumen .csv yang didukung</p>
@@ -361,7 +361,7 @@ export default function ImportBarang() {
               {importResult.summary.skipped.length > 0 && (
                 <div className="mt-2.5">
                   <p className="font-bold mb-1">Catatan/Data Dilewati:</p>
-                  <ul className="list-disc pl-4 space-y-0.5 text-xxs text-neutral-500 font-mono">
+                  <ul className="list-disc pl-4 space-y-0.5 text-xxs text-[var(--text-muted)] font-mono">
                     {importResult.summary.skipped.slice(0, 10).map((skip: string, sIdx: number) => (
                       <li key={sIdx}>{skip}</li>
                     ))}
@@ -379,16 +379,16 @@ export default function ImportBarang() {
         {parsedData.length > 0 && (
           <div className="mt-8 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-neutral-800 dark:text-white uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-neutral-800 text-[var(--text-main)] uppercase tracking-wider">
                 Pratinjau Data (Menampilkan {Math.min(parsedData.length, 5)} dari {parsedData.length} baris)
               </h3>
             </div>
             
-            <div className="border border-neutral-150 dark:border-neutral-800 rounded-2xl overflow-hidden shadow-inner bg-white dark:bg-neutral-950">
+            <div className="border border-neutral-150 border-[var(--border-panel)] rounded-2xl overflow-hidden shadow-inner bg-white bg-[var(--bg-app)]">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-neutral-50 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 text-neutral-450 dark:text-neutral-500 font-bold uppercase tracking-wider">
+                    <tr className="bg-neutral-50 bg-[var(--bg-panel)] border-b border-[var(--border-panel)] text-neutral-450 dark:text-[var(--text-muted)] font-bold uppercase tracking-wider">
                       <th className="px-4 py-3">Kode Barang</th>
                       <th className="px-4 py-3">NUP</th>
                       <th className="px-4 py-3">Nama Barang</th>
@@ -400,11 +400,11 @@ export default function ImportBarang() {
                   </thead>
                   <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800 font-medium">
                     {parsedData.slice(0, 5).map((row, index) => (
-                      <tr key={index} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30">
+                      <tr key={index} className="hover:bg-[var(--bg-app)] transition-colors duration-400/50 dark:hover:bg-neutral-900/30">
                         <td className="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">{row.kode_barang}</td>
                         <td className="px-4 py-3 font-mono">{row.no_urut_pendaft}</td>
-                        <td className="px-4 py-3 text-neutral-900 dark:text-white">{row.nama_barang}</td>
-                        <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400">{row.merk_type}</td>
+                        <td className="px-4 py-3 text-[var(--text-main)] transition-colors duration-400">{row.nama_barang}</td>
+                        <td className="px-4 py-3 text-[var(--text-muted)] transition-colors duration-400">{row.merk_type}</td>
                         <td className="px-4 py-3">{row.th_perolehan}</td>
                         <td className="px-4 py-3">
                           <span className={`inline-flex px-2 py-0.5 rounded-full text-xxs font-bold ${
@@ -413,7 +413,7 @@ export default function ImportBarang() {
                             {row.kondisi}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400 font-mono">{row.lokasi_ruangan}</td>
+                        <td className="px-4 py-3 text-[var(--text-muted)] transition-colors duration-400 font-mono">{row.lokasi_ruangan}</td>
                       </tr>
                     ))}
                   </tbody>

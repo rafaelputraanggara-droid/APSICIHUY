@@ -89,7 +89,7 @@ export default function DatabaseBarangPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 dark:from-indigo-950 dark:to-violet-950 p-8 rounded-3xl text-white shadow-xl">
+      <div className="relative overflow-hidden bg-[var(--bg-banner)] p-8 rounded-3xl text-white shadow-xl transition-colors duration-400">
         <div className="relative z-10 space-y-2">
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
             Daftar Database Barang
@@ -101,37 +101,37 @@ export default function DatabaseBarangPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-10 text-neutral-500">Memuat data ruangan...</div>
+        <div className="text-center py-10 text-[var(--text-muted)]">Memuat data ruangan...</div>
       ) : rooms.length === 0 ? (
-        <div className="text-center py-10 bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800">
-          <p className="text-neutral-500 dark:text-neutral-400">Belum ada data ruangan.</p>
+        <div className="text-center py-10 bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-panel)] rounded-2xl border border-[var(--border-panel)] border-[var(--border-panel)]">
+          <p className="text-[var(--text-muted)] dark:text-[var(--text-muted)]">Belum ada data ruangan.</p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-[var(--bg-panel)] border border-[var(--border-panel)] rounded-2xl shadow-sm overflow-hidden transition-colors duration-400">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
-              <thead className="bg-neutral-50 dark:bg-neutral-950/50">
+            <table className="min-w-full divide-y divide-[var(--border-panel)]">
+              <thead className="bg-[var(--bg-app)]">
                 <tr>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Nama Ruangan / Lokasi
                   </th>
-                  <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Total Inventaris
                   </th>
-                  <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                     Aksi
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-neutral-900 divide-y divide-neutral-200 dark:divide-neutral-800">
+              <tbody className="bg-[var(--bg-panel)] divide-y divide-[var(--border-panel)] transition-colors duration-400">
                 {rooms.map((room, idx) => (
-                  <tr key={idx} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                  <tr key={idx} className="hover:bg-[var(--bg-app)] transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editingRoom === room.room ? (
                         <div className="flex items-center gap-2">
                           <input
                             type="text"
-                            className="px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 rounded-lg text-sm bg-white dark:bg-neutral-950 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="px-3 py-1.5 border border-[var(--border-panel)] rounded-lg text-sm bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-app)] focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             value={newRoomName}
                             onChange={(e) => setNewRoomName(e.target.value)}
                             autoFocus
@@ -144,7 +144,7 @@ export default function DatabaseBarangPage() {
                           </button>
                           <button
                             onClick={() => setEditingRoom(null)}
-                            className="px-3 py-1.5 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-lg text-xs font-bold hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
+                            className="px-3 py-1.5 bg-neutral-200 dark:bg-neutral-800 text-[var(--text-main)] dark:text-neutral-300 rounded-lg text-xs font-bold hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
                           >
                             Batal
                           </button>
@@ -157,7 +157,7 @@ export default function DatabaseBarangPage() {
                             </svg>
                           </div>
                           <div className="ml-4 flex items-center gap-2">
-                            <div className="text-sm font-bold text-neutral-900 dark:text-white truncate" title={room.room}>
+                            <div className="text-sm font-bold text-[var(--text-main)] text-[var(--text-main)] truncate" title={room.room}>
                               {room.room}
                             </div>
                             {room.itemCount === 0 && (
@@ -187,7 +187,7 @@ export default function DatabaseBarangPage() {
                             setEditingRoom(room.room);
                             setNewRoomName(room.room);
                           }}
-                          className="p-1.5 text-neutral-400 hover:text-indigo-600 transition-colors bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700"
+                          className="p-1.5 text-[var(--text-muted)] hover:text-indigo-600 transition-colors bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-panel)] hover:bg-[var(--bg-app)] transition-colors duration-400 rounded-lg border border-[var(--border-panel)] dark:border-neutral-700"
                           title="Edit Nama Ruangan"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -196,7 +196,7 @@ export default function DatabaseBarangPage() {
                         </button>
                         <button
                           onClick={() => handleDeleteRoom(room.room, room.itemCount)}
-                          className="p-1.5 text-neutral-400 hover:text-rose-600 transition-colors bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700"
+                          className="p-1.5 text-[var(--text-muted)] hover:text-rose-600 transition-colors bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-panel)] hover:bg-[var(--bg-app)] transition-colors duration-400 rounded-lg border border-[var(--border-panel)] dark:border-neutral-700"
                           title="Hapus Ruangan"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

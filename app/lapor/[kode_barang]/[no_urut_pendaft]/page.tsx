@@ -99,7 +99,7 @@ export default function LaporKerusakanPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-between font-sans">
       {/* Top Navigation */}
-      <header className="bg-white border-b border-gray-200/80 sticky top-0 z-30 shadow-sm px-6 py-4">
+      <header className="bg-[var(--bg-panel)] transition-colors duration-400 border-b border-gray-200/80 sticky top-0 z-30 shadow-sm px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="h-9 w-9 rounded-xl bg-indigo-650 flex items-center justify-center text-white font-bold text-lg shadow-sm">
@@ -123,13 +123,13 @@ export default function LaporKerusakanPage() {
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
         {loading ? (
           /* Loading State */
-          <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm text-center flex flex-col items-center justify-center py-20">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200 p-8 shadow-sm text-center flex flex-col items-center justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-650 mb-4"></div>
             <p className="text-sm font-semibold text-gray-500">Mengambil data aset barang...</p>
           </div>
         ) : error ? (
           /* Error State */
-          <div className="bg-white rounded-3xl border border-red-200 p-8 shadow-sm text-center py-16">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-red-200 p-8 shadow-sm text-center py-16">
             <div className="w-16 h-16 bg-red-50 text-red-650 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-100">
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -152,7 +152,7 @@ export default function LaporKerusakanPage() {
             
             {/* Left Column: Asset Detail Card */}
             <div className="lg:col-span-1 space-y-6">
-              <div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-sm space-y-5">
+              <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200 p-6 shadow-sm space-y-5">
                 <div className="border-b pb-4">
                   <span className="text-xxs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
                     Informasi Aset
@@ -196,7 +196,7 @@ export default function LaporKerusakanPage() {
 
             {/* Right Column: Reporting Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-3xl border border-gray-200 p-6 sm:p-8 shadow-sm">
+              <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200 p-6 sm:p-8 shadow-sm">
                 <h2 className="text-xl font-bold text-gray-900 border-b pb-4 mb-6">Laporkan Kerusakan Barang</h2>
                 
                 {isSuccess ? (
@@ -321,7 +321,7 @@ export default function LaporKerusakanPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200/80 py-4 text-center text-xs text-gray-400 font-medium">
+      <footer className="bg-[var(--bg-panel)] transition-colors duration-400 border-t border-gray-200/80 py-4 text-center text-xs text-gray-400 font-medium">
         SIPRABU &copy; 2026. FT Universitas Sebelas Maret.
       </footer>
     </div>

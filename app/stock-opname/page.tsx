@@ -418,14 +418,14 @@ export default function StockOpnamePage() {
       {/* PHASE 1: SETUP PHASE */}
       {phase === 'setup' && (
         <div className="max-w-xl mx-auto space-y-8 animate-fade-in print:hidden">
-          <div className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-indigo-650 to-violet-650 text-white p-8 rounded-3xl shadow-lg text-center">
+          <div className="relative overflow-hidden bg-[var(--bg-banner)] transition-colors duration-400 text-white p-8 rounded-3xl shadow-lg text-center">
             <h1 className="text-3xl font-extrabold tracking-tight">Sesi Stok Opname Baru</h1>
             <p className="text-indigo-100 mt-2 text-sm">
               Pilih lokasi ruangan dan masukkan nama Anda selaku petugas auditor BMN untuk memulai verifikasi fisik.
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6 sm:p-8">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 shadow-sm p-6 sm:p-8">
             {loadingRooms ? (
               <div className="py-12 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-650 mx-auto mb-2"></div>
@@ -445,7 +445,7 @@ export default function StockOpnamePage() {
                     value={selectedRoom}
                     onChange={(e) => setSelectedRoom(e.target.value)}
                     placeholder="Ketik untuk mencari ruangan..."
-                    className="mt-2 block w-full bg-white border border-gray-300 rounded-xl px-3.5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 block w-full bg-[var(--bg-panel)] transition-colors duration-400 border border-gray-300 rounded-xl px-3.5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     required
                   />
                   <datalist id="stockOpnameRooms">
@@ -489,7 +489,7 @@ export default function StockOpnamePage() {
         <div className="space-y-6 animate-fade-in print:hidden">
           
           {/* Header Card */}
-          <div className="bg-white rounded-3xl border border-gray-200/80 p-6 shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-6 shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 text-xxs font-bold rounded-full border border-indigo-150 uppercase tracking-wider mb-2">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -520,7 +520,7 @@ export default function StockOpnamePage() {
             {/* Left Column: Viewfinder Scanner */}
             <div className="lg:col-span-5 space-y-6">
               <div className="bg-neutral-900 rounded-3xl border border-neutral-800 p-6 shadow-xl text-white flex flex-col items-center">
-                <h3 className="text-sm font-bold text-neutral-400 tracking-wider uppercase mb-4">Viewfinder QR Kamera</h3>
+                <h3 className="text-sm font-bold text-[var(--text-muted)] tracking-wider uppercase mb-4">Viewfinder QR Kamera</h3>
 
                 {/* Camera Holder */}
                 <div className="relative w-full aspect-square max-w-[280px] bg-neutral-950 rounded-2xl border-2 border-neutral-700 overflow-hidden flex flex-col items-center justify-center shadow-inner group">
@@ -548,7 +548,7 @@ export default function StockOpnamePage() {
                             </svg>
                           </div>
                           <p className="text-xs text-rose-450 font-bold">Kamera Gagal Dimuat</p>
-                          <p className="text-[10px] text-neutral-500 leading-normal max-w-[200px]">{cameraError}</p>
+                          <p className="text-[10px] text-[var(--text-muted)] leading-normal max-w-[200px]">{cameraError}</p>
                           <button
                             onClick={startCameraScanner}
                             className="bg-neutral-800 text-xs hover:bg-neutral-700 px-4 py-1.5 rounded-lg border border-neutral-700 transition"
@@ -558,12 +558,12 @@ export default function StockOpnamePage() {
                         </>
                       ) : (
                         <>
-                          <div className="w-12 h-12 rounded-full bg-neutral-800 flex items-center justify-center mx-auto text-neutral-500 animate-pulse">
+                          <div className="w-12 h-12 rounded-full bg-neutral-800 flex items-center justify-center mx-auto text-[var(--text-muted)] animate-pulse">
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                             </svg>
                           </div>
-                          <p className="text-xs text-neutral-400 font-semibold">Menginisialisasi Kamera...</p>
+                          <p className="text-xs text-[var(--text-muted)] font-semibold">Menginisialisasi Kamera...</p>
                         </>
                       )}
                     </div>
@@ -571,14 +571,14 @@ export default function StockOpnamePage() {
                 </div>
 
                 <div className="w-full text-center mt-3">
-                  <p className="text-xxs text-neutral-500 font-medium leading-relaxed max-w-[280px] mx-auto">
+                  <p className="text-xxs text-[var(--text-muted)] font-medium leading-relaxed max-w-[280px] mx-auto">
                     Kamera dikonfigurasi untuk pemindaian **Beruntun**. Arahkan lensa ke QR Code fisik secara bergantian tanpa perlu me-reload kamera.
                   </p>
                 </div>
 
                 {/* Manual Scan Input Area (if camera fails or user wants to paste) */}
                 <div className="w-full border-t border-neutral-800 mt-6 pt-6">
-                  <span className="text-xxs font-bold text-neutral-500 uppercase tracking-wider block mb-2.5">Input Manual Hasil QR</span>
+                  <span className="text-xxs font-bold text-[var(--text-muted)] uppercase tracking-wider block mb-2.5">Input Manual Hasil QR</span>
                   <div className="flex gap-2">
                     <input
                       id="manual-qr-text"
@@ -612,7 +612,7 @@ export default function StockOpnamePage() {
 
             {/* Right Column: Expected Items Table with simulation */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6 flex flex-col h-[520px]">
+              <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 shadow-sm p-6 flex flex-col h-[520px]">
                 
                 {/* Search & Header */}
                 <div className="border-b pb-4 mb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
@@ -636,7 +636,7 @@ export default function StockOpnamePage() {
                         <th className="px-3 py-2 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Uji (Simulasi)</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-gray-200">
                       {filteredItems.length === 0 ? (
                         <tr>
                           <td colSpan={3} className="px-4 py-8 text-center text-xs text-gray-400">
@@ -717,7 +717,7 @@ export default function StockOpnamePage() {
         <div className="space-y-8 animate-fade-in print:space-y-4">
           
           {/* Header Card (Hide on Print) */}
-          <div className="bg-white rounded-3xl border border-gray-200/80 p-6 shadow-sm flex justify-between items-center print:hidden">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-6 shadow-sm flex justify-between items-center print:hidden">
             <div>
               <h2 className="text-xl font-extrabold text-gray-900">Stok Opname Berhasil Disimpan</h2>
               <p className="text-xs text-gray-400">Audit selesai pada {new Date(report.tanggal_selesai).toLocaleString()}</p>
@@ -749,25 +749,25 @@ export default function StockOpnamePage() {
 
           {/* Official Audit Document Header (Print-friendly format) */}
           <div className="hidden print:block border-b-3 border-neutral-900 pb-4 mb-6 text-center">
-            <h1 className="text-lg font-black tracking-wide uppercase text-neutral-900">
+            <h1 className="text-lg font-black tracking-wide uppercase text-[var(--text-main)]">
               LAPORAN KETIDAKSESUAIAN (GAP REPORT) STOK OPNAME
             </h1>
-            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500 mt-1">
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mt-1">
               SISTEM INFORMASI INVENTARIS BMN (SIPRABU) &bull; FT UNS
             </p>
           </div>
 
           {/* Sesi & Meta Data Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 print:grid-cols-3 print:gap-4">
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
+            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
               <span className="text-[10px] font-bold text-gray-400 uppercase">Lokasi Ruangan</span>
               <p className="text-base font-extrabold text-gray-900 mt-1">{report.ruangan}</p>
             </div>
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
+            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
               <span className="text-[10px] font-bold text-gray-400 uppercase">Auditor Pelaksana</span>
               <p className="text-base font-extrabold text-gray-900 mt-1">{report.dilakukan_oleh}</p>
             </div>
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
+            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
               <span className="text-[10px] font-bold text-gray-400 uppercase">Waktu Audit</span>
               <p className="text-xs font-bold text-gray-900 mt-1.5 font-mono">
                 {new Date(report.tanggal_mulai).toLocaleDateString()} &bull; {new Date(report.tanggal_mulai).toLocaleTimeString()} s/d {new Date(report.tanggal_selesai).toLocaleTimeString()}
@@ -778,25 +778,25 @@ export default function StockOpnamePage() {
           {/* KPI Dashboard Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 print:grid-cols-4 print:gap-3">
             
-            <div className="bg-white rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
+            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
               <span className="text-[10px] font-bold text-gray-400 uppercase">Total Ekspektasi</span>
               <p className="text-3xl font-black text-neutral-800 mt-1">{report.summary.totalItems}</p>
               <p className="text-xxs text-gray-450 mt-1">Item Tercatat di Database</p>
             </div>
 
-            <div className="bg-white rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
+            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
               <span className="text-[10px] font-bold text-emerald-650 uppercase">Item Ditemukan</span>
               <p className="text-3xl font-black text-emerald-600 mt-1">{report.summary.itemsFound}</p>
               <p className="text-xxs text-emerald-500 mt-1">Fisik Ada & Terverifikasi</p>
             </div>
 
-            <div className="bg-white rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
+            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
               <span className="text-[10px] font-bold text-rose-600 uppercase">Aset Hilang (Gap)</span>
               <p className="text-3xl font-black text-rose-600 mt-1">{report.summary.itemsMissing}</p>
               <p className="text-xxs text-rose-500 mt-1">Selisih Tidak Ditemukan</p>
             </div>
 
-            <div className="bg-white rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
+            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
               <span className="text-[10px] font-bold text-indigo-650 uppercase">Tingkat Keberadaan</span>
               <p className="text-3xl font-black text-indigo-600 mt-1">
                 {report.summary.totalItems > 0 
@@ -809,8 +809,8 @@ export default function StockOpnamePage() {
           </div>
 
           {/* Section: GAP / Missing Asets */}
-          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6 print:border-none print:shadow-none print:p-0">
-            <h3 className="text-base font-extrabold text-rose-600 border-b pb-3 mb-4 flex items-center gap-1.5 print:text-neutral-900 print:border-neutral-800">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 shadow-sm p-6 print:border-none print:shadow-none print:p-0">
+            <h3 className="text-base font-extrabold text-rose-600 border-b pb-3 mb-4 flex items-center gap-1.5 print:text-[var(--text-main)] print:border-neutral-800">
               <span className="h-2.5 w-2.5 rounded-full bg-rose-500 print:hidden"></span>
               DAFTAR GAP ASET : TIDAK DITEMUKAN ({report.summary.itemsMissing} Item)
             </h3>
@@ -822,22 +822,22 @@ export default function StockOpnamePage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-neutral-200 border print:border-neutral-300">
-                  <thead className="bg-neutral-50 print:bg-neutral-100">
+                  <thead className="bg-[var(--bg-app)] transition-colors duration-400 print:bg-neutral-100">
                     <tr>
-                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-neutral-600 uppercase">Kode & NUP</th>
-                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-neutral-600 uppercase">Nama Aset</th>
-                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-neutral-600 uppercase">Merk / Spek</th>
-                      <th className="px-4 py-2.5 text-center text-[10px] font-bold text-neutral-600 uppercase">Tahun</th>
-                      <th className="px-4 py-2.5 text-center text-[10px] font-bold text-neutral-600 uppercase">Kondisi</th>
+                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase">Kode & NUP</th>
+                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase">Nama Aset</th>
+                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase">Merk / Spek</th>
+                      <th className="px-4 py-2.5 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase">Tahun</th>
+                      <th className="px-4 py-2.5 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase">Kondisi</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-neutral-200">
+                  <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-neutral-200">
                     {report.gapList.map((item) => (
-                      <tr key={item.id} className="hover:bg-neutral-50 print:bg-white text-xs">
+                      <tr key={item.id} className="hover:bg-[var(--bg-app)] transition-colors duration-400 print:bg-[var(--bg-panel)] transition-colors duration-400 text-xs">
                         <td className="px-4 py-3 font-mono font-bold text-neutral-800">{item.kode_barang} &bull; {String(item.no_urut_pendaft).padStart(3, '0')}</td>
                         <td className="px-4 py-3 font-semibold text-neutral-800">{item.nama_barang}</td>
-                        <td className="px-4 py-3 text-neutral-500">{item.merk_type}</td>
-                        <td className="px-4 py-3 text-center text-neutral-600 font-semibold">{item.th_perolehan}</td>
+                        <td className="px-4 py-3 text-[var(--text-muted)]">{item.merk_type}</td>
+                        <td className="px-4 py-3 text-center text-[var(--text-muted)] font-semibold">{item.th_perolehan}</td>
                         <td className="px-4 py-3 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold border ${
                             item.kondisi === 'Baik' ? 'bg-green-50 text-green-700 border-green-200' :
@@ -856,8 +856,8 @@ export default function StockOpnamePage() {
           </div>
 
           {/* Section: Verified/Found Asets (Collapsed/Hidden on Print default if too long, or styled neatly) */}
-          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6 print:border-none print:shadow-none print:p-0 print:break-before-page print:mt-6">
-            <h3 className="text-base font-extrabold text-emerald-750 border-b pb-3 mb-4 flex items-center gap-1.5 print:text-neutral-900 print:border-neutral-800">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 shadow-sm p-6 print:border-none print:shadow-none print:p-0 print:break-before-page print:mt-6">
+            <h3 className="text-base font-extrabold text-emerald-750 border-b pb-3 mb-4 flex items-center gap-1.5 print:text-[var(--text-main)] print:border-neutral-800">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 print:hidden"></span>
               DAFTAR ASET TERVERIFIKASI : DITEMUKAN ({report.summary.itemsFound} Item)
             </h3>
@@ -867,21 +867,21 @@ export default function StockOpnamePage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-neutral-200 border print:border-neutral-300">
-                  <thead className="bg-neutral-50 print:bg-neutral-100">
+                  <thead className="bg-[var(--bg-app)] transition-colors duration-400 print:bg-neutral-100">
                     <tr>
-                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-neutral-600 uppercase">Kode & NUP</th>
-                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-neutral-600 uppercase">Nama Aset</th>
-                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-neutral-600 uppercase">Merk / Spek</th>
-                      <th className="px-4 py-2.5 text-center text-[10px] font-bold text-neutral-600 uppercase">Waktu Scan</th>
+                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase">Kode & NUP</th>
+                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase">Nama Aset</th>
+                      <th className="px-4 py-2.5 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase">Merk / Spek</th>
+                      <th className="px-4 py-2.5 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase">Waktu Scan</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-neutral-200">
+                  <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-neutral-200">
                     {report.foundList.map((item) => (
-                      <tr key={item.id} className="hover:bg-neutral-50 print:bg-white text-xs">
-                        <td className="px-4 py-3 font-mono font-semibold text-neutral-500">{item.kode_barang} &bull; {String(item.no_urut_pendaft).padStart(3, '0')}</td>
+                      <tr key={item.id} className="hover:bg-[var(--bg-app)] transition-colors duration-400 print:bg-[var(--bg-panel)] transition-colors duration-400 text-xs">
+                        <td className="px-4 py-3 font-mono font-semibold text-[var(--text-muted)]">{item.kode_barang} &bull; {String(item.no_urut_pendaft).padStart(3, '0')}</td>
                         <td className="px-4 py-3 font-bold text-emerald-700">{item.nama_barang}</td>
-                        <td className="px-4 py-3 text-neutral-500">{item.merk_type}</td>
-                        <td className="px-4 py-3 text-center font-mono text-[10px] text-neutral-500">
+                        <td className="px-4 py-3 text-[var(--text-muted)]">{item.merk_type}</td>
+                        <td className="px-4 py-3 text-center font-mono text-[10px] text-[var(--text-muted)]">
                           {item.discan_pada ? new Date(item.discan_pada).toLocaleTimeString() : '-'}
                         </td>
                       </tr>
@@ -895,14 +895,14 @@ export default function StockOpnamePage() {
           {/* Official Signature Area for Print */}
           <div className="hidden print:grid grid-cols-2 mt-16 pt-4 text-center text-xs">
             <div>
-              <p className="text-neutral-400 mb-12">Petugas Pemeriksa / Auditor,</p>
-              <p className="font-bold underline text-neutral-900">{report.dilakukan_oleh}</p>
-              <p className="text-neutral-500 mt-0.5">PJ Ruangan BMN</p>
+              <p className="text-[var(--text-muted)] mb-12">Petugas Pemeriksa / Auditor,</p>
+              <p className="font-bold underline text-[var(--text-main)]">{report.dilakukan_oleh}</p>
+              <p className="text-[var(--text-muted)] mt-0.5">PJ Ruangan BMN</p>
             </div>
             <div>
-              <p className="text-neutral-400 mb-12">Mengetahui,<br />Kepala Unit Pengelola BMN FT,</p>
-              <p className="font-bold underline text-neutral-900">Dr. Slamet Santoso, M.T.</p>
-              <p className="text-neutral-500 mt-0.5">NIP. 19780512 200501 1 002</p>
+              <p className="text-[var(--text-muted)] mb-12">Mengetahui,<br />Kepala Unit Pengelola BMN FT,</p>
+              <p className="font-bold underline text-[var(--text-main)]">Dr. Slamet Santoso, M.T.</p>
+              <p className="text-[var(--text-muted)] mt-0.5">NIP. 19780512 200501 1 002</p>
             </div>
           </div>
 

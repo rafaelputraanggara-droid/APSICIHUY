@@ -56,7 +56,7 @@ export default function NotifikasiPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
-        <div className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 dark:from-indigo-950 dark:to-violet-950 p-8 rounded-3xl text-white shadow-xl">
+        <div className="relative overflow-hidden bg-[var(--bg-banner)] p-8 rounded-3xl text-white shadow-xl transition-colors duration-400">
           <div className="relative z-10 space-y-2">
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
               Pusat Notifikasi & Laporan
@@ -68,14 +68,14 @@ export default function NotifikasiPage() {
         </div>
 
         {/* Tabs Navigation */}
-        <div className="border-b border-neutral-200 dark:border-neutral-800">
+        <div className="border-b border-[var(--border-panel)]">
           <nav className="flex space-x-8 overflow-x-auto" aria-label="Tabs">
             <button
               onClick={() => setActiveTab("kerusakan")}
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
                 activeTab === "kerusakan"
                   ? "border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                  : "border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                  : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
               }`}
             >
               Laporan Kerusakan
@@ -85,7 +85,7 @@ export default function NotifikasiPage() {
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
                 activeTab === "hilang"
                   ? "border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                  : "border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                  : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
               }`}
             >
               Laporan Barang Hilang
@@ -95,7 +95,7 @@ export default function NotifikasiPage() {
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
                 activeTab === "pendaftaran"
                   ? "border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                  : "border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                  : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
               }`}
             >
               Laporan Pendaftaran Akun Baru
@@ -104,23 +104,23 @@ export default function NotifikasiPage() {
         </div>
 
         {/* Tab Content */}
-        <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-8 text-neutral-500">
+        <div className="bg-[var(--bg-panel)] border border-[var(--border-panel)] rounded-2xl p-8 text-[var(--text-muted)] transition-colors duration-400">
           {activeTab === "kerusakan" && (
             <div className="text-center">
-              <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-2">Daftar Laporan Kerusakan</h3>
+              <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400 mb-2">Daftar Laporan Kerusakan</h3>
               <p>Belum ada laporan kerusakan baru yang masuk.</p>
             </div>
           )}
           {activeTab === "hilang" && (
             <div className="text-center">
-              <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-2">Daftar Laporan Barang Hilang</h3>
+              <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400 mb-2">Daftar Laporan Barang Hilang</h3>
               <p>Belum ada laporan barang hilang yang tercatat.</p>
             </div>
           )}
           {activeTab === "pendaftaran" && (
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-neutral-900 dark:text-white">Pendaftaran Mahasiswa (Menunggu Verifikasi)</h3>
+                <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400">Pendaftaran Mahasiswa (Menunggu Verifikasi)</h3>
               </div>
               
               {isLoading ? (
@@ -130,10 +130,10 @@ export default function NotifikasiPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {pendingAccounts.map((acc) => (
-                    <div key={acc.id} className="border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 relative overflow-hidden bg-neutral-50 dark:bg-neutral-800/50">
+                    <div key={acc.id} className="border border-[var(--border-panel)] rounded-xl p-6 relative overflow-hidden bg-[var(--bg-app)] transition-colors duration-400">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h4 className="font-bold text-neutral-900 dark:text-white text-lg">{acc.username}</h4>
+                          <h4 className="font-bold text-[var(--text-main)] text-lg transition-colors duration-400">{acc.username}</h4>
                           <p className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">{acc.nim}</p>
                         </div>
                         <span className="px-3 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-bold rounded-full">
@@ -143,13 +143,13 @@ export default function NotifikasiPage() {
                       
                       <div className="space-y-2 mb-6">
                         <div>
-                          <p className="text-xs text-neutral-400 uppercase tracking-wider font-semibold">Email SSO</p>
-                          <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{acc.email_sso}</p>
+                          <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Email SSO</p>
+                          <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400">{acc.email_sso}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-neutral-400 uppercase tracking-wider font-semibold">Peran & Berkas</p>
+                          <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Peran & Berkas</p>
                           <div className="mt-2 flex items-center justify-between">
-                            <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200">
+                            <span className="text-sm font-bold text-[var(--text-main)] transition-colors duration-400">
                               {acc.peran_pengaju === "PJ_Ruangan" ? "PJ Ruangan" : "Mahasiswa"}
                             </span>
                             <div className="flex gap-2">
@@ -177,7 +177,7 @@ export default function NotifikasiPage() {
                                   </a>
                                 </>
                               ) : (
-                                <span className="text-xs text-neutral-400">Tidak ada berkas</span>
+                                <span className="text-xs text-[var(--text-muted)]">Tidak ada berkas</span>
                               )}
                             </div>
                           </div>
@@ -209,9 +209,9 @@ export default function NotifikasiPage() {
         {/* Modal Lihat PDF */}
         {pdfToView && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white dark:bg-neutral-900 rounded-3xl w-full max-w-4xl h-[85vh] shadow-2xl flex flex-col overflow-hidden relative">
-              <div className="flex justify-between items-center p-4 border-b border-neutral-200 dark:border-neutral-800">
-                <h3 className="font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl w-full max-w-4xl h-[85vh] shadow-2xl flex flex-col overflow-hidden relative">
+              <div className="flex justify-between items-center p-4 border-b border-[var(--border-panel)]">
+                <h3 className="font-bold text-[var(--text-main)] transition-colors duration-400 flex items-center gap-2">
                   <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
@@ -219,14 +219,14 @@ export default function NotifikasiPage() {
                 </h3>
                 <button 
                   onClick={() => setPdfToView(null)}
-                  className="p-2 bg-neutral-100 dark:bg-neutral-800 hover:bg-rose-100 dark:hover:bg-rose-900/30 text-neutral-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-full transition-colors"
+                  className="p-2 bg-neutral-100 dark:bg-neutral-800 hover:bg-rose-100 dark:hover:bg-rose-900/30 text-[var(--text-muted)] hover:text-rose-600 dark:hover:text-rose-400 rounded-full transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
-              <div className="flex-1 bg-neutral-100 dark:bg-neutral-950 p-2">
+              <div className="flex-1 bg-neutral-100 bg-[var(--bg-app)] p-2">
                 <object 
                   data={pdfToView} 
                   type="application/pdf" 

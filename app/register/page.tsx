@@ -94,7 +94,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-neutral-900 via-indigo-950 to-neutral-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--bg-banner)] transition-colors duration-400 p-4">
       <div className="w-full max-w-lg bg-white/10 dark:bg-black/35 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
         
         {/* Decorative background lights */}
@@ -103,7 +103,7 @@ export default function RegisterPage() {
 
         <div className="text-center mb-8 relative z-10">
           <h1 className="text-2xl font-black tracking-tight text-white">Buat Akun {role}</h1>
-          <p className="text-sm text-neutral-400 mt-2">
+          <p className="text-sm text-[var(--text-muted)] mt-2">
             Isi formulir di bawah ini dengan lengkap untuk mendaftar ke SIPRABU.
           </p>
         </div>
@@ -201,7 +201,7 @@ export default function RegisterPage() {
             </button>
 
             <div className="text-center mt-4">
-              <Link href="/login" className="text-xs text-neutral-400 hover:text-white underline">
+              <Link href="/login" className="text-xs text-[var(--text-muted)] hover:text-white underline">
                 Sudah punya akun? Kembali ke Login
               </Link>
             </div>

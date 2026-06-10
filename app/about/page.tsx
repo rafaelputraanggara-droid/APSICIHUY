@@ -4,15 +4,15 @@ export default function About() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="space-y-2">
-        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[var(--text-main)] transition-colors duration-400 sm:text-4xl">
           Tentang Kami
         </h1>
-        <p className="text-base text-neutral-500 dark:text-neutral-400">
+        <p className="text-base text-[var(--text-muted)] transition-colors duration-400">
           Halaman ini memberikan informasi singkat mengenai sistem APSI 2026.
         </p>
       </div>
 
-      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 shadow-sm transition-colors duration-300">
+      <div className="bg-[var(--bg-panel)] transition-colors duration-400 border border-[var(--border-panel)] rounded-2xl p-6 shadow-sm transition-colors duration-300">
         <p className="text-neutral-600 dark:text-neutral-300 leading-relaxed">
           Sistem ini dikembangkan menggunakan kerangka kerja Next.js terbaru dengan integrasi penuh Tailwind CSS v4.
           Semua komponen dirancang agar responsif, modern, dan modular untuk mempermudah pemeliharaan jangka panjang.

@@ -15,6 +15,20 @@ export default function DashboardLayout({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileMasterOpen, setIsMobileMasterOpen] = useState(false);
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [theme, setTheme] = useState("ocean");
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("app-theme") || "ocean";
+    setTheme(storedTheme);
+    document.documentElement.setAttribute('data-theme', storedTheme);
+  }, []);
+
+  const changeTheme = (newTheme: string) => {
+    setTheme(newTheme);
+    localStorage.setItem("app-theme", newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
 
   // Simulated logged-in user state
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -110,9 +124,9 @@ export default function DashboardLayout({
   const visibleMenuItems = menuItems.filter(item => item.roles.includes(activeRole));
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900 transition-colors duration-300">
+    <div className="min-h-screen bg-[var(--bg-app)] flex flex-col font-sans text-[var(--text-header)] transition-colors duration-400">
       {/* Top Navbar */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-30 h-16 flex items-center print:hidden">
+      <header className="bg-[var(--bg-header)] border-b border-[var(--border-layout)] sticky top-0 z-30 h-16 flex items-center print:hidden transition-colors duration-400">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-full">
             <div className="flex items-center">
@@ -131,7 +145,7 @@ export default function DashboardLayout({
                   S
                 </div>
                 <span className="text-lg font-black text-indigo-600 tracking-tight">
-                  SIPRABU <span className="text-gray-800 font-bold">FT UNS</span>
+                  SIPRABU <span className="text-[var(--text-header)] font-bold">FT UNS</span>
                 </span>
               </div>
             </div>
@@ -160,10 +174,10 @@ export default function DashboardLayout({
                   }`}>
                     {currentUser.role.charAt(0)}
                   </div>
-                  <span className="ml-2 hidden md:block text-xs font-semibold text-neutral-700">
+                  <span className="ml-2 hidden md:block text-xs font-semibold text-[var(--text-header)]">
                     {currentUser.name}
                   </span>
-                  <svg className="ml-1.5 h-4 w-4 text-neutral-450" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="ml-1.5 h-4 w-4 text-[var(--text-header)]-muted" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </button>
@@ -177,6 +191,13 @@ export default function DashboardLayout({
                     </div>
                     <a href="#" className="block px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-50" role="menuitem">Profil Anda</a>
                     <a href="#" className="block px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-50" role="menuitem">Pengaturan</a>
+                    <button 
+                      onClick={(e) => { e.preventDefault(); setIsThemeModalOpen(true); setIsProfileOpen(false); }}
+                      className="w-full text-left block px-4 py-2 text-xs font-semibold text-indigo-600 hover:bg-indigo-50" 
+                      role="menuitem"
+                    >
+                      ✨ Tema Kustom
+                    </button>
                     <button 
                       onClick={handleLogout}
                       className="w-full text-left block px-4 py-2 text-xs font-semibold text-red-650 hover:bg-neutral-50 border-t border-neutral-100 focus:outline-none cursor-pointer" 
@@ -327,7 +348,7 @@ export default function DashboardLayout({
         )}
 
         {/* Main Content Area */}
-        <main className="flex-1 relative overflow-y-auto focus:outline-none bg-gray-50/50 min-h-screen">
+        <main className="flex-1 relative overflow-y-auto focus:outline-none bg-[var(--bg-app)] min-h-screen transition-colors duration-400">
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {children}
@@ -335,6 +356,64 @@ export default function DashboardLayout({
           </div>
         </main>
       </div>
+
+      {/* Theme Selection Modal */}
+      {isThemeModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in print:hidden">
+          <div className="bg-white dark:bg-neutral-900 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden relative">
+            <div className="p-6 border-b border-neutral-100 dark:border-neutral-800 flex justify-between items-center">
+              <h3 className="text-lg font-black text-neutral-900 dark:text-white tracking-tight">Tema Kustom</h3>
+              <button onClick={() => setIsThemeModalOpen(false)} className="text-neutral-400 hover:text-neutral-600 transition-colors">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <p className="text-xs font-bold text-neutral-500 mb-4 uppercase tracking-wider">Pilih Warna Favorit Anda</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { id: "ocean", name: "Ocean Blue", color: "bg-blue-600" },
+                  { id: "breeze", name: "Soft Breeze", color: "bg-teal-400" },
+                  { id: "emerald", name: "Emerald Forest", color: "bg-emerald-600" },
+                  { id: "ruby", name: "Crimson Ruby", color: "bg-rose-700" },
+                  { id: "cream", name: "Warm Amber", color: "bg-amber-600" },
+                  { id: "dark", name: "Midnight Dark", color: "bg-slate-800 border border-slate-600" },
+                  { id: "light", name: "Clean Light", color: "bg-neutral-200 border border-neutral-300" },
+                ].map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => changeTheme(t.id)}
+                    className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all cursor-pointer ${
+                      theme === t.id 
+                        ? "border-indigo-600 bg-indigo-50/50 dark:bg-indigo-900/30 dark:border-indigo-500 shadow-sm" 
+                        : "border-neutral-100 hover:border-neutral-200 dark:border-neutral-800 dark:hover:border-neutral-700"
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded-full shadow-inner ${t.color}`}></div>
+                    <span className={`text-sm font-bold ${theme === t.id ? 'text-indigo-700 dark:text-indigo-400' : 'text-neutral-700 dark:text-neutral-300'}`}>
+                      {t.name}
+                    </span>
+                    {theme === t.id && (
+                      <svg className="w-4 h-4 ml-auto text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 flex justify-end">
+              <button 
+                onClick={() => setIsThemeModalOpen(false)}
+                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm w-full sm:w-auto"
+              >
+                Terapkan Tema
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

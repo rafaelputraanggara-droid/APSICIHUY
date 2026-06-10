@@ -116,7 +116,7 @@ export default function KategoriBarangPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12 relative">
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 dark:from-indigo-950 dark:to-violet-950 p-8 rounded-3xl text-white shadow-xl">
+      <div className="relative overflow-hidden bg-[var(--bg-banner)] transition-colors duration-400 p-8 rounded-3xl text-white shadow-xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -128,7 +128,7 @@ export default function KategoriBarangPage() {
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-5 py-2.5 bg-white text-indigo-600 hover:bg-neutral-50 rounded-xl font-bold text-sm transition-colors shadow-sm whitespace-nowrap self-start md:self-auto"
+            className="px-5 py-2.5 bg-[var(--bg-panel)] transition-colors duration-400 text-indigo-600 hover:bg-[var(--bg-app)] transition-colors duration-400 rounded-xl font-bold text-sm transition-colors shadow-sm whitespace-nowrap self-start md:self-auto"
           >
             + Tambah Kategori
           </button>
@@ -136,13 +136,13 @@ export default function KategoriBarangPage() {
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-[var(--bg-panel)] transition-colors duration-400 p-4 rounded-2xl border border-[var(--border-panel)] shadow-sm">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setSortOrder(prev => prev === "asc" ? "desc" : "asc")}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg text-sm font-semibold transition-colors border border-neutral-200 dark:border-neutral-700"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--bg-app)] transition-colors duration-400 hover:bg-[var(--bg-app)] transition-colors duration-400 text-[var(--text-main)] transition-colors duration-400 rounded-lg text-sm font-semibold transition-colors border border-neutral-200 dark:border-neutral-700"
           >
-            <svg className="w-4 h-4 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
             </svg>
             Urutkan: {sortOrder === "asc" ? "A ke Z" : "Z ke A"}
@@ -151,7 +151,7 @@ export default function KategoriBarangPage() {
 
         {selectedCategories.length > 0 && (
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
+            <span className="text-sm font-medium text-[var(--text-muted)] transition-colors duration-400">
               {selectedCategories.length} terpilih
             </span>
             <button
@@ -169,23 +169,23 @@ export default function KategoriBarangPage() {
       </div>
 
       {/* Table Content */}
-      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-[var(--bg-panel)] transition-colors duration-400 border border-[var(--border-panel)] rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
-            <thead className="bg-neutral-50 dark:bg-neutral-950/50">
+          <table className="min-w-full divide-y divide-[var(--border-panel)]">
+            <thead className="bg-[var(--bg-app)] transition-colors duration-400">
               <tr>
                 <th scope="col" className="px-6 py-4 w-12 text-center">
                   <input
                     type="checkbox"
                     checked={categories.length > 0 && selectedCategories.length === categories.length}
                     onChange={toggleSelectAll}
-                    className="w-4 h-4 text-indigo-600 bg-white border-neutral-300 rounded focus:ring-indigo-500 dark:bg-neutral-800 dark:border-neutral-700 cursor-pointer"
+                    className="w-4 h-4 text-indigo-600 bg-[var(--bg-panel)] transition-colors duration-400 border-neutral-300 rounded focus:ring-indigo-500 dark:bg-neutral-800 dark:border-neutral-700 cursor-pointer"
                   />
                 </th>
-                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                   Nama Kategori
                 </th>
-                <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                   Total Barang
                 </th>
                 <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-emerald-500 uppercase tracking-wider">
@@ -194,33 +194,33 @@ export default function KategoriBarangPage() {
                 <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-rose-500 uppercase tracking-wider">
                   Kondisi Rusak
                 </th>
-                <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                   Aksi
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-neutral-900 divide-y divide-neutral-200 dark:divide-neutral-800">
+            <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-[var(--border-panel)]">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-neutral-500 text-sm">
+                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">
                     Memuat data kategori...
                   </td>
                 </tr>
               ) : sortedCategories.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-neutral-500 text-sm">
+                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">
                     Belum ada data kategori.
                   </td>
                 </tr>
               ) : (
                 sortedCategories.map((cat, idx) => (
-                  <tr key={idx} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                  <tr key={idx} className="hover:bg-[var(--bg-app)] transition-colors duration-400 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <input
                         type="checkbox"
                         checked={selectedCategories.includes(cat.nama_kategori)}
                         onChange={() => toggleSelect(cat.nama_kategori)}
-                        className="w-4 h-4 text-indigo-600 bg-white border-neutral-300 rounded focus:ring-indigo-500 dark:bg-neutral-800 dark:border-neutral-700 cursor-pointer"
+                        className="w-4 h-4 text-indigo-600 bg-[var(--bg-panel)] transition-colors duration-400 border-neutral-300 rounded focus:ring-indigo-500 dark:bg-neutral-800 dark:border-neutral-700 cursor-pointer"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -229,12 +229,12 @@ export default function KategoriBarangPage() {
                           {cat.nama_kategori.charAt(0).toUpperCase()}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-bold text-neutral-900 dark:text-white">{cat.nama_kategori}</div>
+                          <div className="text-sm font-bold text-[var(--text-main)] transition-colors duration-400">{cat.nama_kategori}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <div className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                      <div className="text-sm font-semibold text-[var(--text-main)] transition-colors duration-400">
                         {cat.total_barang} item
                       </div>
                     </td>
@@ -252,7 +252,7 @@ export default function KategoriBarangPage() {
                       <button
                         onClick={() => handleDelete([cat.nama_kategori])}
                         disabled={deleting}
-                        className="p-2 text-neutral-400 hover:text-rose-600 transition-colors bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg border border-transparent hover:border-rose-100 dark:hover:border-rose-900/50"
+                        className="p-2 text-[var(--text-muted)] hover:text-rose-600 transition-colors bg-[var(--bg-panel)] transition-colors duration-400 hover:bg-[var(--bg-app)] transition-colors duration-400 rounded-lg border border-transparent hover:border-rose-100 dark:hover:border-rose-900/50"
                         title="Hapus Kategori"
                       >
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -271,32 +271,32 @@ export default function KategoriBarangPage() {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-neutral-900 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden relative">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden relative">
             <form onSubmit={handleAddSubmit}>
-              <div className="p-6 border-b border-neutral-100 dark:border-neutral-800">
-                <h3 className="text-lg font-black text-neutral-900 dark:text-white tracking-tight">Tambah Kategori Baru</h3>
+              <div className="p-6 border-b border-neutral-100 border-[var(--border-panel)]">
+                <h3 className="text-lg font-black text-[var(--text-main)] transition-colors duration-400 tracking-tight">Tambah Kategori Baru</h3>
               </div>
               
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">Nama Kategori</label>
+                  <label className="block text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">Nama Kategori</label>
                   <input
                     type="text"
                     value={newKategori}
                     onChange={(e) => setNewKategori(e.target.value)}
                     required
-                    className="w-full bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 px-4 py-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white"
+                    className="w-full bg-neutral-50 bg-[var(--bg-app)] border border-[var(--border-panel)] px-4 py-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-[var(--text-main)]"
                     placeholder="Contoh: Kursi Kerja"
                     autoFocus
                   />
                 </div>
               </div>
 
-              <div className="p-4 border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 flex justify-end gap-3">
+              <div className="p-4 border-t border-neutral-100 border-[var(--border-panel)] bg-neutral-50 bg-[var(--bg-app)] flex justify-end gap-3">
                 <button 
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-5 py-2.5 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-sm font-bold rounded-xl transition-colors"
+                  className="px-5 py-2.5 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-[var(--text-main)] transition-colors duration-400 text-sm font-bold rounded-xl transition-colors"
                 >
                   Batal
                 </button>

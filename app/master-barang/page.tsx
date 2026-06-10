@@ -265,7 +265,7 @@ export default function MasterBarang() {
   return (
     <div className="space-y-8 pb-12">
       {/* Title Header with Modern Layout */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-750 via-blue-600 to-indigo-600 text-white p-8 rounded-3xl shadow-lg">
+      <div className="relative overflow-hidden bg-[var(--bg-banner)] transition-colors duration-400 text-white p-8 rounded-3xl shadow-lg">
         <div className="relative z-10 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -279,7 +279,7 @@ export default function MasterBarang() {
       </div>
 
       {/* Form Section */}
-      <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm p-6">
+      <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 shadow-sm p-6">
         <h2 className="text-lg font-bold text-gray-900 border-b pb-3 mb-5">Registrasi Barang Baru</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -459,7 +459,7 @@ export default function MasterBarang() {
                 <select
                   value={kondisi}
                   onChange={(e) => setKondisi(e.target.value)}
-                  className="shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-xl px-3 py-2.5 border bg-white focus:outline-none"
+                  className="shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-xl px-3 py-2.5 border bg-[var(--bg-panel)] transition-colors duration-400 focus:outline-none"
                 >
                   <option value="Baik">Baik</option>
                   <option value="Rusak Ringan">Rusak Ringan</option>
@@ -482,7 +482,7 @@ export default function MasterBarang() {
       </div>
 
       {/* Data Table Section */}
-      <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm overflow-hidden">
+      <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-150/80 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">Daftar Barang BMN</h2>
           <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">
@@ -500,7 +500,7 @@ export default function MasterBarang() {
                 <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-gray-200">
               {barangs.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-gray-500 text-sm">
@@ -557,14 +557,14 @@ export default function MasterBarang() {
 
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             
-            <div className={`relative z-10 inline-block align-middle bg-white rounded-3xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle border border-gray-150 w-full transition-all duration-150 ${
+            <div className={`relative z-10 inline-block align-middle bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle border border-gray-150 w-full transition-all duration-150 ${
               zoom > 180 ? 'sm:max-w-2xl' : 
               zoom > 150 ? 'sm:max-w-xl' : 
               zoom > 125 ? 'sm:max-w-lg' : 
               zoom > 100 ? 'sm:max-w-md' : 
               'sm:max-w-sm'
             }`}>
-              <div className="bg-white px-6 pt-6 pb-4">
+              <div className="bg-[var(--bg-panel)] transition-colors duration-400 px-6 pt-6 pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="text-center sm:text-left w-full">
                     <div className="flex items-center justify-between border-b pb-3 mb-4">
@@ -594,7 +594,7 @@ export default function MasterBarang() {
                         {/* Area to be printed */}
                         <div 
                           id="qr-print-area" 
-                          className="bg-white p-6 text-center border border-gray-200 rounded-2xl flex flex-col items-center justify-center shadow-inner origin-center"
+                          className="bg-[var(--bg-panel)] transition-colors duration-400 p-6 text-center border border-gray-200 rounded-2xl flex flex-col items-center justify-center shadow-inner origin-center"
                           style={{
                             width: '280px',
                             height: '330px',
@@ -605,7 +605,7 @@ export default function MasterBarang() {
                           <div className="border-b border-gray-300 pb-2 mb-4 text-xs font-bold uppercase text-gray-700 tracking-wide w-full">
                             SIPRABU FT UNS
                           </div>
-                          <div className="bg-white p-2 border border-gray-100 rounded-xl shadow-sm mb-4 w-full flex items-center justify-center h-[170px] flex-shrink-0">
+                          <div className="bg-[var(--bg-panel)] transition-colors duration-400 p-2 border border-gray-100 rounded-xl shadow-sm mb-4 w-full flex items-center justify-center h-[170px] flex-shrink-0">
                             <QRCodeSVG 
                               value={`${origin}/lapor/${selectedBarang.kode_barang}/${selectedBarang.no_urut_pendaft}`} 
                               size={150} 
@@ -672,7 +672,7 @@ export default function MasterBarang() {
                   Unduh PNG
                 </button>
                 <button type="button" onClick={() => setShowQRModal(false)}
-                  className="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2.5 bg-white text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto cursor-pointer">
+                  className="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2.5 bg-[var(--bg-panel)] transition-colors duration-400 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto cursor-pointer">
                   Tutup
                 </button>
               </div>
