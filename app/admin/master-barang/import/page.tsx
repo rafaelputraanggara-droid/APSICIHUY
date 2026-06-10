@@ -242,7 +242,7 @@ export default function ImportBarang() {
 
   const isAdminBMN =
     currentUser &&
-    currentUser.role === 'Admin BMN' &&
+    currentUser.role === 'Admin Fakultas' &&
     currentUser.email.endsWith('@staff.uns.ac.id');
 
   if (loadingUser) {
@@ -263,7 +263,7 @@ export default function ImportBarang() {
         </div>
         <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Akses Ditolak</h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-450 leading-relaxed mb-6">
-          Halaman ini dibatasi hanya untuk <strong>Admin BMN</strong> dengan email resmi <strong>@staff.uns.ac.id</strong>. Silakan ubah simulasi role di sidebar untuk mengakses halaman ini.
+          Halaman ini dibatasi hanya untuk <strong>Admin Fakultas</strong> dengan email resmi <strong>@staff.uns.ac.id</strong>. Silakan ubah simulasi role di sidebar untuk mengakses halaman ini.
         </p>
       </div>
     );
@@ -276,7 +276,7 @@ export default function ImportBarang() {
         <div className="relative z-10 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Admin BMN Area
+            Admin Fakultas Area
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Import SAKTI CSV</h1>
           <p className="text-indigo-100 max-w-xl text-sm">

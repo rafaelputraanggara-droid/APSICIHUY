@@ -13,16 +13,24 @@ export async function POST(request: Request) {
       );
     }
 
-    const statusMap = action === 'approve' ? 'Disetujui' : 'Ditolak';
-    const query = `UPDATE pendaftaran_akun SET status_pendaftaran = ? WHERE id = ?`;
-    await pool.query(query, [statusMap, id]);
+    if (action === 'reject') {
+      await pool.query(`DELETE FROM pendaftaran_akun WHERE id = ?`, [id]);
+      return NextResponse.json({ success: true, message: 'Pendaftaran berhasil ditolak dan dihapus dari antrean.' });
+    } else {
+      const query = `UPDATE pendaftaran_akun SET status_pendaftaran = 'Disetujui' WHERE id = ?`;
+      await pool.query(query, [id]);
 
-    // Jika disetujui, kita bisa memindahkan data dari pendaftaran_akun ke tabel users.
-    // Karena kita saat ini memisahkan role Mahasiswa, kita asumsikan Mahasiswa bisa login pakai tabel pendaftaran_akun yg disetujui,
-    // Atau insert ke tabel users jika struktur memungkinkan.
-    // Untuk simulasi ini, status_pendaftaran 'Disetujui' sudah cukup untuk login-mahasiswa API.
+      const [rows] = await pool.query(`SELECT * FROM pendaftaran_akun WHERE id = ?`, [id]);
+      const pendaftaran = (rows as any[])[0];
 
-    return NextResponse.json({ success: true, message: `Pendaftaran berhasil di${action === 'approve' ? 'setujui' : 'tolak'}.` });
+      if (pendaftaran && pendaftaran.peran_pengaju === 'PJ_Ruangan') {
+        await pool.query(
+          `INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'PJ_Ruangan')`,
+          [pendaftaran.username, pendaftaran.email_sso, pendaftaran.password]
+        );
+      }
+      return NextResponse.json({ success: true, message: 'Pendaftaran berhasil disetujui.' });
+    }
   } catch (error) {
     console.error('API Verify Account Error:', error);
     return NextResponse.json(

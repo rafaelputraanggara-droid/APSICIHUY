@@ -11,6 +11,12 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS kategori_barang (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama_kategori VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS barangs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     kode_barang VARCHAR(100) NOT NULL,
@@ -19,6 +25,7 @@ CREATE TABLE IF NOT EXISTS barangs (
     merk_type VARCHAR(255) NOT NULL,
     th_perolehan YEAR NOT NULL,
     lokasi_ruangan VARCHAR(100) NOT NULL,
+    nama_kategori VARCHAR(255) NULL,
     kondisi ENUM('Baik', 'Rusak Ringan', 'Rusak Berat') DEFAULT 'Baik',
     status_bmn ENUM('Aktif', 'Dihapuskan') DEFAULT 'Aktif',
     kategori ENUM('Rendah', 'Tinggi') DEFAULT 'Tinggi',
@@ -40,21 +47,18 @@ CREATE TABLE IF NOT EXISTS laporan_kerusakans (
     FOREIGN KEY (kode_barang, no_urut_pendaft) REFERENCES barangs(kode_barang, no_urut_pendaft) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS mutasis (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    kode_barang VARCHAR(100) NOT NULL,
-    no_urut_pendaft INT NOT NULL,
-    ruangan_asal VARCHAR(100) NOT NULL,
-    ruangan_tujuan VARCHAR(100) NOT NULL,
-    alasan TEXT NOT NULL,
-    foto_bukti VARCHAR(255) NULL,
-    status_mutasi ENUM('Pending_Asal', 'Pending_Tujuan', 'Disetujui', 'Ditolak_Asal', 'Ditolak_Tujuan') DEFAULT 'Pending_Asal',
-    diajukan_oleh VARCHAR(255) NOT NULL,
-    disetujui_asal_oleh VARCHAR(255) NULL,
-    disetujui_tujuan_oleh VARCHAR(255) NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (kode_barang, no_urut_pendaft) REFERENCES barangs(kode_barang, no_urut_pendaft) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS mutasi_barang (
+    id_mutasi INT AUTO_INCREMENT PRIMARY KEY,
+    id_barang INT NOT NULL,
+    id_user_pengaju VARCHAR(255) NOT NULL,
+    ruangan_asal VARCHAR(100),
+    id_ruangan_tujuan VARCHAR(100) NOT NULL,
+    tanggal_mutasi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    alasan_mutasi LONGTEXT NOT NULL,
+    status_mutasi VARCHAR(30) DEFAULT 'Menunggu',
+    tanggal_validasi TIMESTAMP NULL,
+    catatan_validasi LONGTEXT NULL,
+    FOREIGN KEY (id_barang) REFERENCES barangs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS sla_logs (
@@ -99,7 +103,8 @@ CREATE TABLE IF NOT EXISTS pendaftaran_akun (
     password VARCHAR(255) NOT NULL,
     email_sso VARCHAR(255) UNIQUE NOT NULL,
     nim VARCHAR(50) UNIQUE NOT NULL,
-    foto_ktm LONGTEXT,
+    peran_pengaju ENUM('Mahasiswa', 'PJ_Ruangan') DEFAULT 'Mahasiswa',
+    dokumen_pdf LONGTEXT,
     status_pendaftaran ENUM('Menunggu', 'Disetujui', 'Ditolak') DEFAULT 'Menunggu',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

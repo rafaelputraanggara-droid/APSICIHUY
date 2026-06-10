@@ -15,8 +15,30 @@ export default function Sidebar() {
     role: "PJ_Ruangan",
   });
 
-  // Master Barang dropdown toggle state
   const [isMasterBarangOpen, setIsMasterBarangOpen] = useState(false);
+  const [pendingMutasiCount, setPendingMutasiCount] = useState(0);
+
+  useEffect(() => {
+    const fetchPendingMutasi = async () => {
+      if (currentUser.role === "Admin Fakultas") {
+        try {
+          const res = await fetch("/api/mutasi?role=Admin%20Fakultas");
+          const json = await res.json();
+          if (json.success) {
+            const count = json.data.filter((m: any) => m.status_mutasi === "Menunggu").length;
+            setPendingMutasiCount(count);
+          }
+        } catch (error) {}
+      } else {
+        setPendingMutasiCount(0);
+      }
+    };
+    fetchPendingMutasi();
+    
+    // Set up polling for real-time-ish updates
+    const interval = setInterval(fetchPendingMutasi, 10000);
+    return () => clearInterval(interval);
+  }, [currentUser.role]);
 
   // Load user from localStorage on mount
   useEffect(() => {
@@ -41,7 +63,7 @@ export default function Sidebar() {
 
   // Toggle simulation user
   const handleToggleUser = () => {
-    const isCurrentlyAdmin = currentUser.role === "Admin BMN";
+    const isCurrentlyAdmin = currentUser.role === "Admin Fakultas";
     const nextUser = isCurrentlyAdmin
       ? {
           name: "PJ Ruangan (Laboran)",
@@ -49,9 +71,9 @@ export default function Sidebar() {
           role: "PJ_Ruangan",
         }
       : {
-          name: "Admin BMN",
+          name: "Admin Fakultas",
           email: "admin@staff.uns.ac.id",
-          role: "Admin BMN",
+          role: "Admin Fakultas",
         };
 
     setCurrentUser(nextUser);
@@ -141,18 +163,25 @@ export default function Sidebar() {
                 <Link
                   key={idx}
                   href={item.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group cursor-pointer ${
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all group cursor-pointer ${
                     isActive
                       ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400"
                       : "text-neutral-600 hover:bg-neutral-55 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-900/60 dark:hover:text-white"
                   }`}
                 >
-                  <span className={`transition-colors duration-200 ${
-                    isActive ? "text-indigo-600 dark:text-indigo-400" : "text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
-                  }`}>
-                    {item.icon}
-                  </span>
-                  {item.name}
+                  <div className="flex items-center gap-3">
+                    <span className={`transition-colors duration-200 ${
+                      isActive ? "text-indigo-600 dark:text-indigo-400" : "text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
+                    }`}>
+                      {item.icon}
+                    </span>
+                    {item.name}
+                  </div>
+                  {item.name === "Mutasi Barang" && currentUser.role === "Admin Fakultas" && pendingMutasiCount > 0 && (
+                    <span className="bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+                      {pendingMutasiCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -165,11 +194,11 @@ export default function Sidebar() {
         <div className="flex flex-col gap-3.5">
           <div className="flex items-center gap-3">
             <div className={`h-9.5 w-9.5 rounded-full flex items-center justify-center font-bold text-sm border transition-colors duration-300 ${
-              currentUser.role === "Admin BMN"
+              currentUser.role === "Admin Fakultas"
                 ? "bg-indigo-100 border-indigo-200 text-indigo-700 dark:bg-indigo-950 dark:border-indigo-900 dark:text-indigo-400"
                 : "bg-neutral-100 border-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300"
             }`}>
-              {currentUser.role === "Admin BMN" ? "A" : "L"}
+              {currentUser.role === "Admin Fakultas" ? "A" : "L"}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-neutral-900 dark:text-white truncate">
@@ -188,7 +217,7 @@ export default function Sidebar() {
             <svg className="w-3.5 h-3.5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
             </svg>
-            Simulasi: {currentUser.role === "Admin BMN" ? "PJ Ruangan" : "Admin BMN"}
+            Simulasi: {currentUser.role === "Admin Fakultas" ? "PJ Ruangan" : "Admin Fakultas"}
           </button>
         </div>
       </div>

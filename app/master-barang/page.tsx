@@ -269,7 +269,7 @@ export default function MasterBarang() {
         <div className="relative z-10 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Admin BMN Role
+            Admin Fakultas Role
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Master Barang</h1>
           <p className="text-blue-100 max-w-2xl text-sm sm:text-base">

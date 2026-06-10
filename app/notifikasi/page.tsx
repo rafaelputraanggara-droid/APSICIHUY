@@ -8,6 +8,7 @@ export default function NotifikasiPage() {
   
   const [pendingAccounts, setPendingAccounts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [pdfToView, setPdfToView] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeTab === "pendaftaran") {
@@ -30,16 +31,20 @@ export default function NotifikasiPage() {
     }
   };
 
-  const handleVerify = async (id: number, username: string, email: string) => {
+  const handleVerify = async (id: number, username: string, email: string, action: "approve" | "reject") => {
     try {
       const res = await fetch("/api/verify-account", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, action: "approve" }),
+        body: JSON.stringify({ id, action }),
       });
       const data = await res.json();
       if (data.success) {
-        alert(`[SIMULASI EMAIL TERKIRIM KE ${email}]\n\nHalo ${username},\nAkun Anda telah DIVERIFIKASI. Anda sekarang bisa masuk ke SIPRABU.\n\nLink Login: http://localhost:3000/login`);
+        if (action === "approve") {
+          alert(`[SIMULASI EMAIL TERKIRIM KE ${email}]\n\nHalo ${username},\nAkun Anda telah DIVERIFIKASI. Anda sekarang bisa masuk ke SIPRABU.\n\nLink Login: http://localhost:3000/login`);
+        } else {
+          alert(`[SIMULASI EMAIL TERKIRIM KE ${email}]\n\nHalo ${username},\nMohon maaf, pendaftaran akun Anda DITOLAK.`);
+        }
         fetchPendingAccounts();
       } else {
         alert("Gagal memverifikasi akun.");
@@ -142,23 +147,55 @@ export default function NotifikasiPage() {
                           <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{acc.email_sso}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-neutral-400 uppercase tracking-wider font-semibold">Foto KTM</p>
-                          <div className="mt-2 w-32 h-20 bg-neutral-200 dark:bg-neutral-700 rounded-lg overflow-hidden flex items-center justify-center border border-neutral-300 dark:border-neutral-600">
-                            {acc.foto_ktm ? (
-                              <img src={acc.foto_ktm} alt="KTM" className="w-full h-full object-cover" />
-                            ) : (
-                              <span className="text-xs">Tidak ada</span>
-                            )}
+                          <p className="text-xs text-neutral-400 uppercase tracking-wider font-semibold">Peran & Berkas</p>
+                          <div className="mt-2 flex items-center justify-between">
+                            <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200">
+                              {acc.peran_pengaju === "PJ_Ruangan" ? "PJ Ruangan" : "Mahasiswa"}
+                            </span>
+                            <div className="flex gap-2">
+                              {acc.dokumen_pdf ? (
+                                <>
+                                  <button
+                                    onClick={() => setPdfToView(acc.dokumen_pdf)}
+                                    className="px-3 py-1.5 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-200 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5"
+                                  >
+                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    Lihat PDF
+                                  </button>
+                                  <a
+                                    href={acc.dokumen_pdf}
+                                    download
+                                    className="px-3 py-1.5 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-200 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5"
+                                  >
+                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    Unduh
+                                  </a>
+                                </>
+                              ) : (
+                                <span className="text-xs text-neutral-400">Tidak ada berkas</span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex gap-3">
+                      <div className="flex gap-3 mt-4">
                         <button 
-                          onClick={() => handleVerify(acc.id, acc.username, acc.email_sso)}
-                          className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm"
+                          onClick={() => handleVerify(acc.id, acc.username, acc.email_sso, "reject")}
+                          className="flex-1 py-2.5 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold rounded-xl text-sm transition-all shadow-sm"
                         >
-                          Verifikasi Selesai
+                          Tolak
+                        </button>
+                        <button 
+                          onClick={() => handleVerify(acc.id, acc.username, acc.email_sso, "approve")}
+                          className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm"
+                        >
+                          Setujui
                         </button>
                       </div>
                     </div>
@@ -168,6 +205,39 @@ export default function NotifikasiPage() {
             </div>
           )}
         </div>
+
+        {/* Modal Lihat PDF */}
+        {pdfToView && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white dark:bg-neutral-900 rounded-3xl w-full max-w-4xl h-[85vh] shadow-2xl flex flex-col overflow-hidden relative">
+              <div className="flex justify-between items-center p-4 border-b border-neutral-200 dark:border-neutral-800">
+                <h3 className="font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                  <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Berkas Identitas (PDF)
+                </h3>
+                <button 
+                  onClick={() => setPdfToView(null)}
+                  className="p-2 bg-neutral-100 dark:bg-neutral-800 hover:bg-rose-100 dark:hover:bg-rose-900/30 text-neutral-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-full transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex-1 bg-neutral-100 dark:bg-neutral-950 p-2">
+                <object 
+                  data={pdfToView} 
+                  type="application/pdf" 
+                  className="w-full h-full rounded-xl"
+                >
+                  <p className="text-center mt-10">Browser Anda tidak mendukung preview PDF. <a href={pdfToView} download className="text-indigo-600 underline">Unduh PDF disini</a>.</p>
+                </object>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
   );
 }

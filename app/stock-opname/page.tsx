@@ -303,6 +303,10 @@ export default function StockOpnamePage() {
       alert('Ruangan dan Nama PJ Auditor wajib diisi!');
       return;
     }
+    if (!rooms.includes(selectedRoom)) {
+      alert('Ruangan tidak valid. Silakan ketik dan pilih ruangan yang tersedia dari daftar dropdown.');
+      return;
+    }
 
     try {
       const res = await fetch('/api/stock-opname/start', {
@@ -435,17 +439,20 @@ export default function StockOpnamePage() {
               <form onSubmit={handleStartSession} className="space-y-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700">Pilih Lokasi Ruangan</label>
-                  <select
+                  <input
+                    type="text"
+                    list="stockOpnameRooms"
                     value={selectedRoom}
                     onChange={(e) => setSelectedRoom(e.target.value)}
+                    placeholder="Ketik untuk mencari ruangan..."
                     className="mt-2 block w-full bg-white border border-gray-300 rounded-xl px-3.5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  >
+                    required
+                  />
+                  <datalist id="stockOpnameRooms">
                     {rooms.map((room) => (
-                      <option key={room} value={room}>
-                        {room}
-                      </option>
+                      <option key={room} value={room} />
                     ))}
-                  </select>
+                  </datalist>
                 </div>
 
                 <div>

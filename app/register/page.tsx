@@ -1,17 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [role, setRole] = useState("Mahasiswa");
+
+  useEffect(() => {
+    const roleParam = searchParams.get("role");
+    if (roleParam === "PJ_Ruangan") {
+      setRole("PJ Ruangan");
+    } else {
+      setRole("Mahasiswa");
+    }
+  }, [searchParams]);
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     email_sso: "",
     nim: "",
   });
+  const [fileToUpload, setFileToUpload] = useState<File | null>(null);
   const [fileBase64, setFileBase64] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -25,15 +38,15 @@ export default function RegisterPage() {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        setErrorMsg("Ukuran file KTM maksimal 2MB agar database tidak berat.");
+        setErrorMsg("Ukuran file PDF maksimal 2MB.");
         return;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFileBase64(reader.result as string);
-        setErrorMsg("");
-      };
-      reader.readAsDataURL(file);
+      if (file.type !== "application/pdf") {
+        setErrorMsg("Harap unggah file dalam format PDF.");
+        return;
+      }
+      setFileToUpload(file);
+      setErrorMsg("");
     }
   };
 
@@ -43,17 +56,24 @@ export default function RegisterPage() {
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!fileBase64) {
-      setErrorMsg("Anda wajib mengunggah Foto Bukti KTM.");
+    if (!fileToUpload) {
+      setErrorMsg("Anda wajib mengunggah Berkas Identitas (PDF).");
       setIsSubmitting(false);
       return;
     }
 
     try {
+      const dataToSend = new FormData();
+      dataToSend.append("username", formData.username);
+      dataToSend.append("password", formData.password);
+      dataToSend.append("email_sso", formData.email_sso);
+      dataToSend.append("nim", formData.nim);
+      dataToSend.append("peran_pengaju", role === "PJ Ruangan" ? "PJ_Ruangan" : "Mahasiswa");
+      dataToSend.append("file_pdf", fileToUpload);
+
       const res = await fetch("/api/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, foto_ktm: fileBase64 }),
+        body: dataToSend,
       });
       const data = await res.json();
 
@@ -82,7 +102,7 @@ export default function RegisterPage() {
         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-violet-600/20 rounded-full blur-2xl pointer-events-none"></div>
 
         <div className="text-center mb-8 relative z-10">
-          <h1 className="text-2xl font-black tracking-tight text-white">Buat Akun Mahasiswa</h1>
+          <h1 className="text-2xl font-black tracking-tight text-white">Buat Akun {role}</h1>
           <p className="text-sm text-neutral-400 mt-2">
             Isi formulir di bawah ini dengan lengkap untuk mendaftar ke SIPRABU.
           </p>
@@ -146,7 +166,9 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">NIM</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">
+                {role === "PJ Ruangan" ? "NIP / NUP / ID Pegawai" : "NIM"}
+              </label>
               <input
                 type="text"
                 name="nim"
@@ -154,14 +176,16 @@ export default function RegisterPage() {
                 value={formData.nim}
                 onChange={handleChange}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                placeholder="I032xxxx"
+                placeholder={role === "PJ Ruangan" ? "Masukkan ID Pegawai Anda" : "I032xxxx"}
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">Foto Bukti KTM (Maks 2MB)</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">
+                Berkas Identitas {role === "PJ Ruangan" ? "Pegawai" : "KTM"} (PDF, Maks 2MB)
+              </label>
               <input
                 type="file"
-                accept="image/*"
+                accept="application/pdf"
                 required
                 onChange={handleFileChange}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500"

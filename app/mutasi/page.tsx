@@ -1,269 +1,304 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-
-interface Barang {
-  id: number;
-  kode_barang: string;
-  no_urut_pendaft: number;
-  nama_barang: string;
-  merk_type: string;
-  th_perolehan: number;
-  lokasi_ruangan: string;
-  kondisi: string;
-  kategori: 'Rendah' | 'Tinggi';
-}
-
-interface MutationRecord {
-  id: number;
-  kode_barang: string;
-  no_urut_pendaft: number;
-  nama_barang: string;
-  merk_type: string;
-  kategori: 'Rendah' | 'Tinggi';
-  ruangan_asal: string;
-  ruangan_tujuan: string;
-  alasan: string;
-  foto_bukti: string | null;
-  status_mutasi: 'Pending_Asal' | 'Pending_Tujuan' | 'Disetujui' | 'Ditolak_Asal' | 'Ditolak_Tujuan';
-  diajukan_oleh: string;
-  disetujui_asal_oleh: string | null;
-  disetujui_tujuan_oleh: string | null;
-  created_at: string;
-}
-
-const AVAILABLE_ROOMS = ['LAB-RPL', 'LAB-JAS', 'LAB-KOD', 'LAB-SISMED', 'LAB-JARKOM'];
+import React, { useState, useEffect } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function MutasiPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [barangs, setBarangs] = useState<Barang[]>([]);
-  const [mutations, setMutations] = useState<MutationRecord[]>([]);
-  
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [approvingId, setApprovingId] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("");
+  const [mutasiData, setMutasiData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [rooms, setRooms] = useState<string[]>([]);
 
-  // Form States
-  const [selectedBarangId, setSelectedBarangId] = useState<string>('');
-  const [destRoom, setDestRoom] = useState<string>('');
-  const [reason, setReason] = useState<string>('');
-  const [photoBase64, setPhotoBase64] = useState<string>('');
-  const [photoName, setPhotoName] = useState<string>('');
+  // Form State untuk Pengajuan Baru
+  const [part1, setPart1] = useState('');
+  const [part2, setPart2] = useState('');
+  const [part3, setPart3] = useState('');
+  const [part4, setPart4] = useState('');
+  const [part5, setPart5] = useState('');
+  const [nup, setNup] = useState('');
+  const [foundItem, setFoundItem] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [ruanganTujuan, setRuanganTujuan] = useState("");
+  const [alasanMutasi, setAlasanMutasi] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // UI States
-  const [activeTab, setActiveTab] = useState<'request' | 'queue' | 'history'>('request');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [showPhotoModal, setShowPhotoModal] = useState<string | null>(null);
-  
-  // QR Scan Simulation Modal
-  const [showScanModal, setShowScanModal] = useState<boolean>(false);
-  const [scanFilterQuery, setScanFilterQuery] = useState<string>('');
+  // State untuk Validasi Admin
+  const [validateModal, setValidateModal] = useState<any>(null);
+  const [catatanValidasi, setCatatanValidasi] = useState("");
 
-  const fetchInitialData = async () => {
-    setLoading(true);
-    try {
-      const barangsRes = await fetch('/api/barangs');
-      const barangsData = await barangsRes.json();
-      if (barangsData.success) {
-        setBarangs(barangsData.data);
-      }
-
-      const mutationsRes = await fetch('/api/mutasi');
-      const mutationsData = await mutationsRes.json();
-      if (mutationsData.success) {
-        setMutations(mutationsData.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // State untuk Scanner Modal
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [scanStream, setScanStream] = useState<MediaStream | null>(null);
 
   useEffect(() => {
-    // Load current simulated user
-    const checkUser = () => {
-      if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem('simulated_user');
-        if (saved) {
-          try {
-            setCurrentUser(JSON.parse(saved));
-          } catch (e) {}
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("simulated_user");
+      if (saved) {
+        const user = JSON.parse(saved);
+        setCurrentUser(user);
+        if (user.role === "Admin Fakultas") {
+          setActiveTab("antrean");
         } else {
-          setCurrentUser({
-            name: "PJ Ruangan (Laboran)",
-            email: "laboran@ft.uns.ac.id",
-            role: "PJ_Ruangan",
-          });
+          setActiveTab("ajukan");
         }
       }
-    };
-
-    checkUser();
-    fetchInitialData();
-
-    window.addEventListener('simulated_user_change', checkUser);
-    return () => window.removeEventListener('simulated_user_change', checkUser);
+    }
+    
+    // Fetch valid rooms for the dropdown
+    fetch("/api/ruangan")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setRooms(data.data.map((r: any) => r.room));
+        }
+      })
+      .catch(console.error);
   }, []);
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPhotoName(file.name);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoBase64(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  useEffect(() => {
+    if (currentUser && (activeTab === "antrean" || activeTab === "riwayat")) {
+      fetchMutasiData();
     }
-  };
+  }, [activeTab, currentUser]);
 
-  const handleCreateMutation = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const barang = barangs.find(b => b.id === parseInt(selectedBarangId));
-    if (!barang || !destRoom || !reason) {
-      alert('Mohon isi semua data formulir mutasi.');
-      return;
-    }
-
-    if (barang.kategori === 'Tinggi' && !photoBase64) {
-      alert('Foto bukti kondisi barang wajib diunggah untuk barang kategori BMN/Tinggi.');
-      return;
-    }
-
-    setSubmitting(true);
+  const fetchMutasiData = async () => {
+    setIsLoading(true);
     try {
-      const res = await fetch('/api/mutasi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          kode_barang: barang.kode_barang,
-          no_urut_pendaft: barang.no_urut_pendaft,
-          ruangan_tujuan: destRoom,
-          alasan: reason,
-          foto_bukti: barang.kategori === 'Tinggi' ? photoBase64 : null,
-          diajukan_oleh: currentUser ? `${currentUser.name} (${currentUser.email})` : 'System Simulated'
-        })
-      });
-
+      const res = await fetch(`/api/mutasi?role=${currentUser.role}&email=${encodeURIComponent(currentUser.email)}`);
       const data = await res.json();
       if (data.success) {
-        alert(
-          data.direct 
-            ? 'Mutasi berhasil! Karena barang kategori Rendah, lokasi barang telah diperbarui secara langsung.' 
-            : 'Permohonan mutasi berhasil diajukan! Menunggu persetujuan PJ Ruangan Asal.'
-        );
-        // Reset form states
-        setSelectedBarangId('');
-        setDestRoom('');
-        setReason('');
-        setPhotoBase64('');
-        setPhotoName('');
-        
-        await fetchInitialData();
-        setActiveTab(data.direct ? 'history' : 'queue');
-      } else {
-        alert('Gagal mengajukan mutasi: ' + data.error);
+        setMutasiData(data.data);
       }
-    } catch (err) {
-      console.error(err);
-      alert('Terjadi kesalahan sistem saat memproses pengajuan mutasi.');
+    } catch (error) {
+      console.error("Gagal mengambil data mutasi", error);
     } finally {
-      setSubmitting(false);
+      setIsLoading(false);
     }
   };
 
-  const handleApproveAction = async (id: number, action: 'approve' | 'reject') => {
-    if (!currentUser) return;
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setter: (val: string) => void,
+    maxLength: number,
+    nextId: string | null
+  ) => {
+    const val = e.target.value.replace(/\D/g, '');
+    if (val.length <= maxLength) {
+      setter(val);
+      if (val.length === maxLength && nextId) {
+        document.getElementById(nextId)?.focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    prevId: string | null
+  ) => {
+    if (e.key === 'Backspace' && e.currentTarget.value === '' && prevId) {
+      document.getElementById(prevId)?.focus();
+    }
+  };
+
+  const handleSearchBarang = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const kodeBarang = `${part1}.${part2}.${part3}.${part4}.${part5}_${nup}`;
+    if (!part1 || !part2 || !part3 || !part4 || !part5 || !nup) return alert("Lengkapi format Kode Barang BMN dan NUP terlebih dahulu.");
+
+    setIsSearching(true);
+    try {
+      const res = await fetch(`/api/barangs/lookup?kode=${encodeURIComponent(kodeBarang)}`);
+      const data = await res.json();
+      if (data.success) {
+        setFoundItem(data.data);
+      } else {
+        alert(data.error || "Barang tidak ditemukan.");
+        setFoundItem(null);
+      }
+    } catch (error) {
+      alert("Terjadi kesalahan sistem saat mencari barang.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSimulateScan = async () => {
+    setIsScannerOpen(true);
     
-    setApprovingId(id);
+    // Try to open the actual camera for realism
     try {
-      const res = await fetch('/api/mutasi/approve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      setScanStream(stream);
+      // Bind stream to video element in the modal (handled in the modal component)
+    } catch (e) {
+      console.warn("Camera access not available, proceeding with simulated view");
+    }
+
+    // Simulate scanning time
+    setTimeout(() => {
+      // Stop the camera stream
+      if (scanStream) {
+        scanStream.getTracks().forEach(track => track.stop());
+        setScanStream(null);
+      }
+      setIsScannerOpen(false);
+      
+      setPart1("3");
+      setPart2("10");
+      setPart3("01");
+      setPart4("02");
+      setPart5("001");
+      setNup("1");
+      const simulatedCode = "3.10.01.02.001_1";
+      setTimeout(() => {
+        // Auto trigger search
+        fetch(`/api/barangs/lookup?kode=${encodeURIComponent(simulatedCode)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) setFoundItem(data.data);
+            else alert("Barang simulasi tidak ditemukan di database. Pastikan barang ini sudah diinput di Master Barang.");
+          });
+      }, 300);
+    }, 2500); // 2.5 seconds to "scan"
+  };
+
+  const closeScanner = () => {
+    if (scanStream) {
+      scanStream.getTracks().forEach(track => track.stop());
+      setScanStream(null);
+    }
+    setIsScannerOpen(false);
+  };
+
+  const handleSubmitPengajuan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!foundItem) return alert("Cari dan pilih barang terlebih dahulu.");
+    if (!rooms.includes(ruanganTujuan)) {
+      return alert("Ruangan tujuan tidak valid. Silakan ketik dan pilih ruangan yang tersedia dari daftar dropdown.");
+    }
+    
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/mutasi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id,
-          action,
-          user_name: currentUser.name
+          id_barang: foundItem.id,
+          id_user_pengaju: currentUser.email,
+          id_ruangan_tujuan: ruanganTujuan,
+          alasan_mutasi: alasanMutasi
         })
       });
-
       const data = await res.json();
       if (data.success) {
-        alert(data.message);
-        await fetchInitialData();
+        alert("Pengajuan mutasi berhasil dikirim!");
+        setPart1("");
+        setPart2("");
+        setPart3("");
+        setPart4("");
+        setPart5("");
+        setNup("");
+        setFoundItem(null);
+        setRuanganTujuan("");
+        setAlasanMutasi("");
+        setActiveTab("riwayat");
       } else {
-        alert('Gagal memproses persetujuan: ' + data.error);
+        alert(data.error || "Gagal mengajukan mutasi.");
       }
-    } catch (err) {
-      console.error(err);
-      alert('Terjadi kesalahan sistem saat memproses persetujuan.');
+    } catch (error) {
+      alert("Terjadi kesalahan sistem.");
     } finally {
-      setApprovingId(null);
+      setIsSubmitting(false);
     }
   };
 
-  const selectedBarang = barangs.find(b => b.id === parseInt(selectedBarangId));
-  const otherRooms = selectedBarang 
-    ? AVAILABLE_ROOMS.filter(r => r !== selectedBarang.lokasi_ruangan)
-    : AVAILABLE_ROOMS;
+  const handleValidasi = async (status: string) => {
+    try {
+      const res = await fetch("/api/mutasi", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id_mutasi: validateModal.id_mutasi,
+          status_mutasi: status,
+          catatan_validasi: catatanValidasi
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`Mutasi berhasil ${status.toLowerCase()}!`);
+        setValidateModal(null);
+        setCatatanValidasi("");
+        fetchMutasiData();
+      } else {
+        alert(data.error || "Gagal memvalidasi.");
+      }
+    } catch (error) {
+      alert("Terjadi kesalahan sistem.");
+    }
+  };
 
-  const scannedBarangList = barangs.filter(b => {
-    if (!scanFilterQuery) return true;
-    return b.nama_barang.toLowerCase().includes(scanFilterQuery.toLowerCase()) ||
-           b.kode_barang.toLowerCase().includes(scanFilterQuery.toLowerCase());
-  });
+  if (!currentUser) return null;
+
+  const isAdmin = currentUser.role === "Admin Fakultas";
+
+  const antreanData = mutasiData.filter(m => m.status_mutasi === "Menunggu");
+  const riwayatData = mutasiData.filter(m => m.status_mutasi !== "Menunggu");
 
   return (
-    <div className="space-y-8 pb-12 max-w-6xl mx-auto">
-      {/* Visual Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-violet-700 via-indigo-650 to-blue-650 text-white p-8 rounded-3xl shadow-lg">
+    <div className="max-w-7xl mx-auto space-y-8 pb-12">
+      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-800 to-teal-900 p-8 rounded-3xl text-white shadow-xl">
         <div className="relative z-10 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Sistem Mutasi Aset
+            Mutasi BMN
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Mutasi & Pemindahan Barang</h1>
-          <p className="text-indigo-100 max-w-2xl text-sm">
-            Lakukan pemindahan barang antar ruangan. Barang kategori Rendah dipindah otomatis, sedangkan barang BMN/Tinggi melewati alur verifikasi multi-step.
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            Sistem Mutasi Barang
+          </h1>
+          <p className="text-emerald-100 max-w-2xl text-sm sm:text-base">
+            Kelola perpindahan barang antar ruangan. Semua pemindahan tercatat rapi dan membutuhkan persetujuan Admin Fakultas.
           </p>
         </div>
       </div>
 
-      {/* Tabs Switcher */}
-      <div className="border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center">
+      {/* Tabs */}
+      <div className="border-b border-neutral-200">
         <nav className="flex space-x-8 overflow-x-auto" aria-label="Tabs">
+          {!isAdmin && (
+            <button
+              onClick={() => setActiveTab("ajukan")}
+              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all ${
+                activeTab === "ajukan"
+                  ? "border-emerald-600 text-emerald-600"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700"
+              }`}
+            >
+              Ajukan Mutasi Baru
+            </button>
+          )}
+          {isAdmin && (
+            <button
+              onClick={() => setActiveTab("antrean")}
+              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all flex items-center gap-2 ${
+                activeTab === "antrean"
+                  ? "border-emerald-600 text-emerald-600"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700"
+              }`}
+            >
+              Antrean Persetujuan
+              {antreanData.length > 0 && (
+                <span className="bg-rose-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  {antreanData.length}
+                </span>
+              )}
+            </button>
+          )}
           <button
-            onClick={() => setActiveTab('request')}
-            className={`py-4 px-1 border-b-2 font-bold text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-              activeTab === 'request'
-                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300'
-            }`}
-          >
-            Ajukan Mutasi Baru
-          </button>
-          <button
-            onClick={() => setActiveTab('queue')}
-            className={`py-4 px-1 border-b-2 font-bold text-sm whitespace-nowrap cursor-pointer transition-all duration-200 flex items-center gap-2 ${
-              activeTab === 'queue'
-                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300'
-            }`}
-          >
-            Antrean Persetujuan
-            {mutations.filter(m => m.status_mutasi === 'Pending_Asal' || m.status_mutasi === 'Pending_Tujuan').length > 0 && (
-              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400 rounded-full text-xxs font-extrabold animate-pulse">
-                {mutations.filter(m => m.status_mutasi === 'Pending_Asal' || m.status_mutasi === 'Pending_Tujuan').length}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`py-4 px-1 border-b-2 font-bold text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-              activeTab === 'history'
-                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300'
+            onClick={() => setActiveTab("riwayat")}
+            className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all ${
+              activeTab === "riwayat"
+                ? "border-emerald-600 text-emerald-600"
+                : "border-transparent text-neutral-500 hover:text-neutral-700"
             }`}
           >
             Riwayat Mutasi
@@ -271,621 +306,460 @@ export default function MutasiPage() {
         </nav>
       </div>
 
-      {/* Main Tabs Contents */}
-      {loading ? (
-        <div className="p-16 text-center bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-3"></div>
-          <p className="text-sm text-neutral-500">Memuat data...</p>
-        </div>
-      ) : (
-        <div className="space-y-6">
-          
-          {/* TAB 1: SUBMIT NEW MUTATION */}
-          {activeTab === 'request' && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              
-              {/* Form Card */}
-              <div className="lg:col-span-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-6 rounded-3xl shadow-sm space-y-6">
-                <h3 className="text-lg font-bold text-neutral-900 dark:text-white border-b pb-3">Formulir Pengajuan Mutasi</h3>
-                
-                <form onSubmit={handleCreateMutation} className="space-y-5">
-                  <div className="flex flex-col sm:flex-row items-end gap-3">
-                    <div className="flex-1 w-full">
-                      <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                        Pilih Barang Milik Negara <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={selectedBarangId}
-                        onChange={(e) => setSelectedBarangId(e.target.value)}
+      {/* TAB CONTENT: AJUKAN BARU */}
+      {activeTab === "ajukan" && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm">
+            <h3 className="text-lg font-bold text-neutral-900 mb-4">1. Cari Barang</h3>
+            <form onSubmit={handleSearchBarang} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
+                  Kode Barang & NUP
+                </label>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center space-x-1.5 sm:space-x-2">
+                    <input
+                      id="mutasi_part1"
+                      type="text"
+                      value={part1}
+                      onChange={(e) => handleInputChange(e, setPart1, 1, 'mutasi_part2')}
+                      onKeyDown={(e) => handleKeyDown(e, null)}
+                      maxLength={1}
+                      inputMode="numeric"
+                      className="w-12 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      placeholder="X"
+                      required
+                    />
+                    <span className="text-neutral-400 font-bold select-none">.</span>
+                    <input
+                      id="mutasi_part2"
+                      type="text"
+                      value={part2}
+                      onChange={(e) => handleInputChange(e, setPart2, 2, 'mutasi_part3')}
+                      onKeyDown={(e) => handleKeyDown(e, 'mutasi_part1')}
+                      maxLength={2}
+                      inputMode="numeric"
+                      className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      placeholder="XX"
+                      required
+                    />
+                    <span className="text-neutral-400 font-bold select-none">.</span>
+                    <input
+                      id="mutasi_part3"
+                      type="text"
+                      value={part3}
+                      onChange={(e) => handleInputChange(e, setPart3, 2, 'mutasi_part4')}
+                      onKeyDown={(e) => handleKeyDown(e, 'mutasi_part2')}
+                      maxLength={2}
+                      inputMode="numeric"
+                      className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      placeholder="XX"
+                      required
+                    />
+                    <span className="text-neutral-400 font-bold select-none">.</span>
+                    <input
+                      id="mutasi_part4"
+                      type="text"
+                      value={part4}
+                      onChange={(e) => handleInputChange(e, setPart4, 2, 'mutasi_part5')}
+                      onKeyDown={(e) => handleKeyDown(e, 'mutasi_part3')}
+                      maxLength={2}
+                      inputMode="numeric"
+                      className="w-14 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      placeholder="XX"
+                      required
+                    />
+                    <span className="text-neutral-400 font-bold select-none">.</span>
+                    <input
+                      id="mutasi_part5"
+                      type="text"
+                      value={part5}
+                      onChange={(e) => handleInputChange(e, setPart5, 3, 'mutasi_nup')}
+                      onKeyDown={(e) => handleKeyDown(e, 'mutasi_part4')}
+                      maxLength={3}
+                      inputMode="numeric"
+                      className="w-16 text-center text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      placeholder="XXX"
+                      required
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="relative w-1/2">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-neutral-500 font-semibold text-sm">NUP:</span>
+                      </div>
+                      <input
+                        id="mutasi_nup"
+                        type="number"
+                        value={nup}
+                        onChange={(e) => setNup(e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, 'mutasi_part5')}
+                        min="1"
+                        className="w-full pl-12 pr-4 text-sm font-mono font-bold bg-neutral-50 border border-neutral-200 rounded-xl py-3 text-neutral-950 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        placeholder="NUP Barang"
                         required
-                        className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-250 dark:border-neutral-700 px-3 py-2.5 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-neutral-900 dark:text-white font-medium"
-                      >
-                        <option value="">-- Pilih Barang dari Daftar --</option>
-                        {barangs.map(b => (
-                          <option key={b.id} value={b.id}>
-                            {b.kode_barang} [NUP: {b.no_urut_pendaft}] - {b.nama_barang} ({b.lokasi_ruangan})
-                          </option>
-                        ))}
-                      </select>
+                      />
                     </div>
-                    
                     <button
                       type="button"
-                      onClick={() => setShowScanModal(true)}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 dark:hover:bg-indigo-950/70 border border-indigo-150 rounded-xl text-sm font-bold shadow-sm transition-all cursor-pointer h-10.5"
+                      onClick={handleSimulateScan}
+                      className="w-1/2 px-4 py-3 bg-white hover:bg-neutral-50 text-neutral-800 rounded-xl flex items-center justify-center gap-2 transition-colors border border-emerald-300 hover:border-emerald-500 shadow-sm"
+                      title="Buka Kamera untuk Scan QR"
                     >
-                      <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-4v-4m-2 4h-2m-2-4h-2m8 0h2m-2 2h2m-4-6h4M6 6h4v4H6V6zm10 0h4v4h-4V6zM6 16h4v4H6v-4z" />
                       </svg>
-                      Simulasi Scan QR
+                      <span className="font-bold text-sm">Scan QR Code</span>
                     </button>
                   </div>
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={isSearching}
+                className="w-full py-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-sm font-bold transition-colors"
+              >
+                {isSearching ? "Mencari..." : "Cari Barang"}
+              </button>
+            </form>
 
-                  {/* Selected Barang Info Box */}
-                  {selectedBarang && (
-                    <div className="p-4 bg-indigo-50/35 border border-indigo-150 rounded-2xl space-y-3 font-sans">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="text-xxs font-bold uppercase tracking-wider text-indigo-650 dark:text-indigo-400">Barang Terpilih</p>
-                          <h4 className="text-sm font-bold text-neutral-900 dark:text-white mt-0.5">{selectedBarang.nama_barang}</h4>
-                          <p className="text-xs text-neutral-500 mt-0.5">{selectedBarang.merk_type} ({selectedBarang.th_perolehan})</p>
-                        </div>
-                        <span className={`px-2.5 py-1 text-xxs font-extrabold rounded-md border ${
-                          selectedBarang.kategori === 'Tinggi' 
-                            ? 'bg-violet-50 text-violet-700 border-violet-200' 
-                            : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                        }`}>
-                          Kategori: {selectedBarang.kategori === 'Tinggi' ? 'BMN/Tinggi' : 'Rendah'}
-                        </span>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 text-xs pt-2 border-t border-indigo-150/50">
-                        <div>
-                          <span className="text-neutral-450">Ruangan Asal (Lokasi Saat Ini):</span>
-                          <p className="font-bold text-neutral-800 dark:text-neutral-200 mt-0.5">{selectedBarang.lokasi_ruangan}</p>
-                        </div>
-                        <div>
-                          <span className="text-neutral-450">Kondisi Barang:</span>
-                          <p className="font-bold text-neutral-800 dark:text-neutral-200 mt-0.5">{selectedBarang.kondisi}</p>
-                        </div>
-                      </div>
+            {foundItem && (
+              <div className="mt-6 p-4 border border-emerald-200 bg-emerald-50 rounded-2xl animate-fade-in">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 text-emerald-600">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-neutral-900">{foundItem.nama_barang}</h4>
+                    <p className="text-sm text-neutral-600 mt-1">{foundItem.merk_type}</p>
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-emerald-200 text-xs font-semibold text-emerald-700">
+                      Lokasi Saat Ini: {foundItem.lokasi_ruangan}
                     </div>
-                  )}
-
-                  {/* Ruangan Tujuan */}
-                  <div>
-                    <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                      Pilih Ruangan Tujuan <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      value={destRoom}
-                      onChange={(e) => setDestRoom(e.target.value)}
-                      required
-                      className="w-full bg-neutral-55 dark:bg-neutral-800 border border-neutral-250 dark:border-neutral-700 px-3 py-2.5 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-neutral-900 dark:text-white font-medium"
-                    >
-                      <option value="">-- Pilih Ruangan Tujuan --</option>
-                      {otherRooms.map(room => (
-                        <option key={room} value={room}>{room}</option>
-                      ))}
-                    </select>
                   </div>
+                </div>
+              </div>
+            )}
+          </div>
 
-                  {/* Alasan Mutasi */}
-                  <div>
-                    <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                      Alasan Pemindahan <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      value={reason}
-                      onChange={(e) => setReason(e.target.value)}
-                      required
-                      rows={3}
-                      placeholder="Contoh: Pemindahan unit untuk kebutuhan laboratorium baru, penyeimbangan utilitas, dll."
-                      className="w-full bg-neutral-55 dark:bg-neutral-800 border border-neutral-250 dark:border-neutral-700 px-3 py-2.5 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-neutral-900 dark:text-white placeholder-neutral-450 font-medium"
-                    />
-                  </div>
+          <div className={`bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm transition-opacity duration-300 ${!foundItem ? 'opacity-50 pointer-events-none' : ''}`}>
+            <h3 className="text-lg font-bold text-neutral-900 mb-4">2. Detail Mutasi</h3>
+            <form onSubmit={handleSubmitPengajuan} className="space-y-5">
+              <div>
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
+                  Ruangan Tujuan Mutasi <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  list="ruanganList"
+                  value={ruanganTujuan}
+                  onChange={(e) => setRuanganTujuan(e.target.value)}
+                  placeholder="Ketik untuk mencari ruangan... (Contoh: LAB-RPL-101)"
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+                  required
+                />
+                <datalist id="ruanganList">
+                  {rooms.map((room, idx) => (
+                    <option key={idx} value={room} />
+                  ))}
+                </datalist>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
+                  Alasan Mutasi <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  value={alasanMutasi}
+                  onChange={(e) => setAlasanMutasi(e.target.value)}
+                  rows={4}
+                  placeholder="Jelaskan alasan pemindahan barang secara detail..."
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none resize-none"
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors"
+              >
+                {isSubmitting ? "Mengirim Pengajuan..." : "Ajukan Mutasi Sekarang"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
-                  {/* Upload Foto (For Tinggi Category only) */}
-                  {selectedBarang && selectedBarang.kategori === 'Tinggi' && (
-                    <div className="space-y-2 animate-fade-in">
-                      <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
-                        Foto Bukti Kondisi Barang <span className="text-red-500">*</span>
-                      </label>
-                      <p className="text-xxs text-neutral-450">Foto kondisi fisik wajib dilampirkan untuk verifikasi awal PJ Ruangan Asal sebelum disetujui.</p>
-                      
-                      <div className="flex items-center gap-3">
-                        <label className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-neutral-50 dark:bg-neutral-900 dark:hover:bg-neutral-850 text-neutral-700 dark:text-neutral-300 border border-neutral-250 dark:border-neutral-700 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer">
-                          <svg className="w-4 h-4 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+      {/* TAB CONTENT: ANTREAN PERSETUJUAN */}
+      {activeTab === "antrean" && (
+        <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden animate-fade-in">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-neutral-200">
+              <thead className="bg-neutral-50">
+                <tr>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Data Barang
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Detail Mutasi
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Pengaju
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Aksi
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-neutral-200">
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-12 text-center text-neutral-500 text-sm">Memuat data...</td>
+                  </tr>
+                ) : antreanData.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-12 text-center text-neutral-500 text-sm">Tidak ada antrean mutasi yang menunggu persetujuan.</td>
+                  </tr>
+                ) : (
+                  antreanData.map((m) => (
+                    <tr key={m.id_mutasi} className="hover:bg-neutral-50">
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-bold text-neutral-900">{m.nama_barang}</p>
+                        <p className="text-xs text-neutral-500 font-mono mt-1">{m.kode_barang}_{m.no_urut_pendaft}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">{m.ruangan_asal}</span>
+                          <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
-                          Unggah Foto Bukti
-                          <input 
-                            type="file" 
-                            accept="image/*" 
-                            onChange={handlePhotoChange} 
-                            required={!photoBase64}
-                            className="hidden" 
-                          />
-                        </label>
+                          <span className="font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">{m.id_ruangan_tujuan}</span>
+                        </div>
+                        <p className="text-xs text-neutral-600 mt-2 italic">"{m.alasan_mutasi}"</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-neutral-900">{m.id_user_pengaju}</p>
+                        <p className="text-xs text-neutral-500">{new Date(m.tanggal_mutasi).toLocaleDateString('id-ID')}</p>
+                      </td>
+                      <td className="px-6 py-4 text-right">
                         <button
-                          type="button"
-                          id="btn-simulate-upload"
-                          onClick={() => {
-                            setPhotoName('simulated_photo.jpg');
-                            setPhotoBase64('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
-                          }}
-                          className="px-3.5 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 dark:hover:bg-indigo-950/70 border border-indigo-150 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+                          onClick={() => setValidateModal(m)}
+                          className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition-colors shadow-sm"
                         >
-                          Simulasi Upload
+                          Validasi
                         </button>
-                        {photoName ? (
-                          <span className="text-xs text-neutral-500 font-medium truncate max-w-[200px]">{photoName}</span>
-                        ) : (
-                          <span className="text-xs text-rose-500 font-bold animate-pulse">Belum ada foto terpilih</span>
-                        )}
-                      </div>
-
-                      {photoBase64 && (
-                        <div className="mt-3 relative w-36 h-36 border border-neutral-200 rounded-xl overflow-hidden shadow-inner">
-                          <img src={photoBase64} alt="Preview" className="w-full h-full object-cover" />
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Submit Button */}
-                  <div className="pt-4 border-t border-neutral-100 flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="inline-flex justify-center items-center gap-2 py-2.5 px-6 border border-transparent shadow-md text-sm font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 transition-all cursor-pointer"
-                    >
-                      {submitting ? 'Mengajukan...' : selectedBarang?.kategori === 'Rendah' ? 'Pindah Sekarang' : 'Ajukan Pindah'}
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              {/* Sidebar Info Flow */}
-              <div className="bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-6 rounded-3xl shadow-sm h-fit space-y-6">
-                <h3 className="text-lg font-bold text-neutral-900 dark:text-white">Alur Logika Mutasi</h3>
-                
-                <div className="space-y-4">
-                  <div className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-450 text-xs font-black flex items-center justify-center">1</span>
-                    <div className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
-                      <strong className="text-neutral-800 dark:text-neutral-200">Kategori 1: Barang Rendah</strong>
-                      <p className="mt-0.5">Pemindahan bersifat langsung dan tercatat instan di sistem tanpa menunggu approval dari siapapun. Lokasi barang berubah real-time.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-450 text-xs font-black flex items-center justify-center">2</span>
-                    <div className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
-                      <strong className="text-neutral-800 dark:text-neutral-200">Kategori 2: Barang BMN/Tinggi</strong>
-                      <p className="mt-0.5">Membutuhkan bukti foto kondisi fisik. Permohonan akan masuk ke antrean persetujuan PJ Ruangan Asal terlebih dahulu.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-450 text-xs font-black flex items-center justify-center">3</span>
-                    <div className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
-                      <strong className="text-neutral-800 dark:text-neutral-200">Penerimaan Barang</strong>
-                      <p className="mt-0.5">Setelah PJ Asal menyetujui, PJ Ruangan Tujuan harus memverifikasi fisik barang masuk sebelum menerima pengajuan secara resmi.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          )}
-
-          {/* TAB 2: APPROVAL QUEUE */}
-          {activeTab === 'queue' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between border-b pb-3 mb-4">
-                <h3 className="text-lg font-bold text-neutral-900 dark:text-white">Antrean Persetujuan Aktif</h3>
-                <span className="text-xs text-neutral-400 dark:text-neutral-500 font-semibold uppercase">Simulasi Role: {currentUser?.role}</span>
-              </div>
-              
-              {mutations.filter(m => m.status_mutasi === 'Pending_Asal' || m.status_mutasi === 'Pending_Tujuan').length === 0 ? (
-                <div className="p-12 text-center bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl text-neutral-400">
-                  Tidak ada pengajuan mutasi aktif yang menunggu persetujuan saat ini.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {mutations.filter(m => m.status_mutasi === 'Pending_Asal' || m.status_mutasi === 'Pending_Tujuan').map(m => {
-                    const isPendingAsal = m.status_mutasi === 'Pending_Asal';
-                    const isPendingTujuan = m.status_mutasi === 'Pending_Tujuan';
-                    
-                    // Simulated authorization: PJ Ruangan or Admin BMN can approve
-                    const canAct = currentUser && (currentUser.role === 'PJ_Ruangan' || currentUser.role === 'Admin BMN');
-
-                    return (
-                      <div key={m.id} className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-5 rounded-3xl shadow-sm space-y-4 flex flex-col justify-between">
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <span className="font-mono text-xxs font-bold text-indigo-650 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-md">
-                                {m.kode_barang}
-                              </span>
-                              <span className="font-mono text-xxs font-bold text-neutral-450 ml-2">NUP: {m.no_urut_pendaft}</span>
-                            </div>
-                            <span className={`px-2 py-0.5 rounded-full text-xxs font-extrabold flex items-center gap-1.5 ${
-                              isPendingAsal 
-                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400' 
-                                : 'bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-400'
-                            }`}>
-                              <span className={`h-1.5 w-1.5 rounded-full animate-ping ${isPendingAsal ? 'bg-amber-500' : 'bg-blue-500'}`}></span>
-                              {isPendingAsal ? 'Approval Asal' : 'Penerimaan Tujuan'}
-                            </span>
-                          </div>
-
-                          <div>
-                            <h4 className="text-sm font-bold text-neutral-900 dark:text-white">{m.nama_barang}</h4>
-                            <p className="text-xxs text-neutral-450">{m.merk_type}</p>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4 text-xs bg-neutral-50 dark:bg-neutral-850 p-3 rounded-2xl">
-                            <div>
-                              <span className="text-neutral-400 font-semibold block text-[10px] uppercase">Asal</span>
-                              <p className="font-bold text-neutral-800 dark:text-neutral-200 mt-0.5">{m.ruangan_asal}</p>
-                            </div>
-                            <div>
-                              <span className="text-neutral-400 font-semibold block text-[10px] uppercase">Tujuan</span>
-                              <p className="font-bold text-indigo-700 dark:text-indigo-400 mt-0.5">{m.ruangan_tujuan}</p>
-                            </div>
-                          </div>
-
-                          <div className="text-xs">
-                            <span className="text-neutral-400 font-semibold">Alasan Pemindahan:</span>
-                            <p className="text-neutral-700 dark:text-neutral-350 italic mt-0.5 font-medium">"{m.alasan}"</p>
-                          </div>
-
-                          <div className="text-[10px] text-neutral-450 space-y-0.5">
-                            <div>Diajukan oleh: <span className="font-bold text-neutral-600 dark:text-neutral-400">{m.diajukan_oleh}</span></div>
-                            {m.disetujui_asal_oleh && (
-                              <div>Disetujui Asal oleh: <span className="font-bold text-emerald-600">{m.disetujui_asal_oleh}</span></div>
-                            )}
-                          </div>
-
-                          {m.foto_bukti && (
-                            <div className="pt-1">
-                              <button
-                                onClick={() => setShowPhotoModal(m.foto_bukti)}
-                                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-                              >
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                Lihat Foto Kondisi
-                              </button>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Visual Linear Stepper (Workflow State Tracker) */}
-                        <div className="py-4 border-t border-b border-neutral-100 dark:border-neutral-800 my-2">
-                          <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-2">Tahap Verifikasi:</p>
-                          <div className="flex items-center w-full text-center">
-                            
-                            {/* Step 1: Diajukan */}
-                            <div className="flex-1 flex flex-col items-center">
-                              <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black shadow-sm">✓</div>
-                              <span className="text-[9px] font-bold text-neutral-700 dark:text-neutral-350 mt-1">Diajukan</span>
-                            </div>
-                            
-                            <div className="w-8 border-t-2 border-emerald-500"></div>
-
-                            {/* Step 2: Persetujuan Asal */}
-                            <div className="flex-1 flex flex-col items-center">
-                              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${
-                                isPendingAsal 
-                                  ? 'bg-amber-500 text-white animate-pulse' 
-                                  : 'bg-emerald-500 text-white shadow-sm'
-                              }`}>
-                                {isPendingAsal ? '•' : '✓'}
-                              </div>
-                              <span className="text-[9px] font-bold text-neutral-750 mt-1">Persetujuan Asal</span>
-                            </div>
-
-                            <div className={`w-8 border-t-2 ${isPendingAsal ? 'border-neutral-200' : 'border-emerald-500'}`}></div>
-
-                            {/* Step 3: Konfirmasi Tujuan */}
-                            <div className="flex-1 flex flex-col items-center">
-                              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${
-                                isPendingTujuan 
-                                  ? 'bg-blue-500 text-white animate-pulse' 
-                                  : 'bg-neutral-200 text-neutral-400'
-                              }`}>
-                                {isPendingTujuan ? '•' : ''}
-                              </div>
-                              <span className="text-[9px] font-semibold text-neutral-450 mt-1">Penerimaan Tujuan</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="pt-2">
-                          {canAct ? (
-                            <div className="flex gap-2">
-                              <button
-                                type="button"
-                                disabled={approvingId !== null}
-                                onClick={() => handleApproveAction(m.id, 'approve')}
-                                className="flex-1 inline-flex justify-center items-center py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow transition-all cursor-pointer disabled:opacity-50"
-                              >
-                                {approvingId === m.id ? 'Memproses...' : isPendingAsal ? 'Setujui Mutasi' : 'Terima Barang'}
-                              </button>
-                              <button
-                                type="button"
-                                disabled={approvingId !== null}
-                                onClick={() => handleApproveAction(m.id, 'reject')}
-                                className="px-4 py-2 border border-rose-200 hover:bg-rose-50 text-rose-600 font-bold rounded-xl text-xs transition-all cursor-pointer disabled:opacity-50"
-                              >
-                                Tolak
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="text-center p-2.5 bg-neutral-50 dark:bg-neutral-850 rounded-xl text-xxs font-bold text-neutral-450">
-                              🔒 Hubungkan role PJ Ruangan / Admin BMN untuk melakukan persetujuan.
-                            </div>
-                          )}
-                        </div>
-
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* TAB 3: MUTATION HISTORY */}
-          {activeTab === 'history' && (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-3 gap-4">
-                <h3 className="text-lg font-bold text-neutral-900 dark:text-white">Riwayat Mutasi & Pemindahan</h3>
-                
-                {/* Search query input */}
-                <div className="relative w-full sm:w-64">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Cari kode barang..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 pl-10 pr-3 py-2 rounded-xl text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none text-neutral-900 dark:text-white"
-                  />
-                </div>
-              </div>
-
-              {mutations.filter(m => m.status_mutasi !== 'Pending_Asal' && m.status_mutasi !== 'Pending_Tujuan').length === 0 ? (
-                <div className="p-12 text-center bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl text-neutral-400">
-                  Belum ada riwayat mutasi yang diselesaikan.
-                </div>
-              ) : (
-                <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl overflow-hidden shadow-sm">
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse text-left">
-                      <thead>
-                        <tr className="bg-neutral-50 dark:bg-neutral-800/40 text-neutral-400 dark:text-neutral-500 text-xs font-bold uppercase tracking-wider border-b border-neutral-150 dark:border-neutral-850">
-                          <th className="px-6 py-4">Kode Barang / NUP</th>
-                          <th className="px-6 py-4">Nama Barang</th>
-                          <th className="px-6 py-4">Asal &rarr; Tujuan</th>
-                          <th className="px-6 py-4">Kategori</th>
-                          <th className="px-6 py-4">Status</th>
-                          <th className="px-6 py-4">Pemeriksa Asal/Tujuan</th>
-                          <th className="px-6 py-4 text-center">Foto Bukti</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800 text-xs">
-                        {mutations
-                          .filter(m => m.status_mutasi !== 'Pending_Asal' && m.status_mutasi !== 'Pending_Tujuan')
-                          .filter(m => !searchQuery || m.kode_barang.includes(searchQuery))
-                          .map(m => (
-                            <tr key={m.id} className="hover:bg-neutral-55 hover:bg-neutral-50/50 dark:hover:bg-neutral-850/40 transition-colors">
-                              <td className="px-6 py-4">
-                                <span className="font-mono font-bold text-indigo-650 dark:text-indigo-400">{m.kode_barang}</span>
-                                <div className="text-[10px] text-neutral-400 font-semibold mt-0.5">NUP: {m.no_urut_pendaft}</div>
-                              </td>
-                              <td className="px-6 py-4">
-                                <span className="font-bold text-neutral-800 dark:text-neutral-200">{m.nama_barang}</span>
-                                <div className="text-[10px] text-neutral-400 truncate max-w-[150px]">{m.merk_type}</div>
-                              </td>
-                              <td className="px-6 py-4">
-                                <div className="flex items-center gap-1.5 font-bold">
-                                  <span className="text-neutral-500">{m.ruangan_asal}</span>
-                                  <span className="text-neutral-400">&rarr;</span>
-                                  <span className="text-indigo-750 dark:text-indigo-400">{m.ruangan_tujuan}</span>
-                                </div>
-                                <div className="text-[10px] text-neutral-400 italic truncate max-w-[150px] mt-0.5">"{m.alasan}"</div>
-                              </td>
-                              <td className="px-6 py-4">
-                                <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${
-                                  m.kategori === 'Tinggi' 
-                                    ? 'bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-400' 
-                                    : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'
-                                }`}>
-                                  {m.kategori === 'Tinggi' ? 'BMN/Tinggi' : 'Rendah'}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4">
-                                <span className={`px-2.5 py-1 inline-flex text-[10px] leading-5 font-extrabold rounded-full ${
-                                  m.status_mutasi === 'Disetujui' ? 'bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400 border border-green-200 dark:border-green-900/35' : 
-                                  'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 border border-rose-200 dark:border-rose-900/35'
-                                }`}>
-                                  {m.status_mutasi === 'Disetujui' ? 'Disetujui (Selesai)' : 'Ditolak'}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4 text-neutral-500 font-semibold space-y-0.5">
-                                <div>Asal: <span className="text-neutral-800 dark:text-neutral-350">{m.disetujui_asal_oleh || '-'}</span></div>
-                                <div>Tujuan: <span className="text-neutral-800 dark:text-neutral-350">{m.disetujui_tujuan_oleh || '-'}</span></div>
-                              </td>
-                              <td className="px-6 py-4 text-center">
-                                {m.foto_bukti ? (
-                                  <button
-                                    onClick={() => setShowPhotoModal(m.foto_bukti)}
-                                    className="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 rounded-lg text-[10px] font-extrabold shadow-sm transition-all cursor-pointer"
-                                  >
-                                    Lihat Foto
-                                  </button>
-                                ) : (
-                                  <span className="text-neutral-400 italic">-</span>
-                                )}
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
-      {/* QR Code Scan Simulation Modal */}
-      {showScanModal && (
-        <div className="fixed z-50 inset-0 overflow-y-auto animate-fade-in">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true" onClick={() => setShowScanModal(false)}>
-              <div className="absolute inset-0 bg-gray-900/60"></div>
-            </div>
-
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
-            <div className="relative z-10 inline-block align-middle bg-white dark:bg-neutral-900 rounded-3xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-gray-150 dark:border-neutral-800">
-              <div className="bg-white dark:bg-neutral-900 px-6 pt-6 pb-4">
-                <div className="flex items-center justify-between border-b pb-3 mb-4">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-indigo-600 animate-pulse"></span>
-                    Simulasi Kamera Scan QR
-                  </h3>
-                  <button 
-                    type="button" 
-                    onClick={() => setShowScanModal(false)}
-                    className="text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
-                  >
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {/* Camera view mockup box */}
-                  <div className="relative bg-black h-48 rounded-2xl flex flex-col items-center justify-center text-white overflow-hidden border border-neutral-800">
-                    {/* Corner overlay brackets */}
-                    <div className="absolute top-4 left-4 w-6 h-6 border-t-4 border-l-4 border-indigo-500"></div>
-                    <div className="absolute top-4 right-4 w-6 h-6 border-t-4 border-r-4 border-indigo-500"></div>
-                    <div className="absolute bottom-4 left-4 w-6 h-6 border-b-4 border-l-4 border-indigo-500"></div>
-                    <div className="absolute bottom-4 right-4 w-6 h-6 border-b-4 border-r-4 border-indigo-500"></div>
-                    
-                    <div className="absolute top-2 right-2 flex items-center gap-1 bg-red-650 px-2 py-0.5 bg-red-600 rounded text-[9px] font-black uppercase tracking-wider animate-pulse">
-                      REC
-                    </div>
-
-                    <svg className="w-12 h-12 text-indigo-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
-                    </svg>
-
-                    <p className="text-xxs text-neutral-450 mt-3 font-semibold">Arahkan kamera ke kode QR label barang...</p>
-                  </div>
-
-                  {/* Filter Search */}
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Cari barang untuk di-scan..."
-                      value={scanFilterQuery}
-                      onChange={(e) => setScanFilterQuery(e.target.value)}
-                      className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-250 dark:border-neutral-700 px-3 py-2 rounded-xl text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none text-neutral-900 dark:text-white"
-                    />
-                  </div>
-
-                  {/* Scanned List simulation */}
-                  <div className="max-h-48 overflow-y-auto space-y-2 border border-neutral-150 p-2 rounded-2xl bg-neutral-50/50">
-                    {scannedBarangList.length === 0 ? (
-                      <p className="text-xxs text-neutral-400 text-center py-4">Barang tidak ditemukan.</p>
-                    ) : (
-                      scannedBarangList.map(b => (
-                        <button
-                          key={b.id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedBarangId(String(b.id));
-                            setShowScanModal(false);
-                            setScanFilterQuery('');
-                            // Dynamic category feedback
-                            alert(`✓ QR Code Pindai Sukses!\nBarang: ${b.nama_barang}\nKategori: ${b.kategori === 'Tinggi' ? 'BMN/Tinggi (Membutuhkan Approval)' : 'Rendah (Pindah Langsung)'}`);
-                          }}
-                          className="w-full text-left p-2.5 bg-white hover:bg-indigo-50 border border-neutral-200 hover:border-indigo-300 rounded-xl text-xxs flex justify-between items-center transition-all cursor-pointer shadow-sm hover:scale-[1.01]"
-                        >
-                          <div className="min-w-0">
-                            <span className="font-mono text-indigo-700 font-bold block">{b.kode_barang}</span>
-                            <span className="font-bold text-neutral-850 truncate block mt-0.5">{b.nama_barang}</span>
-                          </div>
-                          <span className={`px-2 py-0.5 rounded text-[9px] font-black border ${
-                            b.kategori === 'Tinggi' 
-                              ? 'bg-violet-50 text-violet-700 border-violet-150' 
-                              : 'bg-emerald-50 text-emerald-700 border-emerald-150'
+      {/* TAB CONTENT: RIWAYAT MUTASI */}
+      {activeTab === "riwayat" && (
+        <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden animate-fade-in">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-neutral-200">
+              <thead className="bg-neutral-50">
+                <tr>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Data Barang
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Pergerakan
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Pengaju
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Status Validasi
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-neutral-200">
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={3} className="px-6 py-12 text-center text-neutral-500 text-sm">Memuat data...</td>
+                  </tr>
+                ) : riwayatData.length === 0 ? (
+                  <tr>
+                    <td colSpan={3} className="px-6 py-12 text-center text-neutral-500 text-sm">Belum ada riwayat mutasi.</td>
+                  </tr>
+                ) : (
+                  riwayatData.map((m) => (
+                    <tr key={m.id_mutasi} className="hover:bg-neutral-50">
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-bold text-neutral-900">{m.nama_barang}</p>
+                        <p className="text-xs text-neutral-500 font-mono mt-1">{m.kode_barang}_{m.no_urut_pendaft}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="font-semibold text-neutral-600">{m.ruangan_asal}</span>
+                          <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                          <span className="font-semibold text-neutral-900">{m.id_ruangan_tujuan}</span>
+                        </div>
+                        <p className="text-xs text-neutral-500 mt-1">Diajukan: {new Date(m.tanggal_mutasi).toLocaleDateString('id-ID')}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-neutral-900">{m.id_user_pengaju}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col items-start gap-1">
+                          <span className={`px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${
+                            m.status_mutasi === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                           }`}>
-                            {b.kategori === 'Tinggi' ? 'Tinggi' : 'Rendah'}
+                            {m.status_mutasi}
                           </span>
-                        </button>
-                      ))
-                    )}
-                  </div>
+                          {m.catatan_validasi && (
+                            <p className="text-xs text-neutral-600 italic mt-1 max-w-[200px] truncate">
+                              "{m.catatan_validasi}"
+                            </p>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Validasi Admin */}
+      {validateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden relative">
+            <div className="p-6 border-b border-neutral-100 bg-neutral-50">
+              <h3 className="text-lg font-black text-neutral-900 tracking-tight">Validasi Mutasi Barang</h3>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-200">
+                <p className="text-sm font-bold text-neutral-900">{validateModal.nama_barang}</p>
+                <div className="mt-2 flex items-center gap-2 text-sm text-neutral-700">
+                  Dari: <strong>{validateModal.ruangan_asal}</strong>
+                  <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                  Ke: <strong>{validateModal.id_ruangan_tujuan}</strong>
                 </div>
               </div>
-              <div className="bg-gray-50 px-6 py-4 flex justify-end rounded-b-3xl border-t border-gray-100">
-                <button 
-                  type="button" 
-                  onClick={() => { setShowScanModal(false); setScanFilterQuery(''); }}
-                  className="px-4 py-2 bg-white border border-gray-300 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none cursor-pointer"
-                >
-                  Tutup
-                </button>
+
+              <div>
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
+                  Catatan Tambahan (Opsional)
+                </label>
+                <textarea
+                  value={catatanValidasi}
+                  onChange={(e) => setCatatanValidasi(e.target.value)}
+                  rows={3}
+                  placeholder="Tambahkan pesan, alasan penolakan, atau catatan persetujuan..."
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
+                ></textarea>
               </div>
+            </div>
+
+            <div className="p-6 border-t border-neutral-100 flex flex-col sm:flex-row gap-3 justify-end bg-neutral-50">
+              <button 
+                onClick={() => setValidateModal(null)}
+                className="px-6 py-2.5 bg-white border border-neutral-200 hover:bg-neutral-50 text-neutral-700 text-sm font-bold rounded-xl transition-colors"
+              >
+                Batal
+              </button>
+              <button 
+                onClick={() => handleValidasi('Ditolak')}
+                className="px-6 py-2.5 bg-rose-100 hover:bg-rose-200 text-rose-700 text-sm font-bold rounded-xl transition-colors"
+              >
+                Tolak Mutasi
+              </button>
+              <button 
+                onClick={() => handleValidasi('Disetujui')}
+                className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+              >
+                Setujui Mutasi
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Image viewer Modal */}
-      {showPhotoModal && (
-        <div className="fixed z-55 inset-0 overflow-y-auto animate-fade-in flex items-center justify-center">
-          <div className="fixed inset-0 transition-opacity" onClick={() => setShowPhotoModal(null)}>
-            <div className="absolute inset-0 bg-gray-950/80"></div>
-          </div>
-          
-          <div className="relative z-10 bg-white p-4 rounded-3xl max-w-lg mx-4 border border-neutral-100 shadow-2xl flex flex-col items-center">
-            <button
-              onClick={() => setShowPhotoModal(null)}
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-750 bg-gray-50 p-2 rounded-full shadow-sm hover:bg-gray-100 cursor-pointer"
-            >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+      {/* Modal Scanner QR Code */}
+      {isScannerOpen && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-black/95 animate-fade-in backdrop-blur-md">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 sm:p-6 text-white border-b border-white/10 relative z-10">
+            <h3 className="font-bold text-lg flex items-center gap-2">
+              <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-4v-4m-2 4h-2m-2-4h-2m8 0h2m-2 2h2m-4-6h4M6 6h4v4H6V6zm10 0h4v4h-4V6zM6 16h4v4H6v-4z" />
+              </svg>
+              Scan QR Code BMN
+            </h3>
+            <button onClick={closeScanner} className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="max-h-[70vh] overflow-hidden rounded-2xl shadow-inner mt-4 border border-neutral-100">
-              <img src={showPhotoModal} alt="Kondisi Fisik" className="object-contain max-w-full max-h-[70vh]" />
-            </div>
-            <p className="text-xs text-neutral-450 mt-3 font-semibold">Bukti Foto Kondisi Fisik Mutasi Barang</p>
           </div>
+
+          {/* Kamera Area */}
+          <div className="flex-1 relative flex items-center justify-center overflow-hidden">
+            {/* Animasi Kamera */}
+            <div className="relative w-72 h-72 sm:w-96 sm:h-96 z-10">
+              {/* Corner brackets */}
+              <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-emerald-500 rounded-tl-xl"></div>
+              <div className="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-emerald-500 rounded-tr-xl"></div>
+              <div className="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-emerald-500 rounded-bl-xl"></div>
+              <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-emerald-500 rounded-br-xl"></div>
+              
+              {/* Scanning laser animation */}
+              <div className="absolute inset-x-0 top-0 h-1 bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,1)] animate-[scan_2s_ease-in-out_infinite] z-20"></div>
+
+              {/* Fake Video Stream (If real camera isn't available, we show a mock view) */}
+              {scanStream ? (
+                <video
+                  autoPlay
+                  playsInline
+                  muted
+                  className="w-full h-full object-cover rounded-xl opacity-80"
+                  ref={(video) => {
+                    if (video && !video.srcObject) video.srcObject = scanStream;
+                  }}
+                ></video>
+              ) : (
+                <div className="w-full h-full bg-neutral-900 rounded-xl flex flex-col items-center justify-center border border-white/5 opacity-80">
+                  <div className="w-16 h-16 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mb-4"></div>
+                  <p className="text-white/50 text-sm font-semibold tracking-wide">Membuka Kamera...</p>
+                </div>
+              )}
+            </div>
+
+            {/* Dark overlay around the scan area */}
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+
+          <div className="p-8 text-center bg-gradient-to-t from-black to-transparent relative z-10">
+            <p className="text-white/80 font-medium">
+              Arahkan kamera ke QR Code yang tertempel pada Barang Milik Negara (BMN).
+            </p>
+          </div>
+
+          {/* Add custom keyframes for the scanner line */}
+          <style dangerouslySetInnerHTML={{__html: `
+            @keyframes scan {
+              0% { top: 0%; opacity: 0; }
+              10% { opacity: 1; }
+              90% { opacity: 1; }
+              100% { top: 100%; opacity: 0; }
+            }
+          `}} />
         </div>
       )}
-
     </div>
   );
 }

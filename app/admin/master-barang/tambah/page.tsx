@@ -21,6 +21,8 @@ export default function TambahBarang() {
   const [thPerolehan, setThPerolehan] = useState(new Date().getFullYear().toString());
   const [kondisi, setKondisi] = useState('Baik');
   const [lokasiRuangan, setLokasiRuangan] = useState('');
+  const [kategori, setKategori] = useState('');
+  const [kategoriList, setKategoriList] = useState<string[]>([]);
 
   // Simulated User Auth Guard
   useEffect(() => {
@@ -44,6 +46,18 @@ export default function TambahBarang() {
 
     checkUser();
     window.addEventListener('simulated_user_change', checkUser);
+
+    const fetchKategori = async () => {
+      try {
+        const res = await fetch('/api/kategori');
+        const json = await res.json();
+        if (json.success) {
+          setKategoriList(json.data.map((item: any) => item.nama_kategori));
+        }
+      } catch (err) {}
+    };
+    fetchKategori();
+
     return () => window.removeEventListener('simulated_user_change', checkUser);
   }, []);
 
@@ -85,6 +99,41 @@ export default function TambahBarang() {
       return;
     }
 
+    if (!kategori.trim()) {
+      alert('Kategori wajib diisi!');
+      return;
+    }
+
+    const kategoriLower = kategori.trim().toLowerCase();
+    const existingKategori = kategoriList.find(k => k.toLowerCase() === kategoriLower);
+    let finalKategori = existingKategori || kategori.trim();
+
+    if (!existingKategori) {
+      const confirmAdd = window.confirm(`Kategori "${finalKategori}" belum ditemukan di sistem. Apakah Anda ingin membuat kategori baru ini?`);
+      if (!confirmAdd) return;
+
+      setSaving(true);
+      try {
+        const resCat = await fetch('/api/kategori', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nama_kategori: finalKategori }),
+        });
+        const catData = await resCat.json();
+        if (!catData.success) {
+          alert('Gagal menambahkan kategori baru: ' + catData.error);
+          setSaving(false);
+          return;
+        }
+        setKategoriList([...kategoriList, finalKategori]);
+      } catch (err) {
+        alert('Terjadi kesalahan saat menambahkan kategori.');
+        setSaving(false);
+        return;
+      }
+      setSaving(false);
+    }
+
     setSaving(true);
     try {
       const res = await fetch('/api/barangs', {
@@ -98,6 +147,7 @@ export default function TambahBarang() {
           th_perolehan: parseInt(thPerolehan),
           kondisi,
           lokasi_ruangan: lokasiRuangan,
+          nama_kategori: finalKategori,
         }),
       });
 
@@ -114,6 +164,7 @@ export default function TambahBarang() {
         setNamaBarang('');
         setMerkType('');
         setLokasiRuangan('');
+        setKategori('');
         setKondisi('Baik');
         setThPerolehan(new Date().getFullYear().toString());
       } else {
@@ -129,7 +180,7 @@ export default function TambahBarang() {
 
   const isAdminBMN =
     currentUser &&
-    currentUser.role === 'Admin BMN' &&
+    currentUser.role === 'Admin Fakultas' &&
     currentUser.email.endsWith('@staff.uns.ac.id');
 
   if (loadingUser) {
@@ -150,7 +201,7 @@ export default function TambahBarang() {
         </div>
         <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Akses Ditolak</h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-450 leading-relaxed mb-6">
-          Halaman ini dibatasi hanya untuk <strong>Admin BMN</strong> dengan email resmi <strong>@staff.uns.ac.id</strong>. Silakan ubah simulasi role di sidebar untuk mengakses halaman ini.
+          Halaman ini dibatasi hanya untuk <strong>Admin Fakultas</strong> dengan email resmi <strong>@staff.uns.ac.id</strong>. Silakan ubah simulasi role di sidebar untuk mengakses halaman ini.
         </p>
       </div>
     );
@@ -163,7 +214,7 @@ export default function TambahBarang() {
         <div className="relative z-10 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Admin BMN Area
+            Admin Fakultas Area
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Tambah Data Barang</h1>
           <p className="text-indigo-100 max-w-xl text-sm">
@@ -359,6 +410,29 @@ export default function TambahBarang() {
                   <option value="Rusak Ringan">Rusak Ringan</option>
                   <option value="Rusak Berat">Rusak Berat</option>
                 </select>
+              </div>
+            </div>
+
+            {/* Kategori */}
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                Kategori Barang <span className="text-rose-500">*</span>
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  list="kategori-list"
+                  value={kategori}
+                  onChange={(e) => setKategori(e.target.value)}
+                  required
+                  className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-4 py-3 rounded-xl text-sm text-neutral-950 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  placeholder="Ketik/Pilih Kategori"
+                />
+                <datalist id="kategori-list">
+                  {kategoriList.map((cat, idx) => (
+                    <option key={idx} value={cat} />
+                  ))}
+                </datalist>
               </div>
             </div>
 

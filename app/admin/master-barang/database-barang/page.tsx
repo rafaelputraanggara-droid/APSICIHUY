@@ -61,12 +61,42 @@ export default function DatabaseBarangPage() {
     }
   };
 
+  const handleDeleteRoom = async (roomName: string, itemCount: number) => {
+    let confirmMsg = `Apakah Anda yakin untuk menghapus ruangan "${roomName}"?`;
+    if (itemCount > 0) {
+      confirmMsg = `PERINGATAN: Masih ada ${itemCount} barang di ruangan "${roomName}".\n\nJika Anda menghapus ruangan ini, barang-barang tersebut akan kehilangan data lokasinya. Apakah Anda tetap yakin ingin menghapusnya?`;
+    }
+
+    if (!window.confirm(confirmMsg)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/ruangan?room=${encodeURIComponent(roomName)}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (json.success) {
+        fetchRooms();
+      } else {
+        alert(json.error || "Gagal menghapus ruangan");
+      }
+    } catch (error) {
+      console.error("Failed to delete room:", error);
+      alert("Terjadi kesalahan saat menghapus ruangan.");
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Daftar Database Barang</h1>
-          <p className="text-sm text-neutral-500 mt-1">Daftar ruangan dan inventaris barang di dalamnya.</p>
+      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 dark:from-indigo-950 dark:to-violet-950 p-8 rounded-3xl text-white shadow-xl">
+        <div className="relative z-10 space-y-2">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            Daftar Database Barang
+          </h1>
+          <p className="text-indigo-100 max-w-2xl text-sm sm:text-base">
+            Daftar ruangan dan inventaris barang di dalamnya.
+          </p>
         </div>
       </div>
 
@@ -77,70 +107,109 @@ export default function DatabaseBarangPage() {
           <p className="text-neutral-500 dark:text-neutral-400">Belum ada data ruangan.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rooms.map((room, idx) => (
-            <div key={idx} className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-5 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl text-indigo-600 dark:text-indigo-400">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
-                <button
-                  onClick={() => {
-                    setEditingRoom(room.room);
-                    setNewRoomName(room.room);
-                  }}
-                  className="text-neutral-400 hover:text-indigo-600 transition-colors"
-                  title="Edit Nama Ruangan"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                  </svg>
-                </button>
-              </div>
-
-              {editingRoom === room.room ? (
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg text-sm bg-white dark:bg-neutral-950 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    value={newRoomName}
-                    onChange={(e) => setNewRoomName(e.target.value)}
-                    autoFocus
-                  />
-                  <div className="flex gap-2 mt-2">
-                    <button
-                      onClick={() => handleEditSubmit(room.room)}
-                      className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-medium hover:bg-indigo-700 transition-colors"
-                    >
-                      Simpan
-                    </button>
-                    <button
-                      onClick={() => setEditingRoom(null)}
-                      className="px-3 py-1.5 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-lg text-xs font-medium hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
-                    >
-                      Batal
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="mb-4">
-                  <h3 className="text-lg font-bold text-neutral-900 dark:text-white truncate" title={room.room}>
-                    {room.room}
-                  </h3>
-                  <p className="text-sm text-neutral-500 mt-1">{room.itemCount} Barang Terdaftar</p>
-                </div>
-              )}
-
-              <Link
-                href={`/admin/master-barang/database-barang/${encodeURIComponent(room.room)}`}
-                className="inline-flex items-center justify-center w-full px-4 py-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-lg text-sm font-medium hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-              >
-                Lihat Barang
-              </Link>
-            </div>
-          ))}
+        <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
+              <thead className="bg-neutral-50 dark:bg-neutral-950/50">
+                <tr>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Nama Ruangan / Lokasi
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Total Inventaris
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                    Aksi
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-neutral-900 divide-y divide-neutral-200 dark:divide-neutral-800">
+                {rooms.map((room, idx) => (
+                  <tr key={idx} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {editingRoom === room.room ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            className="px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 rounded-lg text-sm bg-white dark:bg-neutral-950 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            value={newRoomName}
+                            onChange={(e) => setNewRoomName(e.target.value)}
+                            autoFocus
+                          />
+                          <button
+                            onClick={() => handleEditSubmit(room.room)}
+                            className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition-colors"
+                          >
+                            Simpan
+                          </button>
+                          <button
+                            onClick={() => setEditingRoom(null)}
+                            className="px-3 py-1.5 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-lg text-xs font-bold hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
+                          >
+                            Batal
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                          </div>
+                          <div className="ml-4 flex items-center gap-2">
+                            <div className="text-sm font-bold text-neutral-900 dark:text-white truncate" title={room.room}>
+                              {room.room}
+                            </div>
+                            {room.itemCount === 0 && (
+                              <svg className="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} title="Ruangan Kosong">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300">
+                        {room.itemCount} Barang
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex justify-end gap-2">
+                        <Link
+                          href={`/admin/master-barang/database-barang/${encodeURIComponent(room.room)}`}
+                          className="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-lg text-xs font-bold transition-colors flex items-center gap-1"
+                        >
+                          Lihat
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setEditingRoom(room.room);
+                            setNewRoomName(room.room);
+                          }}
+                          className="p-1.5 text-neutral-400 hover:text-indigo-600 transition-colors bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700"
+                          title="Edit Nama Ruangan"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteRoom(room.room, room.itemCount)}
+                          className="p-1.5 text-neutral-400 hover:text-rose-600 transition-colors bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700"
+                          title="Hapus Ruangan"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

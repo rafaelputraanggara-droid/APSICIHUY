@@ -14,10 +14,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { kode_barang, no_urut_pendaft, nama_barang, merk_type, th_perolehan, kondisi, lokasi_ruangan } = body;
+    const { kode_barang, no_urut_pendaft, nama_barang, merk_type, th_perolehan, kondisi, lokasi_ruangan, nama_kategori } = body;
 
     // 1. Check for missing required fields
-    if (!kode_barang || no_urut_pendaft === undefined || !nama_barang || !merk_type || !th_perolehan || !lokasi_ruangan) {
+    if (!kode_barang || no_urut_pendaft === undefined || !nama_barang || !merk_type || !th_perolehan || !lokasi_ruangan || !nama_kategori) {
       return NextResponse.json({ success: false, error: 'Semua field wajib diisi' }, { status: 400 });
     }
 
@@ -47,9 +47,9 @@ export async function POST(request: Request) {
 
     // 6. Insert data into MySQL database
     const [result] = await pool.query(
-      `INSERT INTO barangs (kode_barang, no_urut_pendaft, nama_barang, merk_type, th_perolehan, kondisi, lokasi_ruangan) 
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [kode_barang, nupInt, nama_barang.trim(), merk_type.trim(), yearInt, itemCondition, lokasi_ruangan.trim()]
+      `INSERT INTO barangs (kode_barang, no_urut_pendaft, nama_barang, merk_type, th_perolehan, kondisi, lokasi_ruangan, nama_kategori) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [kode_barang, nupInt, nama_barang.trim(), merk_type.trim(), yearInt, itemCondition, lokasi_ruangan.trim(), nama_kategori.trim()]
     );
 
     return NextResponse.json({ success: true, data: result });

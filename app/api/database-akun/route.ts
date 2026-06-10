@@ -1,0 +1,59 @@
+import { NextResponse } from 'next/server';
+import pool from '@/lib/db';
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const role = searchParams.get('role'); // 'admin', 'pj', or 'mahasiswa'
+
+    if (role === 'mahasiswa') {
+      const [rows] = await pool.query(
+        "SELECT id, username as name, email_sso as email, nim, dokumen_pdf as foto_ktm, status_pendaftaran as status FROM pendaftaran_akun WHERE status_pendaftaran = 'Disetujui' AND peran_pengaju = 'Mahasiswa'"
+      );
+      return NextResponse.json({ success: true, data: rows });
+    } else {
+      // For Admin and PJ Ruangan, fetch from `users` table
+      const dbRole = role === 'admin' ? 'Admin' : 'PJ_Ruangan';
+      const [rows] = await pool.query(
+        "SELECT id, name, email, role FROM users WHERE role = ?", [dbRole]
+      );
+      return NextResponse.json({ success: true, data: rows });
+    }
+  } catch (error) {
+    console.error('API Database Akun GET Error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Terjadi kesalahan internal pada server.' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const { id, type } = body;
+
+    if (!id || !type) {
+      return NextResponse.json(
+        { success: false, error: 'ID dan tipe akun diperlukan.' },
+        { status: 400 }
+      );
+    }
+
+    if (type === 'mahasiswa') {
+      // Hapus permanen dari pendaftaran_akun agar bisa mendaftar ulang
+      await pool.query("DELETE FROM pendaftaran_akun WHERE id = ?", [id]);
+    } else {
+      // Hapus dari tabel users
+      await pool.query("DELETE FROM users WHERE id = ?", [id]);
+    }
+
+    return NextResponse.json({ success: true, message: 'Akun berhasil dihapus.' });
+  } catch (error) {
+    console.error('API Database Akun DELETE Error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Gagal menghapus akun.' },
+      { status: 500 }
+    );
+  }
+}

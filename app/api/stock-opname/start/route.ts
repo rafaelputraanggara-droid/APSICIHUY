@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
     // 3. Get all active items in that room
     const [barangs]: any = await pool.query(
-      "SELECT kode_barang, no_urut_pendaft, nama_barang, merk_type, th_perolehan, kondisi FROM barangs WHERE lokasi_ruangan = ? AND status_bmn = 'Aktif'",
+      "SELECT id, kode_barang, no_urut_pendaft, nama_barang, merk_type, th_perolehan, kondisi FROM barangs WHERE lokasi_ruangan = ? AND status_bmn = 'Aktif'",
       [ruangan]
     );
 

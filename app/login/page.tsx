@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function LoginPage() {
-  const [showMahasiswaForm, setShowMahasiswaForm] = useState(false);
+  const [loginMode, setLoginMode] = useState<"none" | "mahasiswa" | "pj">("none");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -23,9 +23,9 @@ export default function LoginPage() {
   const handleQuickLogin = (roleType: "admin" | "pj") => {
     if (roleType === "admin") {
       const user = {
-        name: "Admin BMN",
+        name: "Admin Fakultas",
         email: "admin@staff.uns.ac.id",
-        role: "Admin",
+        role: "Admin Fakultas",
       };
       localStorage.setItem("simulated_user", JSON.stringify(user));
       window.dispatchEvent(new Event("simulated_user_change"));
@@ -75,6 +75,38 @@ export default function LoginPage() {
     }
   };
 
+  const handlePjLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+
+    const trimmedUN = username.trim();
+    const trimmedPW = password.trim();
+
+    try {
+      const res = await fetch("/api/login-pj", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: trimmedUN, password: trimmedPW }),
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        const user = {
+          name: data.data.name,
+          email: data.data.email,
+          role: "PJ_Ruangan",
+        };
+        localStorage.setItem("simulated_user", JSON.stringify(user));
+        window.dispatchEvent(new Event("simulated_user_change"));
+        window.location.href = "/";
+      } else {
+        setErrorMsg(data.error || "Username atau Password salah!");
+      }
+    } catch (err) {
+      setErrorMsg("Gagal terhubung ke server.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-neutral-900 via-indigo-950 to-neutral-900 p-4">
       <div className="w-full max-w-md bg-white/10 dark:bg-black/35 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
@@ -109,7 +141,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        {!showMahasiswaForm ? (
+        {loginMode === "none" && (
           <div className="space-y-4 relative z-10 flex flex-col">
             <button
               onClick={() => handleQuickLogin("admin")}
@@ -118,19 +150,20 @@ export default function LoginPage() {
               Login sebagai Admin Fakultas
             </button>
             <button
-              onClick={() => handleQuickLogin("pj")}
+              onClick={() => setLoginMode("pj")}
               className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-sm font-bold shadow-lg transition-all cursor-pointer"
             >
               Login sebagai PJ Ruangan
             </button>
             <button
-              onClick={() => setShowMahasiswaForm(true)}
+              onClick={() => setLoginMode("mahasiswa")}
               className="w-full py-4 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-2xl text-sm font-bold shadow-lg transition-all cursor-pointer"
             >
               Login sebagai Mahasiswa
             </button>
           </div>
-        ) : (
+        )}
+        {loginMode === "mahasiswa" && (
           <div className="relative z-10 animate-fade-in">
             <form onSubmit={handleMahasiswaLogin} className="space-y-5">
               <div>
@@ -148,7 +181,7 @@ export default function LoginPage() {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Masukkan username"
+                    placeholder="Masukkan username SSO"
                     className="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-semibold"
                   />
                 </div>
@@ -191,12 +224,89 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-4 text-center space-y-2">
-              <Link href="/register" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition-colors block">
-                Belum punya akun? Buat akun
+              <Link href="/register?role=Mahasiswa" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition-colors block">
+                Belum punya akun? Buat akun Mahasiswa
               </Link>
               <button 
                 onClick={() => {
-                  setShowMahasiswaForm(false);
+                  setLoginMode("none");
+                  setErrorMsg(null);
+                }} 
+                className="text-xs text-neutral-400 hover:text-white underline mt-2"
+              >
+                Kembali ke pilihan login
+              </button>
+            </div>
+          </div>
+        )}
+
+        {loginMode === "pj" && (
+          <div className="relative z-10 animate-fade-in">
+            <form onSubmit={handlePjLogin} className="space-y-5">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-emerald-300 mb-1.5 pl-1">
+                  Username PJ Ruangan
+                </label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-450 pointer-events-none">
+                    <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Masukkan username Anda"
+                    className="w-full bg-white/5 border border-emerald-900/50 rounded-2xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-semibold"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-emerald-300 mb-1.5 pl-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-450 pointer-events-none">
+                    <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </span>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Masukkan password"
+                    className="w-full bg-white/5 border border-emerald-900/50 rounded-2xl pl-10 pr-10 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-semibold"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-450 hover:text-white transition-all cursor-pointer"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-sm font-bold shadow-lg transition-all cursor-pointer"
+              >
+                Masuk
+              </button>
+            </form>
+
+            <div className="mt-4 text-center space-y-2">
+              <Link href="/register?role=PJ_Ruangan" className="text-sm font-bold text-emerald-400 hover:text-emerald-300 transition-colors block">
+                Belum punya akun? Buat akun PJ Ruangan
+              </Link>
+              <button 
+                onClick={() => {
+                  setLoginMode("none");
                   setErrorMsg(null);
                 }} 
                 className="text-xs text-neutral-400 hover:text-white underline mt-2"

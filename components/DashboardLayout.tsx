@@ -19,6 +19,29 @@ export default function DashboardLayout({
   // Simulated logged-in user state
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
+  const [pendingMutasiCount, setPendingMutasiCount] = useState(0);
+
+  useEffect(() => {
+    const fetchPendingMutasi = async () => {
+      if (currentUser && currentUser.role === "Admin Fakultas") {
+        try {
+          const res = await fetch("/api/mutasi?role=Admin%20Fakultas");
+          const json = await res.json();
+          if (json.success) {
+            const count = json.data.filter((m: any) => m.status_mutasi === "Menunggu").length;
+            setPendingMutasiCount(count);
+          }
+        } catch (error) {}
+      } else {
+        setPendingMutasiCount(0);
+      }
+    };
+    if (currentUser) {
+      fetchPendingMutasi();
+      const interval = setInterval(fetchPendingMutasi, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [currentUser]);
 
   // Enforce authentication redirect
   useEffect(() => {
@@ -26,12 +49,18 @@ export default function DashboardLayout({
       if (typeof window !== "undefined") {
         const saved = localStorage.getItem("simulated_user");
         if (!saved) {
-          if (pathname !== "/login") {
+          if (pathname !== "/login" && pathname !== "/register") {
             window.location.href = "/login";
           }
         } else {
           try {
-            setCurrentUser(JSON.parse(saved));
+            const parsed = JSON.parse(saved);
+            if (parsed.role === "Admin BMN" || parsed.role === "Admin") {
+              parsed.role = "Admin Fakultas";
+              parsed.name = "Admin Fakultas";
+              localStorage.setItem("simulated_user", JSON.stringify(parsed));
+            }
+            setCurrentUser(parsed);
           } catch (e) {
             console.error("Failed to parse simulated user", e);
           }
@@ -55,8 +84,8 @@ export default function DashboardLayout({
     }
   };
 
-  // 1. Bypass layout shell entirely for the login page
-  if (pathname === '/login') {
+  // 1. Bypass layout shell entirely for the login & register pages
+  if (pathname === '/login' || pathname === '/register') {
     return (
       <div className="min-h-screen bg-neutral-900 flex flex-col font-sans text-gray-100">
         {children}
@@ -74,7 +103,7 @@ export default function DashboardLayout({
   }
 
   const isAdminBMN =
-    currentUser.role === "Admin BMN" &&
+    currentUser.role === "Admin Fakultas" &&
     currentUser.email.endsWith("@staff.uns.ac.id");
 
   const activeRole = getMappedRole(currentUser.role);
@@ -252,14 +281,21 @@ export default function DashboardLayout({
                         key={idx}
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
+                        className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium ${
                           isActive ? "bg-indigo-50 text-indigo-600" : "text-neutral-650"
                         }`}
                       >
-                        <span className={isActive ? "text-indigo-600" : "text-neutral-405"}>
-                          {item.icon}
-                        </span>
-                        {item.name}
+                        <div className="flex items-center gap-3">
+                          <span className={isActive ? "text-indigo-600" : "text-neutral-405"}>
+                            {item.icon}
+                          </span>
+                          {item.name}
+                        </div>
+                        {item.name === "Mutasi Barang" && currentUser?.role === "Admin Fakultas" && pendingMutasiCount > 0 && (
+                          <span className="bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+                            {pendingMutasiCount}
+                          </span>
+                        )}
                       </Link>
                     );
                   })}
