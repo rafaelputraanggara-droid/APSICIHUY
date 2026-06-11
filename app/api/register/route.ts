@@ -21,20 +21,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Save the PDF file
+    // Convert PDF to Base64 (Vercel serverless functions cannot write to /public)
     const bytes = await file_pdf.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    const uploadDir = join(process.cwd(), 'public/uploads/pdf');
-    await mkdir(uploadDir, { recursive: true });
-
-    // Generate safe filename
-    const safeNim = nim.replace(/[^a-zA-Z0-9]/g, '');
-    const filename = `${Date.now()}_${safeNim}.pdf`;
-    const filepath = join(uploadDir, filename);
-
-    await writeFile(filepath, buffer);
-    const fileUrl = `/uploads/pdf/${filename}`;
+    const base64Pdf = buffer.toString('base64');
+    const fileUrl = `data:application/pdf;base64,${base64Pdf}`;
 
     const query = `
       INSERT INTO pendaftaran_akun (username, password, email_sso, nim, peran_pengaju, dokumen_pdf, status_pendaftaran)
