@@ -13,7 +13,7 @@ export default function LoginPage() {
   // If already logged in, redirect to dashboard
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("simulated_user");
+      const saved = sessionStorage.getItem("simulated_user");
       if (saved) {
         window.location.href = "/";
       }
@@ -27,7 +27,7 @@ export default function LoginPage() {
         email: "admin@staff.uns.ac.id",
         role: "Admin Fakultas",
       };
-      localStorage.setItem("simulated_user", JSON.stringify(user));
+      sessionStorage.setItem("simulated_user", JSON.stringify(user));
       window.dispatchEvent(new Event("simulated_user_change"));
       window.location.href = "/";
     } else {
@@ -36,7 +36,7 @@ export default function LoginPage() {
         email: "laboran@ft.uns.ac.id",
         role: "PJ_Ruangan",
       };
-      localStorage.setItem("simulated_user", JSON.stringify(user));
+      sessionStorage.setItem("simulated_user", JSON.stringify(user));
       window.dispatchEvent(new Event("simulated_user_change"));
       window.location.href = "/";
     }
@@ -64,7 +64,7 @@ export default function LoginPage() {
           email: data.data.email,
           role: "Mahasiswa/Dosen",
         };
-        localStorage.setItem("simulated_user", JSON.stringify(user));
+        sessionStorage.setItem("simulated_user", JSON.stringify(user));
         window.dispatchEvent(new Event("simulated_user_change"));
         window.location.href = "/";
       } else {
@@ -96,7 +96,7 @@ export default function LoginPage() {
           email: data.data.email,
           role: "PJ_Ruangan",
         };
-        localStorage.setItem("simulated_user", JSON.stringify(user));
+        sessionStorage.setItem("simulated_user", JSON.stringify(user));
         window.dispatchEvent(new Event("simulated_user_change"));
         window.location.href = "/";
       } else {

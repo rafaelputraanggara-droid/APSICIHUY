@@ -61,7 +61,7 @@ export default function DashboardLayout({
   useEffect(() => {
     const checkAuth = () => {
       if (typeof window !== "undefined") {
-        const saved = localStorage.getItem("simulated_user");
+        const saved = sessionStorage.getItem("simulated_user");
         if (!saved) {
           if (pathname !== "/login" && pathname !== "/register") {
             window.location.href = "/login";
@@ -72,7 +72,7 @@ export default function DashboardLayout({
             if (parsed.role === "Admin BMN" || parsed.role === "Admin") {
               parsed.role = "Admin Fakultas";
               parsed.name = "Admin Fakultas";
-              localStorage.setItem("simulated_user", JSON.stringify(parsed));
+              sessionStorage.setItem("simulated_user", JSON.stringify(parsed));
             }
             setCurrentUser(parsed);
           } catch (e) {
@@ -92,7 +92,7 @@ export default function DashboardLayout({
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
     if (typeof window !== "undefined") {
-      localStorage.removeItem("simulated_user");
+      sessionStorage.removeItem("simulated_user");
       window.dispatchEvent(new Event("simulated_user_change"));
       window.location.href = "/login";
     }

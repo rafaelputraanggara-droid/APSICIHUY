@@ -17,7 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     // Determine user role
-    const saved = localStorage.getItem("simulated_user");
+    const saved = sessionStorage.getItem("simulated_user");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);

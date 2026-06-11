@@ -43,7 +43,7 @@ export default function Sidebar() {
   // Load user from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedUser = localStorage.getItem("simulated_user");
+      const savedUser = sessionStorage.getItem("simulated_user");
       if (savedUser) {
         try {
           setCurrentUser(JSON.parse(savedUser));
@@ -78,7 +78,7 @@ export default function Sidebar() {
 
     setCurrentUser(nextUser);
     if (typeof window !== "undefined") {
-      localStorage.setItem("simulated_user", JSON.stringify(nextUser));
+      sessionStorage.setItem("simulated_user", JSON.stringify(nextUser));
       // Dispatch custom event for real-time reactivity in other components/pages
       window.dispatchEvent(new Event("simulated_user_change"));
     }

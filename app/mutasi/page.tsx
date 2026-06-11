@@ -33,7 +33,7 @@ export default function MutasiPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("simulated_user");
+      const saved = sessionStorage.getItem("simulated_user");
       if (saved) {
         const user = JSON.parse(saved);
         setCurrentUser(user);
