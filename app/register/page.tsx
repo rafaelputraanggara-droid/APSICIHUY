@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function RegisterPage() {
+function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [role, setRole] = useState("Mahasiswa");
@@ -209,5 +209,13 @@ export default function RegisterPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[var(--bg-banner)] text-white font-bold">Memuat Halaman Pendaftaran...</div>}>
+      <RegisterContent />
+    </React.Suspense>
   );
 }
