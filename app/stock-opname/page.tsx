@@ -688,7 +688,7 @@ export default function StockOpnamePage() {
                                   className={`px-3 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer flex items-center gap-1 ml-auto ${
                                     isFound
                                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-250'
+                                      : 'bg-emerald-50 hover:bg-[var(--tag-success-bg)] text-[var(--tag-success-text)] transition-colors duration-400 border border-emerald-250'
                                   }`}
                                 >
                                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -786,19 +786,19 @@ export default function StockOpnamePage() {
 
             <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
               <span className="text-[10px] font-bold text-emerald-650 uppercase">Item Ditemukan</span>
-              <p className="text-3xl font-black text-emerald-600 mt-1">{report.summary.itemsFound}</p>
+              <p className="text-3xl font-black text-[var(--tag-success-text)] transition-colors duration-400 mt-1">{report.summary.itemsFound}</p>
               <p className="text-xxs text-emerald-500 mt-1">Fisik Ada & Terverifikasi</p>
             </div>
 
             <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
-              <span className="text-[10px] font-bold text-rose-600 uppercase">Aset Hilang (Gap)</span>
-              <p className="text-3xl font-black text-rose-600 mt-1">{report.summary.itemsMissing}</p>
+              <span className="text-[10px] font-bold text-[var(--tag-danger-text)] transition-colors duration-400 uppercase">Aset Hilang (Gap)</span>
+              <p className="text-3xl font-black text-[var(--tag-danger-text)] transition-colors duration-400 mt-1">{report.summary.itemsMissing}</p>
               <p className="text-xxs text-rose-500 mt-1">Selisih Tidak Ditemukan</p>
             </div>
 
             <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
               <span className="text-[10px] font-bold text-indigo-650 uppercase">Tingkat Keberadaan</span>
-              <p className="text-3xl font-black text-indigo-600 mt-1">
+              <p className="text-3xl font-black text-[var(--tag-info-text)] transition-colors duration-400 mt-1">
                 {report.summary.totalItems > 0 
                   ? ((report.summary.itemsFound / report.summary.totalItems) * 100).toFixed(1)
                   : '0'}%
@@ -810,13 +810,13 @@ export default function StockOpnamePage() {
 
           {/* Section: GAP / Missing Asets */}
           <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 shadow-sm p-6 print:border-none print:shadow-none print:p-0">
-            <h3 className="text-base font-extrabold text-rose-600 border-b pb-3 mb-4 flex items-center gap-1.5 print:text-[var(--text-main)] print:border-neutral-800">
+            <h3 className="text-base font-extrabold text-[var(--tag-danger-text)] transition-colors duration-400 border-b pb-3 mb-4 flex items-center gap-1.5 print:text-[var(--text-main)] print:border-neutral-800">
               <span className="h-2.5 w-2.5 rounded-full bg-rose-500 print:hidden"></span>
               DAFTAR GAP ASET : TIDAK DITEMUKAN ({report.summary.itemsMissing} Item)
             </h3>
             
             {report.gapList.length === 0 ? (
-              <div className="py-8 text-center text-sm text-emerald-600 font-bold">
+              <div className="py-8 text-center text-sm text-[var(--tag-success-text)] transition-colors duration-400 font-bold">
                 ✓ Sempurna! Seluruh aset fisik lengkap dan terverifikasi di dalam ruangan ini (Tidak ada gap).
               </div>
             ) : (

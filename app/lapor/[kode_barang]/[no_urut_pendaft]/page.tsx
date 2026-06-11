@@ -154,7 +154,7 @@ export default function LaporKerusakanPage() {
             <div className="lg:col-span-1 space-y-6">
               <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200 p-6 shadow-sm space-y-5">
                 <div className="border-b pb-4">
-                  <span className="text-xxs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
+                  <span className="text-xxs font-bold uppercase tracking-wider text-[var(--tag-info-text)] transition-colors duration-400 bg-indigo-50 px-2.5 py-1 rounded-md">
                     Informasi Aset
                   </span>
                   <h3 className="text-lg font-bold text-gray-900 mt-3">{barang.nama_barang}</h3>

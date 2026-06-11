@@ -256,7 +256,7 @@ export default function ImportBarang() {
   if (!isAdminBMN) {
     return (
       <div className="max-w-md mx-auto mt-12 bg-[var(--bg-panel)] transition-colors duration-400 p-8 border border-red-200 dark:border-red-900/40 rounded-3xl text-center shadow-md">
-        <div className="w-16 h-16 bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <div className="w-16 h-16 bg-red-50 dark:bg-red-950/40 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
@@ -306,7 +306,7 @@ export default function ImportBarang() {
         {/* Upload Zone */}
         <div className="border-2 border-dashed border-[var(--border-panel)] rounded-3xl p-8 text-center bg-[var(--bg-app)] transition-colors duration-400/40 bg-[var(--bg-app)]/20 hover:bg-neutral-55 dark:hover:bg-neutral-950/40 transition-all">
           <div className="max-w-md mx-auto space-y-4">
-            <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/50 rounded-2xl flex items-center justify-center mx-auto text-indigo-600 dark:text-indigo-400">
+            <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/50 rounded-2xl flex items-center justify-center mx-auto text-indigo-600">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
@@ -339,7 +339,7 @@ export default function ImportBarang() {
 
         {/* Feedback Messages */}
         {errorMessage && (
-          <div className="mt-6 p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-rose-700 dark:text-rose-400 rounded-2xl text-xs font-semibold flex items-center gap-2">
+          <div className="mt-6 p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-rose-700 rounded-2xl text-xs font-semibold flex items-center gap-2">
             <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
@@ -348,7 +348,7 @@ export default function ImportBarang() {
         )}
 
         {importResult && (
-          <div className="mt-6 p-5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-250 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-400 rounded-2xl space-y-3">
+          <div className="mt-6 p-5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-250 dark:border-emerald-900/40 text-emerald-800 rounded-2xl space-y-3">
             <div className="flex items-center gap-2 text-sm font-bold">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -401,7 +401,7 @@ export default function ImportBarang() {
                   <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800 font-medium">
                     {parsedData.slice(0, 5).map((row, index) => (
                       <tr key={index} className="hover:bg-[var(--bg-app)] transition-colors duration-400/50 dark:hover:bg-neutral-900/30">
-                        <td className="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">{row.kode_barang}</td>
+                        <td className="px-4 py-3 font-mono font-bold text-indigo-600">{row.kode_barang}</td>
                         <td className="px-4 py-3 font-mono">{row.no_urut_pendaft}</td>
                         <td className="px-4 py-3 text-[var(--text-main)] transition-colors duration-400">{row.nama_barang}</td>
                         <td className="px-4 py-3 text-[var(--text-muted)] transition-colors duration-400">{row.merk_type}</td>

@@ -149,9 +149,9 @@ export default function RoomItemsPage() {
                       <td className="px-6 py-4 text-neutral-600 dark:text-neutral-300">{item.th_perolehan}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${
-                          item.kondisi === "Baik" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" :
-                          item.kondisi === "Rusak Ringan" ? "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" :
-                          "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                          item.kondisi === "Baik" ? "bg-emerald-50 text-emerald-700" :
+                          item.kondisi === "Rusak Ringan" ? "bg-amber-50 text-amber-700" :
+                          "bg-red-50 text-red-700"
                         }`}>
                           {item.kondisi}
                         </span>
@@ -170,7 +170,7 @@ export default function RoomItemsPage() {
                           </Link>
                           <button
                             onClick={() => handleEditClick(item)}
-                            className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium transition-colors"
+                            className="text-[var(--tag-info-text)] transition-colors duration-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium transition-colors"
                           >
                             Edit
                           </button>

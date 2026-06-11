@@ -70,7 +70,7 @@ export default function DatabaseAkunPage() {
             onClick={() => setActiveTab("admin")}
             className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
               activeTab === "admin"
-                ? "border-indigo-600 text-indigo-600"
+                ? "border-indigo-600 text-[var(--tag-info-text)] transition-colors duration-400"
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-neutral-300"
             }`}
           >
@@ -80,7 +80,7 @@ export default function DatabaseAkunPage() {
             onClick={() => setActiveTab("pj")}
             className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
               activeTab === "pj"
-                ? "border-indigo-600 text-indigo-600"
+                ? "border-indigo-600 text-[var(--tag-info-text)] transition-colors duration-400"
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-neutral-300"
             }`}
           >
@@ -90,7 +90,7 @@ export default function DatabaseAkunPage() {
             onClick={() => setActiveTab("mahasiswa")}
             className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
               activeTab === "mahasiswa"
-                ? "border-indigo-600 text-indigo-600"
+                ? "border-indigo-600 text-[var(--tag-info-text)] transition-colors duration-400"
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-neutral-300"
             }`}
           >
@@ -142,7 +142,7 @@ export default function DatabaseAkunPage() {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-bold text-[var(--text-main)]">{user.name}</div>
-                          {user.nim && <div className="text-xs text-indigo-600 font-mono mt-0.5">{user.nim}</div>}
+                          {user.nim && <div className="text-xs text-[var(--tag-info-text)] transition-colors duration-400 font-mono mt-0.5">{user.nim}</div>}
                         </div>
                       </div>
                     </td>
@@ -152,8 +152,8 @@ export default function DatabaseAkunPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         activeTab === 'mahasiswa' 
-                          ? 'bg-emerald-100 text-emerald-800' 
-                          : 'bg-indigo-100 text-indigo-800'
+                          ? 'bg-[var(--tag-success-bg)] text-[var(--tag-success-text)] transition-colors duration-400' 
+                          : 'bg-[var(--tag-info-bg)] text-[var(--tag-info-text)] transition-colors duration-400'
                       }`}>
                         {activeTab === 'mahasiswa' ? 'Mahasiswa Aktif' : user.role}
                       </span>
@@ -163,7 +163,7 @@ export default function DatabaseAkunPage() {
                         {activeTab !== 'admin' && (
                           <button
                             onClick={() => setDetailUser(user)}
-                            className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors"
+                            className="text-[var(--tag-info-text)] transition-colors duration-400 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors"
                           >
                             Lihat Detail
                           </button>
@@ -171,7 +171,7 @@ export default function DatabaseAkunPage() {
                         {activeTab !== 'admin' && (
                           <button
                             onClick={() => handleDelete(user.id, activeTab === 'mahasiswa' ? 'mahasiswa' : 'staff', user.name)}
-                            className="text-rose-600 hover:text-rose-900 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-colors"
+                            className="text-[var(--tag-danger-text)] transition-colors duration-400 hover:text-rose-900 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-colors"
                           >
                             Hapus Akses
                           </button>
@@ -216,14 +216,14 @@ export default function DatabaseAkunPage() {
               {detailUser.nim && (
                 <div>
                   <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">NIM Mahasiswa</p>
-                  <p className="font-mono font-bold text-indigo-600 bg-indigo-50 inline-block px-2 py-0.5 rounded-md">{detailUser.nim}</p>
+                  <p className="font-mono font-bold text-[var(--tag-info-text)] transition-colors duration-400 bg-indigo-50 inline-block px-2 py-0.5 rounded-md">{detailUser.nim}</p>
                 </div>
               )}
 
               {detailUser.role && (
                 <div>
                   <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Peran</p>
-                  <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                  <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-[var(--tag-info-bg)] text-[var(--tag-info-text)] transition-colors duration-400">
                     {detailUser.role}
                   </span>
                 </div>
@@ -244,7 +244,7 @@ export default function DatabaseAkunPage() {
                             href={detailUser.foto_ktm} 
                             target="_blank" 
                             rel="noreferrer" 
-                            className="px-4 py-2 bg-indigo-100 text-indigo-700 text-sm font-bold rounded-lg hover:bg-indigo-200 transition-colors"
+                            className="px-4 py-2 bg-[var(--tag-info-bg)] text-[var(--tag-info-text)] transition-colors duration-400 text-sm font-bold rounded-lg hover:bg-indigo-200 transition-colors"
                           >
                             Buka Dokumen PDF
                           </a>

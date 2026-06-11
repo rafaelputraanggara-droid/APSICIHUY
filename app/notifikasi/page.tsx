@@ -74,7 +74,7 @@ export default function NotifikasiPage() {
               onClick={() => setActiveTab("kerusakan")}
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
                 activeTab === "kerusakan"
-                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
+                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
                   : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
               }`}
             >
@@ -84,7 +84,7 @@ export default function NotifikasiPage() {
               onClick={() => setActiveTab("hilang")}
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
                 activeTab === "hilang"
-                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
+                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
                   : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
               }`}
             >
@@ -94,7 +94,7 @@ export default function NotifikasiPage() {
               onClick={() => setActiveTab("pendaftaran")}
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
                 activeTab === "pendaftaran"
-                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
+                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
                   : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
               }`}
             >
@@ -134,9 +134,9 @@ export default function NotifikasiPage() {
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <h4 className="font-bold text-[var(--text-main)] text-lg transition-colors duration-400">{acc.username}</h4>
-                          <p className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">{acc.nim}</p>
+                          <p className="text-xs text-indigo-600 font-semibold">{acc.nim}</p>
                         </div>
-                        <span className="px-3 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-bold rounded-full">
+                        <span className="px-3 py-1 bg-[var(--tag-warning-bg)] text-[var(--tag-warning-text)] transition-colors duration-400 text-xs font-bold rounded-full">
                           Menunggu
                         </span>
                       </div>
@@ -232,7 +232,7 @@ export default function NotifikasiPage() {
                   type="application/pdf" 
                   className="w-full h-full rounded-xl"
                 >
-                  <p className="text-center mt-10">Browser Anda tidak mendukung preview PDF. <a href={pdfToView} download className="text-indigo-600 underline">Unduh PDF disini</a>.</p>
+                  <p className="text-center mt-10">Browser Anda tidak mendukung preview PDF. <a href={pdfToView} download className="text-[var(--tag-info-text)] transition-colors duration-400 underline">Unduh PDF disini</a>.</p>
                 </object>
               </div>
             </div>

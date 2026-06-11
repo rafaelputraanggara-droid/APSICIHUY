@@ -377,8 +377,8 @@ export default function DashboardLayout({
                   { id: "emerald", name: "Emerald Forest", color: "bg-emerald-600" },
                   { id: "ruby", name: "Crimson Ruby", color: "bg-rose-700" },
                   { id: "cream", name: "Warm Amber", color: "bg-amber-600" },
-                  { id: "dark", name: "Midnight Dark", color: "bg-slate-800 border border-slate-600" },
-                  { id: "light", name: "Clean Light", color: "bg-neutral-200 border border-neutral-300" },
+                  { id: "dark", name: "Windows Dark", color: "bg-[#111111] border border-[#333333]" },
+                  { id: "light", name: "Windows Light", color: "bg-[#f3f3f3] border border-[#cccccc]" },
                 ].map((t) => (
                   <button
                     key={t.id}

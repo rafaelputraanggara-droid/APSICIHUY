@@ -83,7 +83,7 @@ export default function Home() {
         {/* Card 1 */}
         <div className="bg-[var(--bg-panel)] border border-[var(--border-panel)] rounded-2xl p-5 shadow-sm transition-colors duration-400 relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <svg className="w-16 h-16 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-16 h-16 text-[var(--tag-info-text)] transition-colors duration-400" fill="currentColor" viewBox="0 0 20 20">
               <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
               <path fillRule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clipRule="evenodd" />
             </svg>
@@ -100,13 +100,13 @@ export default function Home() {
         {/* Card 2 */}
         <div className="bg-[var(--bg-panel)] border border-[var(--border-panel)] rounded-2xl p-5 shadow-sm transition-colors duration-400 relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <svg className="w-16 h-16 text-rose-600" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-16 h-16 text-[var(--tag-danger-text)] transition-colors duration-400" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
           </div>
           <p className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">Barang Rusak</p>
           <div className="flex items-end gap-3">
-            <h3 className="text-4xl font-black text-rose-600">
+            <h3 className="text-4xl font-black text-[var(--tag-danger-text)] transition-colors duration-400">
               {stats.loading ? "..." : stats.barangRusak}
             </h3>
             <span className="text-sm font-semibold text-[var(--text-muted)] pb-1">Perlu perbaikan</span>

@@ -151,7 +151,7 @@ export default function DatabaseBarangPage() {
                         </div>
                       ) : (
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                          <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
@@ -178,7 +178,7 @@ export default function DatabaseBarangPage() {
                       <div className="flex justify-end gap-2">
                         <Link
                           href={`/admin/master-barang/database-barang/${encodeURIComponent(room.room)}`}
-                          className="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-lg text-xs font-bold transition-colors flex items-center gap-1"
+                          className="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-lg text-xs font-bold transition-colors flex items-center gap-1"
                         >
                           Lihat
                         </Link>
@@ -187,7 +187,7 @@ export default function DatabaseBarangPage() {
                             setEditingRoom(room.room);
                             setNewRoomName(room.room);
                           }}
-                          className="p-1.5 text-[var(--text-muted)] hover:text-indigo-600 transition-colors bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-panel)] hover:bg-[var(--bg-app)] transition-colors duration-400 rounded-lg border border-[var(--border-panel)] dark:border-neutral-700"
+                          className="p-1.5 text-[var(--text-muted)] hover:text-[var(--tag-info-text)] transition-colors duration-400 transition-colors bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-panel)] hover:bg-[var(--bg-app)] transition-colors duration-400 rounded-lg border border-[var(--border-panel)] dark:border-neutral-700"
                           title="Edit Nama Ruangan"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -196,7 +196,7 @@ export default function DatabaseBarangPage() {
                         </button>
                         <button
                           onClick={() => handleDeleteRoom(room.room, room.itemCount)}
-                          className="p-1.5 text-[var(--text-muted)] hover:text-rose-600 transition-colors bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-panel)] hover:bg-[var(--bg-app)] transition-colors duration-400 rounded-lg border border-[var(--border-panel)] dark:border-neutral-700"
+                          className="p-1.5 text-[var(--text-muted)] hover:text-[var(--tag-danger-text)] transition-colors duration-400 transition-colors bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-panel)] hover:bg-[var(--bg-app)] transition-colors duration-400 rounded-lg border border-[var(--border-panel)] dark:border-neutral-700"
                           title="Hapus Ruangan"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

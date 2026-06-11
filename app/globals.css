@@ -32,7 +32,14 @@
   --text-sidebar-active: #ffffff;
 
   --bg-sidebar-hover: #1e3a8a;
-  --bg-sidebar-active: #2563eb;
+  --tag-success-bg: #d1fae5;
+  --tag-success-text: #065f46;
+  --tag-danger-bg: #ffe4e6;
+  --tag-danger-text: #9f1239;
+  --tag-warning-bg: #fef3c7;
+  --tag-warning-text: #92400e;
+  --tag-info-bg: #e0e7ff;
+  --tag-info-text: #3730a3;
 }
 
 [data-theme="breeze"] {
@@ -60,7 +67,14 @@
   --text-sidebar-active: #042f2e;
 
   --bg-sidebar-hover: #bae6fd;
-  --bg-sidebar-active: #5eead4;
+  --tag-success-bg: #d1fae5;
+  --tag-success-text: #065f46;
+  --tag-danger-bg: #ffe4e6;
+  --tag-danger-text: #9f1239;
+  --tag-warning-bg: #fef3c7;
+  --tag-warning-text: #92400e;
+  --tag-info-bg: #e0f2fe;
+  --tag-info-text: #075985;
 }
 
 [data-theme="emerald"] {
@@ -88,7 +102,14 @@
   --text-sidebar-active: #ffffff;
 
   --bg-sidebar-hover: #065f46;
-  --bg-sidebar-active: #059669;
+  --tag-success-bg: #d1fae5;
+  --tag-success-text: #065f46;
+  --tag-danger-bg: #ffe4e6;
+  --tag-danger-text: #9f1239;
+  --tag-warning-bg: #fef3c7;
+  --tag-warning-text: #92400e;
+  --tag-info-bg: #d1fae5;
+  --tag-info-text: #065f46;
 }
 
 [data-theme="ruby"] {
@@ -116,7 +137,14 @@
   --text-sidebar-active: #ffffff;
 
   --bg-sidebar-hover: #881337;
-  --bg-sidebar-active: #dc2626;
+  --tag-success-bg: #d1fae5;
+  --tag-success-text: #065f46;
+  --tag-danger-bg: #ffe4e6;
+  --tag-danger-text: #9f1239;
+  --tag-warning-bg: #fef3c7;
+  --tag-warning-text: #92400e;
+  --tag-info-bg: #ffe4e6;
+  --tag-info-text: #9f1239;
 }
 
 [data-theme="cream"] {
@@ -144,63 +172,88 @@
   --text-sidebar-active: #ffffff;
 
   --bg-sidebar-hover: #78350f;
-  --bg-sidebar-active: #d97706;
+  --tag-success-bg: #d1fae5;
+  --tag-success-text: #065f46;
+  --tag-danger-bg: #ffe4e6;
+  --tag-danger-text: #9f1239;
+  --tag-warning-bg: #fef3c7;
+  --tag-warning-text: #92400e;
+  --tag-info-bg: #fef3c7;
+  --tag-info-text: #92400e;
 }
 
 [data-theme="dark"] {
   /* ========================================================
-     MIDNIGHT DARK - Full Dark Mode
+     WINDOWS DARK - Pure Black/Gray (Windows OS Style)
      ======================================================== */
-  --bg-app: #020617;
-  --bg-header: #0f172a;
-  --bg-sidebar: #0f172a;
+  --bg-app: #111111;
+  --bg-header: #1c1c1c;
+  --bg-sidebar: #1c1c1c;
   
-  --bg-panel: #0f172a;
-  --bg-banner: #1e293b;
+  --bg-panel: #202020;
+  --bg-banner: #2d2d2d;
 
-  --border-layout: #1e293b;
-  --border-sidebar: #1e293b;
-  --border-panel: #1e293b;
+  --border-layout: #333333;
+  --border-sidebar: #333333;
+  --border-panel: #333333;
 
-  --text-header: #f8fafc;
-  --text-header-muted: #94a3b8;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --text-header: #ffffff;
+  --text-header-muted: #a0a0a0;
+  --text-main: #ffffff;
+  --text-muted: #a0a0a0;
 
-  --text-sidebar-default: #94a3b8;
-  --text-sidebar-hover: #f8fafc;
-  --text-sidebar-active: #f8fafc;
+  --text-sidebar-default: #a0a0a0;
+  --text-sidebar-hover: #ffffff;
+  --text-sidebar-active: #ffffff;
 
-  --bg-sidebar-hover: #1e293b;
-  --bg-sidebar-active: #334155;
+  --bg-sidebar-hover: #2d2d2d;
+  --bg-sidebar-active: #3b3b3b;
+
+  --tag-success-bg: rgba(16, 185, 129, 0.15);
+  --tag-success-text: #34d399;
+  --tag-danger-bg: rgba(244, 63, 94, 0.15);
+  --tag-danger-text: #fb7185;
+  --tag-warning-bg: rgba(245, 158, 11, 0.15);
+  --tag-warning-text: #fbbf24;
+  --tag-info-bg: rgba(99, 102, 241, 0.15);
+  --tag-info-text: #818cf8;
 }
 
 [data-theme="light"] {
   /* ========================================================
-     CLEAN LIGHT - Monochrome White/Gray
+     WINDOWS LIGHT - Pure White/Gray (Windows OS Style)
      ======================================================== */
-  --bg-app: #f5f5f5;
+  --bg-app: #f3f3f3;
   --bg-header: #ffffff;
   --bg-sidebar: #ffffff;
   
   --bg-panel: #ffffff;
-  --bg-banner: #171717;
+  --bg-banner: #e5e5e5;
 
-  --border-layout: #e5e5e5;
-  --border-sidebar: #e5e5e5;
-  --border-panel: #e5e5e5;
+  --border-layout: #cccccc;
+  --border-sidebar: #cccccc;
+  --border-panel: #cccccc;
 
-  --text-header: #171717;
-  --text-header-muted: #525252;
-  --text-main: #171717;
-  --text-muted: #525252;
+  --text-header: #000000;
+  --text-header-muted: #5c5c5c;
+  --text-main: #000000;
+  --text-muted: #5c5c5c;
 
-  --text-sidebar-default: #525252;
-  --text-sidebar-hover: #171717;
-  --text-sidebar-active: #ffffff;
+  --text-sidebar-default: #5c5c5c;
+  --text-sidebar-hover: #000000;
+  --text-sidebar-active: #000000;
 
-  --bg-sidebar-hover: #f5f5f5;
-  --bg-sidebar-active: #262626;
+  --bg-sidebar-hover: #e5e5e5;
+  --bg-sidebar-active: #d4d4d4;
+
+  --tag-success-bg: #d1fae5;
+  --tag-success-text: #065f46;
+  --tag-danger-bg: #ffe4e6;
+  --tag-danger-text: #9f1239;
+  --tag-warning-bg: #fef3c7;
+  --tag-warning-text: #92400e;
+  --tag-info-bg: #e5e5e5;
+  --tag-info-text: #171717;
 }
 
 @theme inline {

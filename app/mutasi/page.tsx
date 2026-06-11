@@ -269,7 +269,7 @@ export default function MutasiPage() {
               onClick={() => setActiveTab("ajukan")}
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all ${
                 activeTab === "ajukan"
-                  ? "border-emerald-600 text-emerald-600"
+                  ? "border-emerald-600 text-[var(--tag-success-text)] transition-colors duration-400"
                   : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
               }`}
             >
@@ -281,7 +281,7 @@ export default function MutasiPage() {
               onClick={() => setActiveTab("antrean")}
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all flex items-center gap-2 ${
                 activeTab === "antrean"
-                  ? "border-emerald-600 text-emerald-600"
+                  ? "border-emerald-600 text-[var(--tag-success-text)] transition-colors duration-400"
                   : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
               }`}
             >
@@ -297,7 +297,7 @@ export default function MutasiPage() {
             onClick={() => setActiveTab("riwayat")}
             className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all ${
               activeTab === "riwayat"
-                ? "border-emerald-600 text-emerald-600"
+                ? "border-emerald-600 text-[var(--tag-success-text)] transition-colors duration-400"
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
@@ -406,7 +406,7 @@ export default function MutasiPage() {
                       className="w-1/2 px-4 py-3 bg-[var(--bg-panel)] transition-colors duration-400 hover:bg-[var(--bg-app)] transition-colors duration-400 text-neutral-800 rounded-xl flex items-center justify-center gap-2 transition-colors border border-emerald-300 hover:border-emerald-500 shadow-sm"
                       title="Buka Kamera untuk Scan QR"
                     >
-                      <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[var(--tag-success-text)] transition-colors duration-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-4v-4m-2 4h-2m-2-4h-2m8 0h2m-2 2h2m-4-6h4M6 6h4v4H6V6zm10 0h4v4h-4V6zM6 16h4v4H6v-4z" />
                       </svg>
                       <span className="font-bold text-sm">Scan QR Code</span>
@@ -426,7 +426,7 @@ export default function MutasiPage() {
             {foundItem && (
               <div className="mt-6 p-4 border border-emerald-200 bg-emerald-50 rounded-2xl animate-fade-in">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 text-emerald-600">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 text-[var(--tag-success-text)] transition-colors duration-400">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
@@ -529,11 +529,11 @@ export default function MutasiPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">{m.ruangan_asal}</span>
+                          <span className="font-semibold text-[var(--tag-danger-text)] transition-colors duration-400 bg-rose-50 px-2 py-0.5 rounded">{m.ruangan_asal}</span>
                           <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
-                          <span className="font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">{m.id_ruangan_tujuan}</span>
+                          <span className="font-semibold text-[var(--tag-success-text)] transition-colors duration-400 bg-emerald-50 px-2 py-0.5 rounded">{m.id_ruangan_tujuan}</span>
                         </div>
                         <p className="text-xs text-[var(--text-muted)] mt-2 italic">"{m.alasan_mutasi}"</p>
                       </td>
@@ -611,7 +611,7 @@ export default function MutasiPage() {
                       <td className="px-6 py-4">
                         <div className="flex flex-col items-start gap-1">
                           <span className={`px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${
-                            m.status_mutasi === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            m.status_mutasi === 'Disetujui' ? 'bg-[var(--tag-success-bg)] text-[var(--tag-success-text)] transition-colors duration-400' : 'bg-[var(--tag-danger-bg)] text-[var(--tag-danger-text)] transition-colors duration-400'
                           }`}>
                             {m.status_mutasi}
                           </span>
