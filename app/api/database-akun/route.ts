@@ -11,11 +11,17 @@ export async function GET(request: Request) {
         "SELECT id, username as name, email_sso as email, nim, dokumen_pdf as foto_ktm, status_pendaftaran as status FROM pendaftaran_akun WHERE status_pendaftaran = 'Disetujui' AND peran_pengaju = 'Mahasiswa'"
       );
       return NextResponse.json({ success: true, data: rows });
-    } else {
-      // For Admin and PJ Ruangan, fetch from `users` table
-      const dbRole = role === 'admin' ? 'Admin' : 'PJ_Ruangan';
+    } else if (role === 'pj') {
       const [rows] = await pool.query(
-        "SELECT id, name, email, role FROM users WHERE role = ?", [dbRole]
+        `SELECT u.id, u.name, u.email, u.role, p.dokumen_pdf as foto_ktm, p.nim 
+         FROM users u 
+         LEFT JOIN pendaftaran_akun p ON u.email = p.email_sso 
+         WHERE u.role = 'PJ_Ruangan'`
+      );
+      return NextResponse.json({ success: true, data: rows });
+    } else {
+      const [rows] = await pool.query(
+        "SELECT id, name, email, role FROM users WHERE role = 'Admin'"
       );
       return NextResponse.json({ success: true, data: rows });
     }

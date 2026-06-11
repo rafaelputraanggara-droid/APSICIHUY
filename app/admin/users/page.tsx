@@ -215,7 +215,7 @@ export default function DatabaseAkunPage() {
 
               {detailUser.nim && (
                 <div>
-                  <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">NIM Mahasiswa</p>
+                  <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">NIM / NUP / ID Pegawai</p>
                   <p className="font-mono font-bold text-[var(--tag-info-text)] transition-colors duration-400 bg-indigo-50 inline-block px-2 py-0.5 rounded-md">{detailUser.nim}</p>
                 </div>
               )}
@@ -229,9 +229,9 @@ export default function DatabaseAkunPage() {
                 </div>
               )}
 
-              {activeTab === 'mahasiswa' && (
+              {activeTab !== 'admin' && (
                 <div>
-                  <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">Dokumen KTM (PDF)</p>
+                  <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">Dokumen Identitas (PDF)</p>
                   {detailUser.foto_ktm ? (
                     <div className="rounded-xl border-2 border-[var(--border-panel)] overflow-hidden bg-neutral-100 h-64">
                       <object 
@@ -253,7 +253,7 @@ export default function DatabaseAkunPage() {
                     </div>
                   ) : (
                     <div className="p-4 bg-[var(--bg-app)] transition-colors duration-400 rounded-xl text-center text-sm text-[var(--text-muted)] font-medium border border-[var(--border-panel)] border-dashed">
-                      Foto KTM tidak tersedia
+                      Dokumen tidak tersedia
                     </div>
                   )}
                 </div>
