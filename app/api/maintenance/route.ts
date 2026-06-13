@@ -69,7 +69,7 @@ export async function PUT(request: Request) {
   } catch (error) {
     console.error('API Maintenance PUT Error:', error);
     return NextResponse.json(
-      { success: false, error: 'Gagal memperbarui status.' },
+      { success: false, error: 'Gagal memperbarui status: ' + (error instanceof Error ? error.message : String(error)) },
       { status: 500 }
     );
   }
