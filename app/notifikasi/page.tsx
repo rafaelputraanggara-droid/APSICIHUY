@@ -5,10 +5,11 @@ import React, { useState, useEffect } from "react";
 import RiwayatLaporanPage from "../riwayat-laporan/page";
 
 export default function NotifikasiPage() {
-  const [activeTab, setActiveTab] = useState<"kerusakan" | "hilang" | "pendaftaran" | "riwayat">("kerusakan");
+  const [activeTab, setActiveTab] = useState<"kerusakan" | "hilang" | "pendaftaran" | "riwayat" | "riwayat-maintenance">("kerusakan");
   
   const [pendingAccounts, setPendingAccounts] = useState<any[]>([]);
   const [pendingKerusakan, setPendingKerusakan] = useState<any[]>([]);
+  const [maintenanceHistory, setMaintenanceHistory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pdfToView, setPdfToView] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string>("");
@@ -52,6 +53,8 @@ export default function NotifikasiPage() {
       fetchPendingAccounts();
     } else if (activeTab === "kerusakan") {
       fetchPendingKerusakan();
+    } else if (activeTab === "riwayat-maintenance") {
+      fetchMaintenanceHistory();
     }
   }, [activeTab]);
 
@@ -80,6 +83,21 @@ export default function NotifikasiPage() {
       }
     } catch (error) {
       console.error("Gagal mengambil data kerusakan", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchMaintenanceHistory = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/maintenance?status=Selesai");
+      const data = await res.json();
+      if (data.success) {
+        setMaintenanceHistory(data.data);
+      }
+    } catch (error) {
+      console.error("Gagal mengambil histori maintenance", error);
     } finally {
       setIsLoading(false);
     }
@@ -192,16 +210,28 @@ export default function NotifikasiPage() {
               </button>
             )}
             {userRole === "Admin Fakultas" && (
-              <button
-                onClick={() => setActiveTab("pendaftaran")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-                  activeTab === "pendaftaran"
-                    ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
-                    : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
-                }`}
-              >
-                Laporan Pendaftaran Akun Baru
-              </button>
+              <>
+                <button
+                  onClick={() => setActiveTab("pendaftaran")}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                    activeTab === "pendaftaran"
+                      ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
+                      : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                  }`}
+                >
+                  Laporan Pendaftaran Akun Baru
+                </button>
+                <button
+                  onClick={() => setActiveTab("riwayat-maintenance")}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                    activeTab === "riwayat-maintenance"
+                      ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
+                      : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                  }`}
+                >
+                  Riwayat Maintenance
+                </button>
+              </>
             )}
           </nav>
         </div>
@@ -360,6 +390,78 @@ export default function NotifikasiPage() {
                         >
                           Setujui
                         </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          {activeTab === "riwayat-maintenance" && userRole === "Admin Fakultas" && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400">Riwayat Perbaikan Barang Selesai</h3>
+              </div>
+              
+              {isLoading ? (
+                <p className="text-center py-8">Memuat riwayat maintenance...</p>
+              ) : maintenanceHistory.length === 0 ? (
+                <p className="text-center py-8">Belum ada riwayat maintenance yang selesai.</p>
+              ) : (
+                <div className="grid grid-cols-1 gap-6">
+                  {maintenanceHistory.map((laporan) => (
+                    <div key={laporan.id} className="border border-[var(--border-panel)] rounded-xl p-6 relative overflow-hidden bg-[var(--bg-app)] transition-colors duration-400">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h4 className="font-bold text-[var(--text-main)] text-lg transition-colors duration-400">{laporan.nama_barang || "Barang Tidak Diketahui"}</h4>
+                          <p className="text-xs text-indigo-600 font-semibold">{laporan.kode_barang} - {laporan.no_urut_pendaft}</p>
+                        </div>
+                        <span className="px-3 py-1 bg-emerald-100 text-emerald-700 transition-colors duration-400 text-xs font-bold rounded-full">
+                          Selesai
+                        </span>
+                      </div>
+                      
+                      <div className="space-y-4 mb-6">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Ruangan Asal</p>
+                            <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400">{laporan.ruangan_asal || "-"}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Teknisi / Laboran</p>
+                            <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400">{laporan.nama_teknisi || "-"}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Kendala Awal</p>
+                          <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400 mt-1">{laporan.deskripsi_kerusakan}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-3 border-t border-[var(--border-panel)] pt-4">
+                        {laporan.bukti_penyelesaian_pdf && (
+                          <button 
+                            onClick={() => setPdfToView(laporan.bukti_penyelesaian_pdf)}
+                            className="flex-1 py-2.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 font-bold rounded-xl text-sm transition-all shadow-sm flex justify-center items-center gap-2"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            Bukti Lokasi
+                          </button>
+                        )}
+                        {laporan.bukti_administrasi_pdf && (
+                          <button 
+                            onClick={() => setPdfToView(laporan.bukti_administrasi_pdf)}
+                            className="flex-1 py-2.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 font-bold rounded-xl text-sm transition-all shadow-sm flex justify-center items-center gap-2"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Bukti Administrasi / Nota
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}

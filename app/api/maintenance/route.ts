@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  let id: any, status: any, nama_teknisi: any, bukti_penyelesaian_pdf: any, catatan: any;
+  let id: any, status: any, nama_teknisi: any, bukti_penyelesaian_pdf: any, bukti_administrasi_pdf: any, catatan: any;
   
   try {
     const body = await request.json();
@@ -37,6 +37,7 @@ export async function PUT(request: Request) {
     status = body.status;
     nama_teknisi = body.nama_teknisi;
     bukti_penyelesaian_pdf = body.bukti_penyelesaian_pdf;
+    bukti_administrasi_pdf = body.bukti_administrasi_pdf;
     catatan = body.catatan;
 
     if (!id || !status) {
@@ -56,8 +57,8 @@ export async function PUT(request: Request) {
 
     if (status === 'Selesai') {
       await pool.query(
-        "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ? WHERE id = ?",
-        [status, nama_teknisi, bukti_penyelesaian_pdf, id]
+        "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ?, bukti_administrasi_pdf = ? WHERE id = ?",
+        [status, nama_teknisi, bukti_penyelesaian_pdf, bukti_administrasi_pdf, id]
       );
     } else if (catatan !== undefined) {
       await pool.query(
@@ -115,8 +116,8 @@ export async function PUT(request: Request) {
         // Retry the update after migration
         if (status === 'Selesai') {
           await pool.query(
-            "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ? WHERE id = ?",
-            [status, nama_teknisi, bukti_penyelesaian_pdf, id]
+            "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ?, bukti_administrasi_pdf = ? WHERE id = ?",
+            [status, nama_teknisi, bukti_penyelesaian_pdf, bukti_administrasi_pdf, id]
           );
         } else if (catatan !== undefined) {
           await pool.query(
@@ -138,21 +139,18 @@ export async function PUT(request: Request) {
       }
     }
 
-    // AUTO-MIGRATE: Self-healing for nama_teknisi and bukti_penyelesaian_pdf
-    if (error.message && error.message.includes("Unknown column 'nama_teknisi'")) {
+    if (error.message && (error.message.includes("Unknown column 'nama_teknisi'") || error.message.includes("Unknown column 'bukti_administrasi_pdf'"))) {
       try {
-        console.log("Auto-migrating: Adding nama_teknisi to laporan_kerusakans...");
-        await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN nama_teknisi VARCHAR(255) NULL');
-        
-        try {
-          await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN bukti_penyelesaian_pdf LONGTEXT NULL');
-        } catch (e) { /* ignore if already exists */ }
+        console.log("Auto-migrating: Adding columns to laporan_kerusakans...");
+        try { await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN nama_teknisi VARCHAR(255) NULL'); } catch(e){}
+        try { await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN bukti_penyelesaian_pdf LONGTEXT NULL'); } catch (e) {}
+        try { await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN bukti_administrasi_pdf LONGTEXT NULL'); } catch (e) {}
 
         // Retry the update after migration
         if (status === 'Selesai') {
           await pool.query(
-            "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ? WHERE id = ?",
-            [status, nama_teknisi, bukti_penyelesaian_pdf, id]
+            "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ?, bukti_administrasi_pdf = ? WHERE id = ?",
+            [status, nama_teknisi, bukti_penyelesaian_pdf, bukti_administrasi_pdf, id]
           );
         } else if (catatan !== undefined) {
           await pool.query(

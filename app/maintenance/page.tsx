@@ -12,9 +12,11 @@ export default function MaintenancePage() {
   const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
   const [namaTeknisi, setNamaTeknisi] = useState("");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfAdminFile, setPdfAdminFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const adminFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchReports();
@@ -58,6 +60,7 @@ export default function MaintenancePage() {
     setSelectedReportId(id);
     setNamaTeknisi("");
     setPdfFile(null);
+    setPdfAdminFile(null);
     setShowModal(true);
   };
 
@@ -77,24 +80,25 @@ export default function MaintenancePage() {
 
   const handleSubmitKonfirmasi = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedReportId || !namaTeknisi || !pdfFile) {
-      alert("Harap lengkapi semua data dan unggah file PDF.");
+    if (!selectedReportId || !namaTeknisi || !pdfFile || !pdfAdminFile) {
+      alert("Harap lengkapi semua data dan unggah kedua file PDF.");
       return;
     }
 
-    if (pdfFile.type !== "application/pdf") {
+    if (pdfFile.type !== "application/pdf" || pdfAdminFile.type !== "application/pdf") {
       alert("Hanya file berformat PDF yang diperbolehkan.");
       return;
     }
 
-    if (pdfFile.size > 2 * 1024 * 1024) {
-      alert("Ukuran file PDF tidak boleh lebih dari 2MB.");
+    if (pdfFile.size > 2 * 1024 * 1024 || pdfAdminFile.size > 2 * 1024 * 1024) {
+      alert("Ukuran masing-masing file PDF tidak boleh lebih dari 2MB.");
       return;
     }
 
     setIsSubmitting(true);
     try {
       const base64Pdf = await convertToBase64(pdfFile);
+      const base64AdminPdf = await convertToBase64(pdfAdminFile);
 
       const res = await fetch("/api/maintenance", {
         method: "PUT",
@@ -104,6 +108,7 @@ export default function MaintenancePage() {
           status: "Selesai",
           nama_teknisi: namaTeknisi,
           bukti_penyelesaian_pdf: base64Pdf,
+          bukti_administrasi_pdf: base64AdminPdf,
         }),
       });
       const data = await res.json();
@@ -270,7 +275,7 @@ export default function MaintenancePage() {
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">
-                    Bukti Penyelesaian (PDF)
+                    Bukti Perbaikan di Lokasi (PDF)
                   </label>
                   <div 
                     onClick={() => fileInputRef.current?.click()}
@@ -305,6 +310,49 @@ export default function MaintenancePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
                         <p className="text-sm font-bold text-[var(--text-main)]">Klik untuk unggah file PDF</p>
+                        <p className="text-xs text-[var(--text-muted)] mt-1">Maks. 2MB</p>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">
+                    Bukti Administrasi / Nota (PDF)
+                  </label>
+                  <div 
+                    onClick={() => adminFileInputRef.current?.click()}
+                    className={`w-full border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all ${
+                      pdfAdminFile 
+                        ? 'border-indigo-500 bg-indigo-50/5 dark:bg-indigo-900/10' 
+                        : 'border-[var(--border-panel)] hover:border-indigo-400 bg-[var(--bg-app)]'
+                    }`}
+                  >
+                    <input 
+                      type="file" 
+                      accept="application/pdf" 
+                      className="hidden" 
+                      ref={adminFileInputRef}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setPdfAdminFile(e.target.files[0]);
+                        }
+                      }}
+                    />
+                    {pdfAdminFile ? (
+                      <>
+                        <svg className="w-10 h-10 text-indigo-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p className="text-sm font-bold text-[var(--text-main)]">{pdfAdminFile.name}</p>
+                        <p className="text-xs text-indigo-600 mt-1">Berhasil dipilih</p>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-10 h-10 text-[var(--text-muted)] mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <p className="text-sm font-bold text-[var(--text-main)]">Klik untuk unggah Bukti Administrasi</p>
                         <p className="text-xs text-[var(--text-muted)] mt-1">Maks. 2MB</p>
                       </>
                     )}
