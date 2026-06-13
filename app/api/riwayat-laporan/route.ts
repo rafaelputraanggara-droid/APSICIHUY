@@ -5,6 +5,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const pelapor_id = searchParams.get('pelapor_id');
+    const nama_pelapor = searchParams.get('nama_pelapor');
 
     if (!pelapor_id) {
       return NextResponse.json(
@@ -29,11 +30,11 @@ export async function GET(request: Request) {
       LEFT JOIN barangs b 
         ON l.kode_barang = b.kode_barang 
         AND l.no_urut_pendaft = b.no_urut_pendaft
-      WHERE l.pelapor_id = ?
+      WHERE l.pelapor_id = ? OR (l.pelapor_id IS NULL AND l.dilaporkan_oleh = ?)
       ORDER BY l.created_at DESC
     `;
     
-    const [rows] = await pool.query(query, [pelapor_id]);
+    const [rows] = await pool.query(query, [pelapor_id, nama_pelapor || '']);
     return NextResponse.json({ success: true, data: rows });
   } catch (error: any) {
     console.error('Database query error (GET /api/riwayat-laporan):', error);

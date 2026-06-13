@@ -24,7 +24,7 @@ export default function RiwayatLaporanPage() {
       }
       
       if (parsed.id) {
-        fetchRiwayat(parsed.id);
+        fetchRiwayat(parsed.id, parsed.name);
       } else {
         setLoading(false);
       }
@@ -33,9 +33,9 @@ export default function RiwayatLaporanPage() {
     }
   }, [router]);
 
-  const fetchRiwayat = async (pelaporId: number) => {
+  const fetchRiwayat = async (pelaporId: number, pelaporName: string) => {
     try {
-      const res = await fetch(`/api/riwayat-laporan?pelapor_id=${pelaporId}`);
+      const res = await fetch(`/api/riwayat-laporan?pelapor_id=${pelaporId}&nama_pelapor=${encodeURIComponent(pelaporName)}`);
       const data = await res.json();
       if (data.success) {
         setLaporans(data.data);

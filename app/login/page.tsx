@@ -69,6 +69,7 @@ export default function LoginPage() {
       
       if (data.success) {
         const user = {
+          id: data.data.id,
           name: data.data.name || "Mahasiswa",
           email: data.data.email,
           role: "Mahasiswa/Dosen",
@@ -101,6 +102,7 @@ export default function LoginPage() {
       
       if (data.success) {
         const user = {
+          id: data.data.id,
           name: data.data.name,
           email: data.data.email,
           role: "PJ_Ruangan",
