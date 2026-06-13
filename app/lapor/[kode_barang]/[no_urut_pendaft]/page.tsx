@@ -78,9 +78,16 @@ export default function LaporKerusakanPage() {
     fetchBarangDetail();
   }, [kode_barang, no_urut_pendaft]);
 
-  // Autofill dynamic demo image link for testing ease
-  const handleUseDemoPhoto = () => {
-    setFotoUrl('https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&q=80&w=600');
+  // Handle file input and convert to base64
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFotoUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -323,39 +330,26 @@ export default function LaporKerusakanPage() {
 
                     <div>
                       <label className="block text-sm font-semibold text-[var(--text-main)]">
-                        Link Foto Bukti Kerusakan
+                        Upload Foto Bukti Kerusakan <span className="text-[var(--tag-danger-text)]">*</span>
                       </label>
-                      <div className="mt-2 flex gap-2">
-                        <input
-                          type="text"
-                          value={fotoUrl}
-                          onChange={(e) => setFotoUrl(e.target.value)}
-                          className="shadow-sm focus:ring-2 focus:ring-neutral-400 block w-full sm:text-sm border-[var(--border-input,#cccccc)] rounded-xl px-3.5 py-3 border focus:outline-none font-mono text-xs bg-[var(--bg-input,#ffffff)] text-[var(--text-input,#000000)] placeholder-[var(--text-placeholder,#999999)]"
-                          placeholder="Contoh: https://link-gambar.com/foto.jpg"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleUseDemoPhoto}
-                          className="flex-shrink-0 px-3.5 py-2.5 bg-[var(--bg-sidebar-hover)] hover:bg-[var(--bg-sidebar-active)] text-[var(--text-main)] rounded-xl text-xs font-semibold transition border border-[var(--border-panel)] cursor-pointer"
-                        >
-                          Gunakan Foto Demo
-                        </button>
-                      </div>
-                      <p className="mt-1.5 text-xs text-[var(--text-muted)]">Gunakan Foto Demo untuk mengisi URL gambar dummy agar mempermudah pengujian.</p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        required
+                        className="mt-2 block w-full text-sm text-[var(--text-main)]
+                          file:mr-4 file:py-2.5 file:px-4
+                          file:rounded-xl file:border-0
+                          file:text-sm file:font-semibold
+                          file:bg-indigo-50 file:text-indigo-700
+                          hover:file:bg-indigo-100 transition-colors"
+                      />
                     </div>
 
                     {fotoUrl && (
-                      <div className="border border-[var(--border-panel)] rounded-2xl p-2 bg-[var(--bg-app)] inline-block">
+                      <div className="border border-[var(--border-panel)] rounded-2xl p-2 bg-[var(--bg-app)] inline-block w-full">
                         <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase block mb-1">Pratinjau Foto Bukti</span>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
-                          src={fotoUrl} 
-                          alt="Pratinjau kerusakan" 
-                          className="max-h-[140px] rounded-xl object-cover border border-[var(--border-panel)]"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://placehold.co/300x150?text=Gambar+Tidak+Valid';
-                          }}
-                        />
+                        <img src={fotoUrl} alt="Preview Bukti Kerusakan" className="h-40 w-auto object-cover rounded-xl" />
                       </div>
                     )}
 

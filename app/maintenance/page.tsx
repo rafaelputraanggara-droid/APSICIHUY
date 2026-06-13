@@ -193,10 +193,12 @@ export default function MaintenancePage() {
                     <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold">Deskripsi Kendala</p>
                     <p className="text-sm font-medium text-[var(--text-main)] mt-0.5">{report.deskripsi_kerusakan}</p>
                   </div>
-                  {activeTab === "daftar" && report.foto_url && (
-                    <div>
-                      <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-1">Bukti Foto Kerusakan</p>
-                      <img src={report.foto_url} alt="Foto Kerusakan" className="w-full h-40 object-cover rounded-lg border border-[var(--border-panel)]" />
+                  {report.foto_url && (
+                    <div className="pt-2">
+                      <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2">Bukti Kerusakan</p>
+                      <a href={report.foto_url} target="_blank" rel="noopener noreferrer" className="inline-block w-full border border-[var(--border-panel)] rounded-xl overflow-hidden shadow-sm hover:opacity-80 transition-opacity">
+                        <img src={report.foto_url} alt="Foto Kerusakan" className="w-full h-40 object-cover bg-black/5" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                      </a>
                     </div>
                   )}
                 </div>

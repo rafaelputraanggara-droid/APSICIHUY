@@ -211,6 +211,14 @@ export default function NotifikasiPage() {
                           <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Kendala</p>
                           <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400 mt-1">{laporan.deskripsi_kerusakan}</p>
                         </div>
+                        {laporan.foto_url && (
+                          <div className="pt-2">
+                            <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400 mb-2">Bukti Kerusakan</p>
+                            <a href={laporan.foto_url} target="_blank" rel="noopener noreferrer" className="inline-block border border-[var(--border-panel)] rounded-xl overflow-hidden shadow-sm hover:opacity-80 transition-opacity">
+                              <img src={laporan.foto_url} alt="Bukti Kerusakan" className="h-32 w-auto object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                            </a>
+                          </div>
+                        )}
                       </div>
 
                       {userRole === "Laboran" && (
