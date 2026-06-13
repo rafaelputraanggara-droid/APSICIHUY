@@ -29,9 +29,15 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  let id: any, status: any, nama_teknisi: any, bukti_penyelesaian_pdf: any, catatan: any;
+  
   try {
     const body = await request.json();
-    const { id, status, nama_teknisi, bukti_penyelesaian_pdf, catatan } = body;
+    id = body.id;
+    status = body.status;
+    nama_teknisi = body.nama_teknisi;
+    bukti_penyelesaian_pdf = body.bukti_penyelesaian_pdf;
+    catatan = body.catatan;
 
     if (!id || !status) {
       return NextResponse.json(
