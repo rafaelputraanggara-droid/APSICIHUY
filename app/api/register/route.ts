@@ -38,6 +38,30 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('API Register Error:', error);
     if (error.code === 'ER_DUP_ENTRY') {
+      // DEBUG LOGIC: Cari tahu bentroknya di mana
+      try {
+        const [conflictRows] = await pool.query(
+          "SELECT id, status_pendaftaran, peran_pengaju, username, email_sso, nim FROM pendaftaran_akun WHERE username = ? OR email_sso = ? OR nim = ?",
+          [username, email_sso, nim]
+        );
+        const conflict = (conflictRows as any[])[0];
+        
+        if (conflict) {
+          if (conflict.status_pendaftaran === 'Menunggu') {
+            return NextResponse.json(
+              { success: false, error: `Pendaftaran Anda sedang diproses (Menunggu persetujuan Admin). Mohon cek secara berkala.` },
+              { status: 400 }
+            );
+          } else if (conflict.status_pendaftaran === 'Disetujui') {
+            // Ini adalah "ghost" record jika mereka tidak muncul di UI!
+            return NextResponse.json(
+              { success: false, error: `Akun sudah terdaftar aktif sebagai ${conflict.peran_pengaju}. Jika Anda merasa ini kesalahan sistem (ghost record), lapor ke Admin.` },
+              { status: 400 }
+            );
+          }
+        }
+      } catch (e) {}
+
       return NextResponse.json(
         { success: false, error: 'Username, Email SSO, atau NIM/NIP sudah terdaftar!' },
         { status: 400 }
