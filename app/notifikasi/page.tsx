@@ -9,6 +9,33 @@ export default function NotifikasiPage() {
   const [pendingAccounts, setPendingAccounts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pdfToView, setPdfToView] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedUser = sessionStorage.getItem("simulated_user");
+      if (savedUser) {
+        try {
+          setUserRole(JSON.parse(savedUser).role);
+        } catch (e) {}
+      }
+      
+      const handleUserChange = () => {
+        const updated = sessionStorage.getItem("simulated_user");
+        if (updated) {
+          try {
+            setUserRole(JSON.parse(updated).role);
+            if (JSON.parse(updated).role === "PJ_Ruangan" && activeTab === "pendaftaran") {
+              setActiveTab("kerusakan");
+            }
+          } catch (e) {}
+        }
+      };
+      
+      window.addEventListener("simulated_user_change", handleUserChange);
+      return () => window.removeEventListener("simulated_user_change", handleUserChange);
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     if (activeTab === "pendaftaran") {
@@ -90,16 +117,18 @@ export default function NotifikasiPage() {
             >
               Laporan Barang Hilang
             </button>
-            <button
-              onClick={() => setActiveTab("pendaftaran")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-                activeTab === "pendaftaran"
-                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
-                  : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
-              }`}
-            >
-              Laporan Pendaftaran Akun Baru
-            </button>
+            {userRole === "Admin Fakultas" && (
+              <button
+                onClick={() => setActiveTab("pendaftaran")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                  activeTab === "pendaftaran"
+                    ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
+                    : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                }`}
+              >
+                Laporan Pendaftaran Akun Baru
+              </button>
+            )}
           </nav>
         </div>
 
@@ -117,7 +146,7 @@ export default function NotifikasiPage() {
               <p>Belum ada laporan barang hilang yang tercatat.</p>
             </div>
           )}
-          {activeTab === "pendaftaran" && (
+          {activeTab === "pendaftaran" && userRole === "Admin Fakultas" && (
             <div>
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400">Pendaftaran Mahasiswa (Menunggu Verifikasi)</h3>

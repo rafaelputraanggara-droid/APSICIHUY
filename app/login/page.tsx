@@ -20,7 +20,7 @@ export default function LoginPage() {
     }
   }, []);
 
-  const handleQuickLogin = (roleType: "admin" | "pj") => {
+  const handleQuickLogin = (roleType: "admin" | "pj" | "laboran") => {
     if (roleType === "admin") {
       const user = {
         name: "Admin Fakultas",
@@ -30,10 +30,19 @@ export default function LoginPage() {
       sessionStorage.setItem("simulated_user", JSON.stringify(user));
       window.dispatchEvent(new Event("simulated_user_change"));
       window.location.href = "/";
+    } else if (roleType === "laboran") {
+      const user = {
+        name: "Laboran (Teknisi)",
+        email: "laboran@ft.uns.ac.id",
+        role: "Laboran",
+      };
+      sessionStorage.setItem("simulated_user", JSON.stringify(user));
+      window.dispatchEvent(new Event("simulated_user_change"));
+      window.location.href = "/";
     } else {
       const user = {
-        name: "PJ Ruangan (Laboran)",
-        email: "laboran@ft.uns.ac.id",
+        name: "PJ Ruangan (Dosen/Staff)",
+        email: "pjruangan@ft.uns.ac.id",
         role: "PJ_Ruangan",
       };
       sessionStorage.setItem("simulated_user", JSON.stringify(user));
@@ -148,6 +157,12 @@ export default function LoginPage() {
               className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-sm font-bold shadow-lg transition-all cursor-pointer"
             >
               Login sebagai Admin Fakultas
+            </button>
+            <button
+              onClick={() => handleQuickLogin("laboran")}
+              className="w-full py-4 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl text-sm font-bold shadow-lg transition-all cursor-pointer"
+            >
+              Login sebagai Laboran (Maintenance)
             </button>
             <button
               onClick={() => setLoginMode("pj")}

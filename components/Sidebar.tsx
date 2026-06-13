@@ -63,18 +63,26 @@ export default function Sidebar() {
 
   // Toggle simulation user
   const handleToggleUser = () => {
-    const isCurrentlyAdmin = currentUser.role === "Admin Fakultas";
-    const nextUser = isCurrentlyAdmin
-      ? {
-          name: "PJ Ruangan (Laboran)",
-          email: "laboran@ft.uns.ac.id",
-          role: "PJ_Ruangan",
-        }
-      : {
-          name: "Admin Fakultas",
-          email: "admin@staff.uns.ac.id",
-          role: "Admin Fakultas",
-        };
+    let nextUser;
+    if (currentUser.role === "Admin Fakultas") {
+      nextUser = {
+        name: "PJ Ruangan (Dosen/Staff)",
+        email: "pjruangan@ft.uns.ac.id",
+        role: "PJ_Ruangan",
+      };
+    } else if (currentUser.role === "PJ_Ruangan") {
+      nextUser = {
+        name: "Laboran (Teknisi)",
+        email: "laboran@ft.uns.ac.id",
+        role: "Laboran",
+      };
+    } else {
+      nextUser = {
+        name: "Admin Fakultas",
+        email: "admin@staff.uns.ac.id",
+        role: "Admin Fakultas",
+      };
+    }
 
     setCurrentUser(nextUser);
     if (typeof window !== "undefined") {
@@ -196,9 +204,11 @@ export default function Sidebar() {
             <div className={`h-9.5 w-9.5 rounded-full flex items-center justify-center font-bold text-sm border transition-colors duration-300 ${
               currentUser.role === "Admin Fakultas"
                 ? "bg-indigo-600 border-indigo-500 text-white shadow-sm"
-                : "bg-white/20 border-white/30 text-[var(--text-sidebar-default)]"
+                : currentUser.role === "PJ_Ruangan"
+                ? "bg-emerald-600 border-emerald-500 text-white shadow-sm"
+                : "bg-rose-600 border-rose-500 text-white shadow-sm"
             }`}>
-              {currentUser.role === "Admin Fakultas" ? "A" : "L"}
+              {currentUser.role === "Admin Fakultas" ? "A" : currentUser.role === "PJ_Ruangan" ? "P" : "L"}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-[var(--text-sidebar-active)] truncate">
@@ -217,7 +227,7 @@ export default function Sidebar() {
             <svg className="w-3.5 h-3.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
             </svg>
-            Simulasi: {currentUser.role === "Admin Fakultas" ? "PJ Ruangan" : "Admin Fakultas"}
+            Simulasi: {currentUser.role === "Admin Fakultas" ? "PJ Ruangan" : currentUser.role === "PJ_Ruangan" ? "Laboran" : "Admin Fakultas"}
           </button>
         </div>
       </div>
