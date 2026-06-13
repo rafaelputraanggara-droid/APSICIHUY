@@ -234,7 +234,7 @@ export default function NotifikasiPage() {
                         )}
                       </div>
 
-                      {(userRole === "Laboran" || userRole === "PJ_Ruangan" || userRole === "Admin Fakultas") && (
+                      {(userRole === "Laboran" || userRole === "PJ_Ruangan") && (
                         <div className="flex gap-3 mt-4">
                           <button 
                             onClick={() => handleUpdateKerusakan(laporan.id, "Ditolak")}
