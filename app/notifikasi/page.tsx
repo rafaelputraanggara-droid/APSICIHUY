@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 
 export default function NotifikasiPage() {
   const [activeTab, setActiveTab] = useState<"kerusakan" | "hilang" | "pendaftaran">("kerusakan");
@@ -132,8 +131,7 @@ export default function NotifikasiPage() {
   };
 
   return (
-    <DashboardLayout>
-      <div className="max-w-7xl mx-auto space-y-8 pb-12">
+    <div className="max-w-7xl mx-auto space-y-8 pb-12">
         <div className="relative overflow-hidden bg-[var(--bg-banner)] p-8 rounded-3xl text-white shadow-xl transition-colors duration-400">
           <div className="relative z-10 space-y-2">
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -437,6 +435,6 @@ export default function NotifikasiPage() {
         )}
 
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
