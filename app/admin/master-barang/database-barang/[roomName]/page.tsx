@@ -107,7 +107,6 @@ export default function RoomItemsPage() {
         
         <Link 
           href={`/admin/master-barang/database-barang/${encodeURIComponent(decodedRoomName)}/cetak-label`}
-          target="_blank"
           className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow hover:bg-indigo-700 transition-colors"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -160,7 +159,6 @@ export default function RoomItemsPage() {
                         <div className="flex items-center justify-end gap-3">
                           <Link
                             href={`/admin/master-barang/database-barang/${encodeURIComponent(decodedRoomName)}/cetak-label?item=${item.kode_barang}_${item.no_urut_pendaft}`}
-                            target="_blank"
                             className="text-[var(--text-muted)] hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white font-medium transition-colors"
                             title="Cetak Label Item Ini"
                           >

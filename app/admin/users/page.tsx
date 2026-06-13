@@ -233,23 +233,31 @@ export default function DatabaseAkunPage() {
                 <div>
                   <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">Dokumen Identitas (PDF)</p>
                   {detailUser.foto_ktm ? (
-                    <div className="rounded-xl border-2 border-[var(--border-panel)] overflow-hidden bg-neutral-100 h-64">
-                      <object 
-                        data={detailUser.foto_ktm} 
-                        type="application/pdf" 
-                        className="w-full h-full"
-                      >
-                        <div className="flex items-center justify-center h-full">
-                          <a 
-                            href={detailUser.foto_ktm} 
-                            target="_blank" 
-                            rel="noreferrer" 
-                            className="px-4 py-2 bg-[var(--tag-info-bg)] text-[var(--tag-info-text)] transition-colors duration-400 text-sm font-bold rounded-lg hover:bg-indigo-200 transition-colors"
-                          >
-                            Buka Dokumen PDF
-                          </a>
-                        </div>
-                      </object>
+                    <div className="space-y-3">
+                      <div className="flex justify-end">
+                        <a 
+                          href={detailUser.foto_ktm} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                          </svg>
+                          Cetak / Buka di Tab Baru
+                        </a>
+                      </div>
+                      <div className="rounded-xl border-2 border-[var(--border-panel)] overflow-hidden bg-neutral-100 h-64">
+                        <object 
+                          data={detailUser.foto_ktm} 
+                          type="application/pdf" 
+                          className="w-full h-full"
+                        >
+                          <div className="flex items-center justify-center h-full">
+                            <span className="text-sm text-[var(--text-muted)]">Browser tidak mendukung preview PDF.</span>
+                          </div>
+                        </object>
+                      </div>
                     </div>
                   ) : (
                     <div className="p-4 bg-[var(--bg-app)] transition-colors duration-400 rounded-xl text-center text-sm text-[var(--text-muted)] font-medium border border-[var(--border-panel)] border-dashed">

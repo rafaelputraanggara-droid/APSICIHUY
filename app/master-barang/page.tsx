@@ -217,49 +217,9 @@ export default function MasterBarang() {
                 justify-content: center;
                 margin-bottom: 16px;
               }
-              .asset-name { 
-                font-size: 16px; 
-                font-weight: bold; 
-                margin: 8px 0; 
-                text-transform: uppercase;
-              }
-              .code-info { 
-                font-size: 11px; 
-                margin-bottom: 4px; 
-                font-weight: bold;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="label-box">
-              <div class="header">
-                SIPRABU FT UNS
-              </div>
-              <div class="qr-container">
-                ${printContent.querySelector('svg')?.outerHTML || ''}
-              </div>
-              <div class="asset-name">
-                ${selectedBarang.nama_barang}
-              </div>
-              <div class="code-info">
-                KODE: ${selectedBarang.kode_barang}
-              </div>
-              <div class="code-info">
-                NUP: ${selectedBarang.no_urut_pendaft}
-              </div>
-            </div>
-            <script>
-              setTimeout(() => { 
-                window.print(); 
-                window.close(); 
-              }, 500);
-            </script>
-          </body>
-        </html>
-      `);
-      windowPrint.document.close();
-      windowPrint.focus();
-    }
+  const handleCetakLabel = () => {
+    if (!selectedBarang) return;
+    window.print();
   };
 
   return (

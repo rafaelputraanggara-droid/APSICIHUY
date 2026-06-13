@@ -45,10 +45,6 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
         console.error("Failed to fetch items for printing:", error);
       } finally {
         setLoading(false);
-        // Automatically open print dialog after rendering completes
-        setTimeout(() => {
-          window.print();
-        }, 1200);
       }
     };
     fetchItems();
