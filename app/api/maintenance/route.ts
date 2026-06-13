@@ -138,6 +138,42 @@ export async function PUT(request: Request) {
       }
     }
 
+    // AUTO-MIGRATE: Self-healing for nama_teknisi and bukti_penyelesaian_pdf
+    if (error.message && error.message.includes("Unknown column 'nama_teknisi'")) {
+      try {
+        console.log("Auto-migrating: Adding nama_teknisi to laporan_kerusakans...");
+        await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN nama_teknisi VARCHAR(255) NULL');
+        
+        try {
+          await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN bukti_penyelesaian_pdf LONGTEXT NULL');
+        } catch (e) { /* ignore if already exists */ }
+
+        // Retry the update after migration
+        if (status === 'Selesai') {
+          await pool.query(
+            "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ? WHERE id = ?",
+            [status, nama_teknisi, bukti_penyelesaian_pdf, id]
+          );
+        } else if (catatan !== undefined) {
+          await pool.query(
+            "UPDATE laporan_kerusakans SET status_laporan = ?, catatan_pj = ? WHERE id = ?",
+            [status, catatan, id]
+          );
+        } else {
+          await pool.query(
+            "UPDATE laporan_kerusakans SET status_laporan = ? WHERE id = ?",
+            [status, id]
+          );
+        }
+        return NextResponse.json({ success: true, message: 'Status berhasil diperbarui setelah auto-migrate teknisi.' });
+      } catch (retryError: any) {
+        return NextResponse.json(
+          { success: false, error: 'Gagal auto-migrate kolom teknisi: ' + retryError.message },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { success: false, error: 'Gagal memperbarui status: ' + (error instanceof Error ? error.message : String(error)) },
       { status: 500 }
