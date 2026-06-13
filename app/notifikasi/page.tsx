@@ -7,6 +7,7 @@ export default function NotifikasiPage() {
   const [activeTab, setActiveTab] = useState<"kerusakan" | "hilang" | "pendaftaran">("kerusakan");
   
   const [pendingAccounts, setPendingAccounts] = useState<any[]>([]);
+  const [pendingKerusakan, setPendingKerusakan] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pdfToView, setPdfToView] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string>("");
@@ -40,6 +41,8 @@ export default function NotifikasiPage() {
   useEffect(() => {
     if (activeTab === "pendaftaran") {
       fetchPendingAccounts();
+    } else if (activeTab === "kerusakan") {
+      fetchPendingKerusakan();
     }
   }, [activeTab]);
 
@@ -55,6 +58,39 @@ export default function NotifikasiPage() {
       console.error("Gagal mengambil data pendaftaran", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchPendingKerusakan = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/maintenance?status=Menunggu");
+      const data = await res.json();
+      if (data.success) {
+        setPendingKerusakan(data.data);
+      }
+    } catch (error) {
+      console.error("Gagal mengambil data kerusakan", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdateKerusakan = async (id: number, status: string) => {
+    try {
+      const res = await fetch("/api/maintenance", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchPendingKerusakan();
+      } else {
+        alert(data.error || "Gagal memperbarui status.");
+      }
+    } catch (error) {
+      alert("Terjadi kesalahan sistem saat memperbarui laporan kerusakan.");
     }
   };
 
@@ -107,16 +143,18 @@ export default function NotifikasiPage() {
             >
               Laporan Kerusakan
             </button>
-            <button
-              onClick={() => setActiveTab("hilang")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-                activeTab === "hilang"
-                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
-                  : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
-              }`}
-            >
-              Laporan Barang Hilang
-            </button>
+            {userRole !== "Laboran" && (
+              <button
+                onClick={() => setActiveTab("hilang")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                  activeTab === "hilang"
+                    ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
+                    : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                }`}
+              >
+                Laporan Barang Hilang
+              </button>
+            )}
             {userRole === "Admin Fakultas" && (
               <button
                 onClick={() => setActiveTab("pendaftaran")}
@@ -135,9 +173,64 @@ export default function NotifikasiPage() {
         {/* Tab Content */}
         <div className="bg-[var(--bg-panel)] border border-[var(--border-panel)] rounded-2xl p-8 text-[var(--text-muted)] transition-colors duration-400">
           {activeTab === "kerusakan" && (
-            <div className="text-center">
-              <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400 mb-2">Daftar Laporan Kerusakan</h3>
-              <p>Belum ada laporan kerusakan baru yang masuk.</p>
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400">Daftar Laporan Kerusakan</h3>
+              </div>
+              
+              {isLoading ? (
+                <p className="text-center py-8">Memuat data laporan kerusakan...</p>
+              ) : pendingKerusakan.length === 0 ? (
+                <p className="text-center py-8">Belum ada laporan kerusakan baru yang masuk.</p>
+              ) : (
+                <div className="grid grid-cols-1 gap-6">
+                  {pendingKerusakan.map((laporan) => (
+                    <div key={laporan.id} className="border border-[var(--border-panel)] rounded-xl p-6 relative overflow-hidden bg-[var(--bg-app)] transition-colors duration-400">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h4 className="font-bold text-[var(--text-main)] text-lg transition-colors duration-400">{laporan.nama_barang || "Barang Tidak Diketahui"}</h4>
+                          <p className="text-xs text-indigo-600 font-semibold">{laporan.kode_barang} - {laporan.no_urut_pendaft}</p>
+                        </div>
+                        <span className="px-3 py-1 bg-[var(--tag-warning-bg)] text-[var(--tag-warning-text)] transition-colors duration-400 text-xs font-bold rounded-full">
+                          Menunggu
+                        </span>
+                      </div>
+                      
+                      <div className="space-y-4 mb-6">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Ruangan Asal</p>
+                            <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400">{laporan.ruangan_asal || "-"}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Pelapor</p>
+                            <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400">{laporan.dilaporkan_oleh}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400">Kendala</p>
+                          <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400 mt-1">{laporan.deskripsi_kerusakan}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 mt-4">
+                        <button 
+                          onClick={() => handleUpdateKerusakan(laporan.id, "Ditolak")}
+                          className="flex-1 py-2.5 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold rounded-xl text-sm transition-all shadow-sm"
+                        >
+                          Tolak
+                        </button>
+                        <button 
+                          onClick={() => handleUpdateKerusakan(laporan.id, "Diterima")}
+                          className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm"
+                        >
+                          Terima Laporan
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
           {activeTab === "hilang" && (
