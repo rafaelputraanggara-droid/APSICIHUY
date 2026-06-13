@@ -19,7 +19,11 @@ export default function NotifikasiPage() {
       const savedUser = sessionStorage.getItem("simulated_user");
       if (savedUser) {
         try {
-          setUserRole(JSON.parse(savedUser).role);
+          const role = JSON.parse(savedUser).role;
+          setUserRole(role);
+          if (role === "Mahasiswa/Dosen" || role === "Mahasiswa") {
+            setActiveTab("riwayat");
+          }
         } catch (e) {}
       }
       
@@ -27,9 +31,12 @@ export default function NotifikasiPage() {
         const updated = sessionStorage.getItem("simulated_user");
         if (updated) {
           try {
-            setUserRole(JSON.parse(updated).role);
-            if (JSON.parse(updated).role === "PJ_Ruangan" && activeTab === "pendaftaran") {
+            const parsedRole = JSON.parse(updated).role;
+            setUserRole(parsedRole);
+            if (parsedRole === "PJ_Ruangan" && activeTab === "pendaftaran") {
               setActiveTab("kerusakan");
+            } else if ((parsedRole === "Mahasiswa/Dosen" || parsedRole === "Mahasiswa") && activeTab !== "riwayat") {
+              setActiveTab("riwayat");
             }
           } catch (e) {}
         }
@@ -148,17 +155,19 @@ export default function NotifikasiPage() {
         {/* Tabs Navigation */}
         <div className="border-b border-[var(--border-panel)]">
           <nav className="flex space-x-8 overflow-x-auto" aria-label="Tabs">
-            <button
-              onClick={() => setActiveTab("kerusakan")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-                activeTab === "kerusakan"
-                  ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
-                  : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
-              }`}
-            >
-              Laporan Kerusakan
-            </button>
-            {userRole !== "Laboran" && (
+            {userRole !== "Mahasiswa/Dosen" && userRole !== "Mahasiswa" && (
+              <button
+                onClick={() => setActiveTab("kerusakan")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                  activeTab === "kerusakan"
+                    ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
+                    : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                }`}
+              >
+                Laporan Kerusakan
+              </button>
+            )}
+            {userRole !== "Laboran" && userRole !== "Mahasiswa/Dosen" && userRole !== "Mahasiswa" && (
               <button
                 onClick={() => setActiveTab("hilang")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${

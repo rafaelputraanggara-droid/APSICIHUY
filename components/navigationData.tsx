@@ -65,7 +65,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "Stock Opname",
     href: "/stock-opname",
-    roles: ["Admin", "PJ_Ruangan"],
+    roles: ["PJ_Ruangan"],
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -123,6 +123,7 @@ export const subMenus: SubMenuItem[] = [
   { name: "Tambah Data Barang", href: "/admin/master-barang/tambah", roles: ["Admin"] },
   { name: "Import SAKTI CSV", href: "/admin/master-barang/import", roles: ["Admin"] },
   { name: "Daftar Database Barang", href: "/admin/master-barang/database-barang", roles: ["Admin", "PJ_Ruangan", "Laboran"] },
-  { name: "Kategori Barang", href: "/admin/master-barang/kategori", roles: ["Admin", "PJ_Ruangan", "Laboran"] }
+  { name: "Kategori Barang", href: "/admin/master-barang/kategori", roles: ["Admin", "PJ_Ruangan", "Laboran"] },
+  { name: "Riwayat Stock Opname", href: "/admin/master-barang/riwayat-stock-opname", roles: ["Admin"] }
 ];
 
