@@ -107,7 +107,7 @@ export async function PUT(request: Request) {
     }
 
     // AUTO-MIGRATE: Fix ENUM definition if status is invalid
-    if (error.message && error.message.includes("Data truncated for column 'status_laporan'")) {
+    if (error.message && (error.message.includes("Data truncated for column 'status_laporan'") || error.message.includes("Data truncated for column '%s'"))) {
       try {
         console.log("Auto-migrating: Updating ENUM for status_laporan...");
         await pool.query("ALTER TABLE laporan_kerusakans MODIFY status_laporan ENUM('Menunggu', 'Diproses', 'Diterima', 'Sedang Diperbaiki', 'Selesai', 'Ditolak') DEFAULT 'Menunggu'");
