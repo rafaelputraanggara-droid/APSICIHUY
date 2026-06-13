@@ -90,6 +90,27 @@ export default function RoomItemsPage() {
     }
   };
 
+  const handleDeleteClick = async (item: Barang) => {
+    if (!window.confirm(`Apakah Anda yakin ingin menghapus barang ${item.nama_barang} (${item.kode_barang}/${item.no_urut_pendaft})?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/barangs/detail?kode_barang=${encodeURIComponent(item.kode_barang)}&no_urut_pendaft=${item.no_urut_pendaft}`, {
+        method: "DELETE"
+      });
+      const json = await res.json();
+      if (json.success) {
+        fetchItems();
+      } else {
+        alert(json.error || "Gagal menghapus barang");
+      }
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+      alert("Terjadi kesalahan saat menghapus barang.");
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-6 relative">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -168,9 +189,15 @@ export default function RoomItemsPage() {
                           </Link>
                           <button
                             onClick={() => handleEditClick(item)}
-                            className="text-[var(--tag-info-text)] transition-colors duration-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium transition-colors"
+                            className="text-[var(--tag-info-text)] hover:text-indigo-900 dark:hover:text-indigo-300 font-medium transition-colors"
                           >
                             Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(item)}
+                            className="text-rose-600 hover:text-rose-900 dark:text-rose-400 dark:hover:text-rose-300 font-medium transition-colors"
+                          >
+                            Hapus
                           </button>
                         </div>
                       </td>
