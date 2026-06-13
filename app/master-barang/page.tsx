@@ -179,44 +179,10 @@ export default function MasterBarang() {
   };
 
   const handlePrintQR = () => {
-    const printContent = document.getElementById('qr-print-area');
-    const windowPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-    if (windowPrint && printContent && selectedBarang) {
-      windowPrint.document.write(`
-        <html>
-          <head>
-            <title>Print QR Label - ${selectedBarang.nama_barang}</title>
-            <style>
-              body { 
-                font-family: 'Courier New', Courier, monospace; 
-                display: flex; 
-                justify-content: center; 
-                align-items: center; 
-                height: 100vh; 
-                margin: 0; 
-                background: #fff;
-              }
-              .label-box { 
-                border: 2px solid #000; 
-                padding: 24px; 
-                text-align: center; 
-                width: 280px; 
-                border-radius: 8px;
-              }
-              .header { 
-                font-size: 14px; 
-                font-weight: bold; 
-                margin-bottom: 16px; 
-                border-bottom: 2px solid #000; 
-                padding-bottom: 8px; 
-                text-transform: uppercase;
-                letter-spacing: 1px;
-              }
-              .qr-container {
-                display: flex;
-                justify-content: center;
-                margin-bottom: 16px;
-              }
+    if (!selectedBarang) return;
+    window.print();
+  };
+
   const handleCetakLabel = () => {
     if (!selectedBarang) return;
     window.print();
