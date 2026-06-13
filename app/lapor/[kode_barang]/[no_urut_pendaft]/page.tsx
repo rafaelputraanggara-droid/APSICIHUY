@@ -82,6 +82,14 @@ export default function LaporKerusakanPage() {
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.type !== "application/pdf") {
+        alert("Harap unggah file PDF.");
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Ukuran file maksimal 2MB.");
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setFotoUrl(reader.result as string);
@@ -330,11 +338,11 @@ export default function LaporKerusakanPage() {
 
                     <div>
                       <label className="block text-sm font-semibold text-[var(--text-main)]">
-                        Upload Foto Bukti Kerusakan <span className="text-[var(--tag-danger-text)]">*</span>
+                        Upload Dokumen Bukti Kerusakan (PDF) <span className="text-[var(--tag-danger-text)]">*</span>
                       </label>
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="application/pdf"
                         onChange={handlePhotoUpload}
                         required
                         className="mt-2 block w-full text-sm text-[var(--text-main)]
@@ -344,12 +352,19 @@ export default function LaporKerusakanPage() {
                           file:bg-indigo-50 file:text-indigo-700
                           hover:file:bg-indigo-100 transition-colors"
                       />
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">Maksimal ukuran file: 2MB.</p>
                     </div>
 
                     {fotoUrl && (
                       <div className="border border-[var(--border-panel)] rounded-2xl p-2 bg-[var(--bg-app)] inline-block w-full">
-                        <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase block mb-1">Pratinjau Foto Bukti</span>
-                        <img src={fotoUrl} alt="Preview Bukti Kerusakan" className="h-40 w-auto object-cover rounded-xl" />
+                        <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase block mb-2">Pratinjau Dokumen Bukti</span>
+                        <div className="h-64 w-full rounded-xl overflow-hidden border border-[var(--border-panel)] bg-neutral-100">
+                          <object data={fotoUrl} type="application/pdf" className="w-full h-full">
+                            <div className="flex items-center justify-center h-full">
+                              <span className="text-sm text-[var(--text-muted)]">Pratinjau PDF tidak didukung di browser ini.</span>
+                            </div>
+                          </object>
+                        </div>
                       </div>
                     )}
 

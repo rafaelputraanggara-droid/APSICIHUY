@@ -27,6 +27,7 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
 
   // Target single item if specified in URL query "?item=KODE_NUP"
   const [targetItem, setTargetItem] = useState<string | null>(null);
+  const [zoom, setZoom] = useState<number>(100);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -80,26 +81,44 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
           >
             Tutup
           </button>
-          <button 
-            onClick={() => window.print()} 
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-sm flex items-center gap-2 cursor-pointer transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            Cetak Ulang (Ctrl+P)
-          </button>
+          
+          <div className="flex items-center gap-4 print:hidden">
+            <div className="flex items-center gap-2 bg-[var(--bg-app)] border border-[var(--border-panel)] px-3 py-1.5 rounded-lg shadow-sm">
+              <span className="text-xs font-bold text-[var(--text-muted)]">Zoom:</span>
+              <input 
+                type="range" 
+                min="50" 
+                max="200" 
+                value={zoom} 
+                onChange={(e) => setZoom(parseInt(e.target.value))}
+                className="w-24 accent-indigo-600"
+              />
+              <span className="text-xs font-mono font-bold text-[var(--text-main)]">{zoom}%</span>
+            </div>
+            <button 
+              onClick={() => window.print()} 
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 hover:shadow-lg transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              Cetak Ulang (Ctrl+P)
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Printable Area */}
-      <div className="print:pt-0 pt-24 p-8 max-w-[210mm] mx-auto bg-[var(--bg-panel)] transition-colors duration-400 shadow-xl print:shadow-none min-h-[297mm]">
+      <div className="print:pt-0 pt-24 p-8 max-w-[210mm] mx-auto bg-white transition-colors duration-400 shadow-xl print:shadow-none min-h-[297mm]">
         {filteredItems.length === 0 ? (
           <div className="text-center py-20 text-[var(--text-muted)] print:hidden">
             Aset tidak ditemukan.
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 print:gap-2">
+          <div 
+            className="grid grid-cols-2 gap-4 print:gap-2 print:transform-none transform-gpu origin-top-left"
+            style={{ transform: `scale(${zoom / 100})`, width: `${100 / (zoom / 100)}%` }}
+          >
             {filteredItems.map((item, idx) => {
               // Define the destination URL for scanning
               const host = typeof window !== "undefined" ? window.location.origin : "http://siprabu.ft.uns.ac.id";
@@ -108,7 +127,7 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
               return (
                 <div 
                   key={idx} 
-                  className="border-[1.5px] border-black rounded-lg p-3 flex flex-row items-center gap-3 bg-[var(--bg-panel)] transition-colors duration-400 print:break-inside-avoid relative overflow-hidden"
+                  className="border-[1.5px] border-black rounded-lg p-3 flex flex-row items-center gap-3 bg-white text-black transition-colors duration-400 print:break-inside-avoid relative overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-600 print:bg-black"></div>
                   
@@ -131,7 +150,7 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
                   </div>
                   
                   <div className="flex-shrink-0 flex flex-col items-center gap-1 justify-center border-l-[1.5px] border-dashed border-neutral-300 pl-3">
-                    <div className="p-1 bg-[var(--bg-panel)] transition-colors duration-400">
+                    <div className="p-1 bg-white transition-colors duration-400">
                       <QRCodeSVG 
                         value={scanUrl} 
                         size={64}

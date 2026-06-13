@@ -75,7 +75,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Database query error (POST /api/laporan-masuk):', error);
     return NextResponse.json(
-      { success: false, error: 'Terjadi kesalahan internal server saat menyimpan laporan kerusakan.' },
+      { success: false, error: 'Terjadi kesalahan internal server: ' + (error?.message || 'Unknown error') },
       { status: 500 }
     );
   }

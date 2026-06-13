@@ -330,14 +330,20 @@ export default function NotifikasiPage() {
 
         {/* Modal Lihat PDF */}
         {pdfToView && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-            <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl w-full max-w-4xl h-[85vh] shadow-2xl flex flex-col overflow-hidden relative">
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
+            onClick={() => setPdfToView(null)}
+          >
+            <div 
+              className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl w-full max-w-4xl h-[85vh] shadow-2xl flex flex-col overflow-hidden relative"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex justify-between items-center p-4 border-b border-[var(--border-panel)]">
                 <h3 className="font-bold text-[var(--text-main)] transition-colors duration-400 flex items-center gap-2">
                   <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Berkas Identitas (PDF)
+                  Pratinjau Dokumen PDF
                 </h3>
                 <div className="flex items-center gap-3">
                   <a 
