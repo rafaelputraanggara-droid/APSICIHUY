@@ -23,8 +23,8 @@ export default function RiwayatLaporanPage() {
         return;
       }
       
-      if (parsed.id) {
-        fetchRiwayat(parsed.id, parsed.name);
+      if (parsed.id || parsed.name) {
+        fetchRiwayat(parsed.id || 0, parsed.name || "");
       } else {
         setLoading(false);
       }

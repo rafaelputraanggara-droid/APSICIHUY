@@ -7,9 +7,9 @@ export async function GET(request: Request) {
     const pelapor_id = searchParams.get('pelapor_id');
     const nama_pelapor = searchParams.get('nama_pelapor');
 
-    if (!pelapor_id) {
+    if (!pelapor_id && !nama_pelapor) {
       return NextResponse.json(
-        { success: false, error: 'pelapor_id parameter is required.' },
+        { success: false, error: 'pelapor_id atau nama_pelapor parameter is required.' },
         { status: 400 }
       );
     }
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       LEFT JOIN barangs b 
         ON l.kode_barang = b.kode_barang 
         AND l.no_urut_pendaft = b.no_urut_pendaft
-      WHERE l.pelapor_id = ? OR (l.pelapor_id IS NULL AND l.dilaporkan_oleh = ?)
+      WHERE l.pelapor_id = ? OR l.dilaporkan_oleh = ?
       ORDER BY l.created_at DESC
     `;
     
