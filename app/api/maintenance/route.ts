@@ -66,8 +66,40 @@ export async function PUT(request: Request) {
     }
 
     return NextResponse.json({ success: true, message: 'Status berhasil diperbarui.' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('API Maintenance PUT Error:', error);
+
+    // AUTO-MIGRATE: Self-healing database schema if columns are missing
+    if (error.message && error.message.includes("Unknown column 'catatan_pj'")) {
+      try {
+        console.log("Auto-migrating: Adding catatan_pj to laporan_kerusakans...");
+        await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN catatan_pj TEXT NULL');
+        
+        try {
+          await pool.query('ALTER TABLE laporan_kerusakans ADD COLUMN pelapor_id INT NULL');
+        } catch (e) { /* ignore if already exists */ }
+
+        // Retry the update after migration
+        if (catatan !== undefined) {
+          await pool.query(
+            "UPDATE laporan_kerusakans SET status_laporan = ?, catatan_pj = ? WHERE id = ?",
+            [status, catatan, id]
+          );
+        } else {
+          await pool.query(
+            "UPDATE laporan_kerusakans SET status_laporan = ? WHERE id = ?",
+            [status, id]
+          );
+        }
+        return NextResponse.json({ success: true, message: 'Status berhasil diperbarui setelah auto-migrate.' });
+      } catch (retryError: any) {
+        return NextResponse.json(
+          { success: false, error: 'Gagal auto-migrate: ' + retryError.message },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { success: false, error: 'Gagal memperbarui status: ' + (error instanceof Error ? error.message : String(error)) },
       { status: 500 }
