@@ -495,7 +495,7 @@ export default function StockOpnamePage() {
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 Audit Berjalan
               </div>
-              <h2 className="text-2xl font-extrabold text-gray-900">Stok Opname: {session.ruangan}</h2>
+              <h2 className="text-2xl font-extrabold text-[var(--text-main)] transition-colors duration-400">Stok Opname: {session.ruangan}</h2>
               <p className="text-xs text-gray-500 mt-1">Auditor: <strong className="text-gray-700">{session.dilakukan_oleh}</strong></p>
             </div>
             
@@ -616,7 +616,7 @@ export default function StockOpnamePage() {
                 
                 {/* Search & Header */}
                 <div className="border-b pb-4 mb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-                  <h3 className="text-lg font-bold text-gray-900">Daftar Ekspektasi Ruangan</h3>
+                  <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400">Daftar Ekspektasi Ruangan</h3>
                   <input
                     type="text"
                     value={searchQuery}
@@ -657,7 +657,7 @@ export default function StockOpnamePage() {
                                 <span className="font-mono text-[9px] font-bold bg-gray-100 px-1 py-0.5 rounded text-gray-500">
                                   {item.kode_barang} &bull; {item.no_urut_pendaft}
                                 </span>
-                                <h4 className="text-xs font-bold text-gray-800 mt-1 truncate max-w-[200px]">{item.nama_barang}</h4>
+                                <h4 className="text-xs font-bold text-[var(--text-main)] transition-colors duration-400 mt-1 truncate max-w-[200px]">{item.nama_barang}</h4>
                                 <p className="text-[10px] text-gray-400 truncate max-w-[200px]">{item.merk_type}</p>
                               </td>
                               <td className="px-3 py-3 text-center whitespace-nowrap">
@@ -719,14 +719,14 @@ export default function StockOpnamePage() {
           {/* Header Card (Hide on Print) */}
           <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-6 shadow-sm flex justify-between items-center print:hidden">
             <div>
-              <h2 className="text-xl font-extrabold text-gray-900">Stok Opname Berhasil Disimpan</h2>
+              <h2 className="text-xl font-extrabold text-[var(--text-main)] transition-colors duration-400">Stok Opname Berhasil Disimpan</h2>
               <p className="text-xs text-gray-400">Audit selesai pada {new Date(report.tanggal_selesai).toLocaleString()}</p>
             </div>
             
             <div className="flex gap-3">
               <button
                 onClick={() => window.print()}
-                className="inline-flex items-center gap-1.5 px-4.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-750 font-bold border border-gray-200 rounded-xl text-xs transition cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4.5 py-2.5 bg-[var(--bg-app)] hover:bg-indigo-50 dark:hover:bg-neutral-800 text-[var(--text-main)] font-bold border border-[var(--border-panel)] rounded-xl text-xs transition cursor-pointer"
               >
                 <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -761,15 +761,15 @@ export default function StockOpnamePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 print:grid-cols-3 print:gap-4">
             <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
               <span className="text-[10px] font-bold text-gray-400 uppercase">Lokasi Ruangan</span>
-              <p className="text-base font-extrabold text-gray-900 mt-1">{report.ruangan}</p>
+              <p className="text-base font-extrabold text-[var(--text-main)] transition-colors duration-400 mt-1">{report.ruangan}</p>
             </div>
             <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
               <span className="text-[10px] font-bold text-gray-400 uppercase">Auditor Pelaksana</span>
-              <p className="text-base font-extrabold text-gray-900 mt-1">{report.dilakukan_oleh}</p>
+              <p className="text-base font-extrabold text-[var(--text-main)] transition-colors duration-400 mt-1">{report.dilakukan_oleh}</p>
             </div>
             <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-2xl border border-gray-200 p-5 shadow-sm print:p-3 print:border-none print:shadow-none">
               <span className="text-[10px] font-bold text-gray-400 uppercase">Waktu Audit</span>
-              <p className="text-xs font-bold text-gray-900 mt-1.5 font-mono">
+              <p className="text-xs font-bold text-[var(--text-main)] transition-colors duration-400 mt-1.5 font-mono">
                 {new Date(report.tanggal_mulai).toLocaleDateString()} &bull; {new Date(report.tanggal_mulai).toLocaleTimeString()} s/d {new Date(report.tanggal_selesai).toLocaleTimeString()}
               </p>
             </div>
@@ -780,7 +780,7 @@ export default function StockOpnamePage() {
             
             <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-gray-200/80 p-5 shadow-sm text-center print:border-neutral-300">
               <span className="text-[10px] font-bold text-gray-400 uppercase">Total Ekspektasi</span>
-              <p className="text-3xl font-black text-neutral-800 mt-1">{report.summary.totalItems}</p>
+              <p className="text-3xl font-black text-[var(--text-main)] transition-colors duration-400 mt-1">{report.summary.totalItems}</p>
               <p className="text-xxs text-gray-450 mt-1">Item Tercatat di Database</p>
             </div>
 
@@ -834,8 +834,8 @@ export default function StockOpnamePage() {
                   <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-neutral-200">
                     {report.gapList.map((item) => (
                       <tr key={item.id} className="hover:bg-[var(--bg-app)] transition-colors duration-400 print:bg-[var(--bg-panel)] transition-colors duration-400 text-xs">
-                        <td className="px-4 py-3 font-mono font-bold text-neutral-800">{item.kode_barang} &bull; {String(item.no_urut_pendaft).padStart(3, '0')}</td>
-                        <td className="px-4 py-3 font-semibold text-neutral-800">{item.nama_barang}</td>
+                        <td className="px-4 py-3 font-mono font-bold text-[var(--text-main)] transition-colors duration-400">{item.kode_barang} &bull; {String(item.no_urut_pendaft).padStart(3, '0')}</td>
+                        <td className="px-4 py-3 font-semibold text-[var(--text-main)] transition-colors duration-400">{item.nama_barang}</td>
                         <td className="px-4 py-3 text-[var(--text-muted)]">{item.merk_type}</td>
                         <td className="px-4 py-3 text-center text-[var(--text-muted)] font-semibold">{item.th_perolehan}</td>
                         <td className="px-4 py-3 text-center">
