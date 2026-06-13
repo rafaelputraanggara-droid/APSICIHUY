@@ -88,10 +88,21 @@ export const menuItems: MenuItem[] = [
   {
     name: "Notifikasi",
     href: "/notifikasi",
-    roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek", "Mahasiswa/Dosen", "Laboran"],
+    roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek", "Laboran", "Mahasiswa/Dosen"],
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+    )
+  },
+
+  {
+    name: "Scan QR Barang",
+    href: "/mahasiswa/scan",
+    roles: ["Mahasiswa/Dosen"],
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-4v-4m-2 4h-2m-2-4h-2m8 0h2m-2 2h2m-4-6h4M6 6h4v4H6V6zm10 0h4v4h-4V6zM6 16h4v4H6v-4z" />
       </svg>
     )
   },

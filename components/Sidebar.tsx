@@ -221,15 +221,30 @@ export default function Sidebar() {
             </div>
           </div>
           
-          <button
-            onClick={handleToggleUser}
-            className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white/10 hover:bg-white/20 text-[var(--text-sidebar-active)] border border-white/10 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer hover:shadow"
-          >
-            <svg className="w-3.5 h-3.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-            Simulasi: {currentUser.role === "Admin Fakultas" ? "PJ Ruangan" : currentUser.role === "PJ_Ruangan" ? "Laboran" : "Admin Fakultas"}
-          </button>
+          <div className="flex gap-2 w-full">
+            <button
+              onClick={handleToggleUser}
+              title="Ganti Peran Simulasi"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white/10 hover:bg-white/20 text-[var(--text-sidebar-active)] border border-white/10 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer hover:shadow"
+            >
+              <svg className="w-4 h-4 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              Ganti Role
+            </button>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem("simulated_user");
+                window.location.href = "/login";
+              }}
+              title="Logout / Hapus Sesi"
+              className="flex-none inline-flex items-center justify-center px-3 py-2 bg-rose-500/20 hover:bg-rose-500/40 text-rose-100 border border-rose-500/30 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </aside>

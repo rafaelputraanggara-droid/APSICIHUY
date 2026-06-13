@@ -46,20 +46,31 @@ export async function DELETE(request: Request) {
       );
     }
 
+    let userEmail = '';
+
     if (type === 'mahasiswa') {
-      // Hapus permanen dari pendaftaran_akun agar bisa mendaftar ulang
+      // Dapatkan email dari pendaftaran_akun terlebih dahulu
+      const [pRows] = await pool.query("SELECT email_sso FROM pendaftaran_akun WHERE id = ?", [id]);
+      userEmail = (pRows as any[])[0]?.email_sso;
+
+      // Hapus permanen dari pendaftaran_akun
       await pool.query("DELETE FROM pendaftaran_akun WHERE id = ?", [id]);
+
+      // Hapus juga dari users jika kebetulan ada untuk menghindari ER_DUP_ENTRY
+      if (userEmail) {
+        await pool.query("DELETE FROM users WHERE email = ?", [userEmail]);
+      }
     } else {
-      // Dapatkan email terlebih dahulu
+      // Dapatkan email dari users terlebih dahulu
       const [userRows] = await pool.query("SELECT email FROM users WHERE id = ?", [id]);
-      const email = (userRows as any[])[0]?.email;
+      userEmail = (userRows as any[])[0]?.email;
 
       // Hapus dari tabel users
       await pool.query("DELETE FROM users WHERE id = ?", [id]);
 
       // Hapus juga riwayat pendaftaran di pendaftaran_akun agar constraint unik tidak menghalangi pendaftaran ulang
-      if (email) {
-        await pool.query("DELETE FROM pendaftaran_akun WHERE email_sso = ?", [email]);
+      if (userEmail) {
+        await pool.query("DELETE FROM pendaftaran_akun WHERE email_sso = ?", [userEmail]);
       }
     }
 
