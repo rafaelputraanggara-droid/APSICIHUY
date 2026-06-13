@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { id, status, nama_teknisi, bukti_penyelesaian_pdf } = body;
+    const { id, status, nama_teknisi, bukti_penyelesaian_pdf, catatan } = body;
 
     if (!id || !status) {
       return NextResponse.json(
@@ -52,6 +52,11 @@ export async function PUT(request: Request) {
       await pool.query(
         "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ? WHERE id = ?",
         [status, nama_teknisi, bukti_penyelesaian_pdf, id]
+      );
+    } else if (catatan !== undefined) {
+      await pool.query(
+        "UPDATE laporan_kerusakans SET status_laporan = ?, catatan_pj = ? WHERE id = ?",
+        [status, catatan, id]
       );
     } else {
       await pool.query(

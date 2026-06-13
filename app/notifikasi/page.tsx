@@ -11,6 +11,7 @@ export default function NotifikasiPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [pdfToView, setPdfToView] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string>("");
+  const [kerusakanModal, setKerusakanModal] = useState<{ isOpen: boolean; id: number; action: "Diterima" | "Ditolak"; catatan: string } | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -76,15 +77,28 @@ export default function NotifikasiPage() {
     }
   };
 
-  const handleUpdateKerusakan = async (id: number, status: string) => {
+  const handleUpdateKerusakan = (id: number, status: "Diterima" | "Ditolak") => {
+    setKerusakanModal({ isOpen: true, id, action: status, catatan: "" });
+  };
+
+  const submitUpdateKerusakan = async () => {
+    if (!kerusakanModal) return;
+    const { id, action, catatan } = kerusakanModal;
+    
+    if (action === "Ditolak" && !catatan.trim()) {
+      alert("Alasan penolakan wajib diisi!");
+      return;
+    }
+
     try {
       const res = await fetch("/api/maintenance", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status }),
+        body: JSON.stringify({ id, status: action, catatan }),
       });
       const data = await res.json();
       if (data.success) {
+        setKerusakanModal(null);
         fetchPendingKerusakan();
       } else {
         alert(data.error || "Gagal memperbarui status.");
@@ -118,7 +132,8 @@ export default function NotifikasiPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-12">
+    <DashboardLayout>
+      <div className="max-w-7xl mx-auto space-y-8 pb-12">
         <div className="relative overflow-hidden bg-[var(--bg-banner)] p-8 rounded-3xl text-white shadow-xl transition-colors duration-400">
           <div className="relative z-10 space-y-2">
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -221,7 +236,7 @@ export default function NotifikasiPage() {
                         )}
                       </div>
 
-                      {userRole === "Laboran" && (
+                      {(userRole === "Laboran" || userRole === "PJ_Ruangan" || userRole === "Admin Fakultas") && (
                         <div className="flex gap-3 mt-4">
                           <button 
                             onClick={() => handleUpdateKerusakan(laporan.id, "Ditolak")}
@@ -379,6 +394,49 @@ export default function NotifikasiPage() {
             </div>
           </div>
         )}
+
+        {/* Modal for Update Kerusakan (Tolak/Terima) */}
+        {kerusakanModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+            <div className="bg-[var(--bg-panel)] rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-scale-in border border-[var(--border-panel)]">
+              <div className="p-6 border-b border-[var(--border-panel)]">
+                <h3 className="text-xl font-bold text-[var(--text-main)]">
+                  {kerusakanModal.action === "Ditolak" ? "Tolak Laporan Kerusakan" : "Terima Laporan Kerusakan"}
+                </h3>
+              </div>
+              <div className="p-6">
+                <label className="block text-sm font-semibold text-[var(--text-main)] mb-2">
+                  {kerusakanModal.action === "Ditolak" ? "Alasan Penolakan (Wajib)" : "Catatan Tambahan (Opsional)"}
+                </label>
+                <textarea
+                  className="w-full border border-[var(--border-input)] rounded-xl p-3 bg-[var(--bg-input)] text-[var(--text-main)] focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  rows={4}
+                  placeholder={kerusakanModal.action === "Ditolak" ? "Masukkan alasan kenapa laporan ditolak..." : "Catatan untuk pelapor (opsional)..."}
+                  value={kerusakanModal.catatan}
+                  onChange={(e) => setKerusakanModal({ ...kerusakanModal, catatan: e.target.value })}
+                />
+              </div>
+              <div className="p-6 border-t border-[var(--border-panel)] bg-[var(--bg-app)] flex justify-end gap-3">
+                <button
+                  onClick={() => setKerusakanModal(null)}
+                  className="px-5 py-2.5 rounded-xl font-bold text-[var(--text-muted)] hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+                >
+                  Batal
+                </button>
+                <button
+                  onClick={submitUpdateKerusakan}
+                  className={`px-5 py-2.5 rounded-xl font-bold text-white transition-colors ${
+                    kerusakanModal.action === "Ditolak" ? "bg-rose-600 hover:bg-rose-700" : "bg-emerald-600 hover:bg-emerald-700"
+                  }`}
+                >
+                  Konfirmasi
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
+    </DashboardLayout>
   );
 }

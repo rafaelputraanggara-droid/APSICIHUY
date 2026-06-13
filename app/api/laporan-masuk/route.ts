@@ -35,7 +35,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { kode_barang, no_urut_pendaft, dilaporkan_oleh, deskripsi_kerusakan, foto_url } = body;
+    const { kode_barang, no_urut_pendaft, dilaporkan_oleh, deskripsi_kerusakan, foto_url, pelapor_id } = body;
 
     if (!kode_barang || no_urut_pendaft === undefined || !dilaporkan_oleh || !deskripsi_kerusakan) {
       return NextResponse.json(
@@ -54,9 +54,9 @@ export async function POST(request: Request) {
 
     // Insert to database
     const [result]: any = await pool.query(
-      `INSERT INTO laporan_kerusakans (kode_barang, no_urut_pendaft, dilaporkan_oleh, deskripsi_kerusakan, foto_url, status_laporan) 
-       VALUES (?, ?, ?, ?, ?, 'Menunggu')`,
-      [kode_barang, nup, dilaporkan_oleh.trim(), deskripsi_kerusakan.trim(), (foto_url || '').trim()]
+      `INSERT INTO laporan_kerusakans (kode_barang, no_urut_pendaft, dilaporkan_oleh, deskripsi_kerusakan, foto_url, status_laporan, pelapor_id) 
+       VALUES (?, ?, ?, ?, ?, 'Menunggu', ?)`,
+      [kode_barang, nup, dilaporkan_oleh.trim(), deskripsi_kerusakan.trim(), (foto_url || '').trim(), pelapor_id || null]
     );
 
     const insertId = result.insertId;

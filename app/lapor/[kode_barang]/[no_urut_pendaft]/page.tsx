@@ -33,6 +33,7 @@ export default function LaporKerusakanPage() {
   const [fotoUrl, setFotoUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [pelaporId, setPelaporId] = useState<number | null>(null);
 
   // Auth State
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -47,6 +48,7 @@ export default function LaporKerusakanPage() {
           setIsAuthorized(true);
           // Autofill name if possible
           if (parsed.name) setNamaPelapor(parsed.name);
+          if (parsed.id) setPelaporId(parsed.id);
         }
       } catch (e) {}
     }
@@ -112,7 +114,8 @@ export default function LaporKerusakanPage() {
           no_urut_pendaft: barang.no_urut_pendaft,
           dilaporkan_oleh: namaPelapor,
           deskripsi_kerusakan: deskripsi,
-          foto_url: fotoUrl
+          foto_url: fotoUrl,
+          pelapor_id: pelaporId
         })
       });
 
