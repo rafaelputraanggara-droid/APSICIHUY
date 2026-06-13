@@ -136,7 +136,7 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="text-2xl font-black tracking-tight text-white">SIPRABU FT UNS</h1>
-          <p className="text-xs text-[var(--text-muted)] mt-1 uppercase font-bold tracking-wider">
+          <p className="text-xs text-white/70 mt-1 uppercase font-bold tracking-wider">
             Masuk ke Sistem
           </p>
         </div>
@@ -247,7 +247,7 @@ export default function LoginPage() {
                   setLoginMode("none");
                   setErrorMsg(null);
                 }} 
-                className="text-xs text-[var(--text-muted)] hover:text-white underline mt-2"
+                className="text-xs text-white/60 hover:text-white underline mt-2"
               >
                 Kembali ke pilihan login
               </button>

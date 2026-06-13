@@ -124,7 +124,7 @@ export default function NotifikasiPage() {
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
               Pusat Notifikasi & Laporan
             </h1>
-            <p className="text-indigo-100 max-w-2xl text-sm sm:text-base">
+            <p className="text-white/80 max-w-2xl text-sm sm:text-base">
               Pantau laporan kerusakan, laporan barang hilang, dan pendaftaran akun baru.
             </p>
           </div>

@@ -217,7 +217,7 @@ export default function TambahBarang() {
             Admin Fakultas Area
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Tambah Data Barang</h1>
-          <p className="text-indigo-100 max-w-xl text-sm">
+          <p className="text-white/80 max-w-xl text-sm">
             Daftarkan aset fisik milik negara secara manual ke database. Format kode barang akan divalidasi sesuai standar SAKTI BMN.
           </p>
         </div>

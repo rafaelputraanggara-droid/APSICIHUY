@@ -98,10 +98,10 @@ export default function Sidebar() {
   const visibleMenuItems = menuItems.filter(item => item.roles.includes(activeRole));
 
   return (
-    <aside className="w-64 border-r border-[var(--border-sidebar)] bg-[var(--bg-sidebar)] flex flex-col h-[calc(100vh-4rem)] sticky top-16 hidden lg:flex transition-colors duration-400 z-20">
+    <aside className="w-64 border-r border-[var(--border-sidebar)] bg-[var(--bg-sidebar)] flex flex-col h-[calc(100vh-4rem)] sticky top-16 hidden lg:flex transition-colors duration-300 z-20">
       <div className="flex-1 py-6 px-4 space-y-7 overflow-y-auto">
         <div className="space-y-1">
-          <p className="px-3 text-xs font-semibold text-[var(--text-sidebar-default)] opacity-80 uppercase tracking-wider">Navigation</p>
+          <p className="px-3 text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Navigation</p>
           <nav className="space-y-1">
             {visibleMenuItems.map((item, idx) => {
               // Master Barang dropdown rendering
@@ -120,7 +120,7 @@ export default function Sidebar() {
                         <span className={`transition-colors duration-200 ${
                           pathname && pathname.startsWith("/admin/master-barang")
                             ? "text-[var(--text-sidebar-active)]"
-                            : "text-[var(--text-sidebar-default)] opacity-80 group-hover:opacity-100 group-hover:text-[var(--text-sidebar-hover)]"
+                            : "text-[var(--text-sidebar-default)] group-hover:text-[var(--text-sidebar-hover)]"
                         }`}>
                           {item.icon}
                         </span>
@@ -153,8 +153,8 @@ export default function Sidebar() {
                             href={sub.href}
                             className={`flex items-center py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all border-l-2 ${
                               isSubActive
-                                ? "border-text-sidebar-active bg-[var(--bg-sidebar-active)]/30 text-[var(--text-sidebar-active)]"
-                                : "border-transparent text-[var(--text-sidebar-default)] hover:bg-[var(--bg-sidebar-hover)]/50 hover:text-[var(--text-sidebar-hover)]"
+                                ? "border-[var(--text-sidebar-active)] bg-[var(--bg-sidebar-active)] text-[var(--text-sidebar-active)]"
+                                : "border-transparent text-[var(--text-sidebar-default)] hover:bg-[var(--bg-sidebar-hover)] hover:text-[var(--text-sidebar-hover)]"
                             }`}
                           >
                             {sub.name}
@@ -180,7 +180,7 @@ export default function Sidebar() {
                 >
                   <div className="flex items-center gap-3">
                     <span className={`transition-colors duration-200 ${
-                      isActive ? "text-[var(--text-sidebar-active)]" : "text-[var(--text-sidebar-default)] opacity-80 group-hover:opacity-100 group-hover:text-[var(--text-sidebar-hover)]"
+                      isActive ? "text-[var(--text-sidebar-active)]" : "text-[var(--text-sidebar-default)] group-hover:text-[var(--text-sidebar-hover)]"
                     }`}>
                       {item.icon}
                     </span>
@@ -199,23 +199,23 @@ export default function Sidebar() {
       </div>
 
       {/* Simulated User Profile Footer with Toggle Button */}
-      <div className="p-4 border-t border-[var(--border-sidebar)] bg-[var(--bg-sidebar-hover)]/30">
+      <div className="p-4 border-t border-[var(--border-sidebar)] bg-[var(--bg-sidebar-hover)]">
         <div className="flex flex-col gap-3.5">
           <div className="flex items-center gap-3">
             <div className={`h-9.5 w-9.5 rounded-full flex items-center justify-center font-bold text-sm border transition-colors duration-300 ${
               currentUser.role === "Admin Fakultas"
-                ? "bg-indigo-600 border-indigo-500 text-white shadow-sm"
+                ? "bg-neutral-800 border-neutral-700 text-white shadow-sm"
                 : currentUser.role === "PJ_Ruangan"
-                ? "bg-emerald-600 border-emerald-500 text-white shadow-sm"
-                : "bg-rose-600 border-rose-500 text-white shadow-sm"
+                ? "bg-neutral-700 border-neutral-600 text-white shadow-sm"
+                : "bg-neutral-600 border-neutral-500 text-white shadow-sm"
             }`}>
               {currentUser.role === "Admin Fakultas" ? "A" : currentUser.role === "PJ_Ruangan" ? "P" : "L"}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-[var(--text-sidebar-active)] truncate">
+              <p className="text-sm font-bold text-[var(--text-main)] truncate">
                 {currentUser.name}
               </p>
-              <p className="text-xs text-[var(--text-sidebar-default)] opacity-80 truncate">
+              <p className="text-xs text-[var(--text-muted)] truncate">
                 {currentUser.email}
               </p>
             </div>
@@ -225,7 +225,7 @@ export default function Sidebar() {
             <button
               onClick={handleToggleUser}
               title="Ganti Peran Simulasi"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white/10 hover:bg-white/20 text-[var(--text-sidebar-active)] border border-white/10 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer hover:shadow"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[var(--bg-sidebar-active)] hover:bg-[var(--bg-sidebar-hover)] text-[var(--text-main)] border border-[var(--border-panel)] rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer hover:shadow"
             >
               <svg className="w-4 h-4 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
@@ -238,7 +238,7 @@ export default function Sidebar() {
                 window.location.href = "/login";
               }}
               title="Logout / Hapus Sesi"
-              className="flex-none inline-flex items-center justify-center px-3 py-2 bg-rose-500/20 hover:bg-rose-500/40 text-rose-100 border border-rose-500/30 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+              className="flex-none inline-flex items-center justify-center px-3 py-2 bg-[var(--tag-danger-bg)] hover:opacity-80 text-[var(--tag-danger-text)] border border-[var(--border-panel)] rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

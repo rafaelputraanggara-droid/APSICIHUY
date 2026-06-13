@@ -19,10 +19,10 @@ export default function Card({
   href = "#",
 }: CardProps) {
   return (
-    <div className="group overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/5 dark:border-neutral-800/80 dark:bg-neutral-900/60 dark:hover:border-neutral-700/80">
+    <div className="group overflow-hidden rounded-2xl border border-[var(--border-panel)] bg-[var(--bg-panel)] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Optional Image */}
       {imageUrl && (
-        <div className="relative aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+        <div className="relative aspect-video w-full overflow-hidden bg-[var(--bg-app)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imageUrl}
@@ -37,16 +37,16 @@ export default function Card({
       <div className="p-6">
         {/* Tag */}
         {tag && (
-          <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-950/40 dark:text-indigo-400 dark:ring-indigo-400/20 mb-3">
+          <span className="inline-flex items-center rounded-md bg-[var(--tag-info-bg)] px-2 py-1 text-xs font-medium text-[var(--tag-info-text)] ring-1 ring-inset ring-[var(--border-panel)] mb-3">
             {tag}
           </span>
         )}
 
-        <h3 className="text-lg font-semibold leading-6 text-neutral-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200">
+        <h3 className="text-lg font-semibold leading-6 text-[var(--text-main)] group-hover:opacity-80 transition-opacity duration-200">
           {title}
         </h3>
         
-        <p className="mt-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 line-clamp-3">
+        <p className="mt-2 text-sm leading-relaxed text-[var(--text-muted)] line-clamp-3">
           {description}
         </p>
 
@@ -54,7 +54,7 @@ export default function Card({
         <div className="mt-6">
           <Link
             href={href}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors group/link cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--text-main)] hover:opacity-70 transition-opacity group/link cursor-pointer"
           >
             {ctaText}
             <svg

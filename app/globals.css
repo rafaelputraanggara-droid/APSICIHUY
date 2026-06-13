@@ -1,185 +1,47 @@
 @import "tailwindcss";
 
-:root {
+:root,
+[data-theme="light"] {
   /* ========================================================
-     OCEAN BLUE (DEFAULT) - Tweaked for true Ocean feel
+     WINDOWS LIGHT - Pure White/Gray (Default)
      ======================================================== */
-  --primary-50: #eff6ff; --primary-100: #dbeafe; --primary-200: #bfdbfe; --primary-300: #93c5fd;
-  --primary-400: #60a5fa; --primary-500: #3b82f6; --primary-600: #2563eb; --primary-650: #1d4ed8;
-  --primary-700: #1d4ed8; --primary-750: #1e40af; --primary-800: #1e40af; --primary-900: #1e3a8a; --primary-950: #172554;
-  --secondary-50: #f8fafc; --secondary-100: #f1f5f9; --secondary-500: #64748b; --secondary-600: #475569;
-  --secondary-650: #334155; --secondary-700: #334155; --secondary-900: #0f172a; --secondary-950: #020617;
-
-  /* Layout Colors */
-  --bg-app: #f8fafc;
+  --bg-app: #f3f3f3;
   --bg-header: #ffffff;
-  --bg-sidebar: #172554; /* Blue-950 instead of Slate */
+  --bg-sidebar: #ffffff;
   
   --bg-panel: #ffffff;
-  --bg-banner: #1e3a8a; /* Blue-900 */
+  --bg-banner: #1a1a1a;
 
-  --border-layout: #e2e8f0;
-  --border-sidebar: #1e3a8a;
-  --border-panel: #e2e8f0;
+  --border-layout: #d4d4d4;
+  --border-sidebar: #d4d4d4;
+  --border-panel: #d4d4d4;
 
-  --text-header: #0f172a;
-  --text-header-muted: #64748b;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
+  --text-header: #000000;
+  --text-header-muted: #5c5c5c;
+  --text-main: #000000;
+  --text-muted: #5c5c5c;
 
-  --text-sidebar-default: #93c5fd;
-  --text-sidebar-hover: #ffffff;
-  --text-sidebar-active: #ffffff;
+  --text-sidebar-default: #5c5c5c;
+  --text-sidebar-hover: #000000;
+  --text-sidebar-active: #000000;
 
-  --bg-sidebar-hover: #1e3a8a;
+  --bg-sidebar-hover: #e5e5e5;
+  --bg-sidebar-active: #d4d4d4;
+
   --tag-success-bg: #d1fae5;
   --tag-success-text: #065f46;
   --tag-danger-bg: #ffe4e6;
   --tag-danger-text: #9f1239;
   --tag-warning-bg: #fef3c7;
   --tag-warning-text: #92400e;
-  --tag-info-bg: #e0e7ff;
-  --tag-info-text: #3730a3;
-}
+  --tag-info-bg: #e5e5e5;
+  --tag-info-text: #171717;
 
-[data-theme="breeze"] {
-  /* ========================================================
-     SOFT BREEZE - Calming, Pastel, Low Contrast
-     ======================================================== */
-  --bg-app: #f0f9ff;
-  --bg-header: #ffffff;
-  --bg-sidebar: #e0f2fe;
-  
-  --bg-panel: #ffffff;
-  --bg-banner: #0284c7; /* Sky-600 */
-
-  --border-layout: #bae6fd;
-  --border-sidebar: #bae6fd;
-  --border-panel: #e0f2fe;
-
-  --text-header: #0c4a6e;
-  --text-header-muted: #0369a1;
-  --text-main: #0c4a6e;
-  --text-muted: #0369a1;
-
-  --text-sidebar-default: #0369a1;
-  --text-sidebar-hover: #0c4a6e;
-  --text-sidebar-active: #042f2e;
-
-  --bg-sidebar-hover: #bae6fd;
-  --tag-success-bg: #d1fae5;
-  --tag-success-text: #065f46;
-  --tag-danger-bg: #ffe4e6;
-  --tag-danger-text: #9f1239;
-  --tag-warning-bg: #fef3c7;
-  --tag-warning-text: #92400e;
-  --tag-info-bg: #e0f2fe;
-  --tag-info-text: #075985;
-}
-
-[data-theme="emerald"] {
-  /* ========================================================
-     EMERALD FOREST - Rich Greens
-     ======================================================== */
-  --bg-app: #f0fdf4;
-  --bg-header: #ffffff;
-  --bg-sidebar: #064e3b;
-  
-  --bg-panel: #ffffff;
-  --bg-banner: #047857;
-
-  --border-layout: #d1fae5;
-  --border-sidebar: #065f46;
-  --border-panel: #d1fae5;
-
-  --text-header: #064e3b;
-  --text-header-muted: #15803d;
-  --text-main: #064e3b;
-  --text-muted: #15803d;
-
-  --text-sidebar-default: #6ee7b7;
-  --text-sidebar-hover: #ecfdf5;
-  --text-sidebar-active: #ffffff;
-
-  --bg-sidebar-hover: #065f46;
-  --tag-success-bg: #d1fae5;
-  --tag-success-text: #065f46;
-  --tag-danger-bg: #ffe4e6;
-  --tag-danger-text: #9f1239;
-  --tag-warning-bg: #fef3c7;
-  --tag-warning-text: #92400e;
-  --tag-info-bg: #d1fae5;
-  --tag-info-text: #065f46;
-}
-
-[data-theme="ruby"] {
-  /* ========================================================
-     CRIMSON RUBY - Bold Reds
-     ======================================================== */
-  --bg-app: #fff1f2;
-  --bg-header: #ffffff;
-  --bg-sidebar: #4c0519;
-  
-  --bg-panel: #ffffff;
-  --bg-banner: #991b1b;
-
-  --border-layout: #ffe4e6;
-  --border-sidebar: #881337;
-  --border-panel: #ffe4e6;
-
-  --text-header: #881337;
-  --text-header-muted: #be123c;
-  --text-main: #881337;
-  --text-muted: #be123c;
-
-  --text-sidebar-default: #fda4af;
-  --text-sidebar-hover: #ffe4e6;
-  --text-sidebar-active: #ffffff;
-
-  --bg-sidebar-hover: #881337;
-  --tag-success-bg: #d1fae5;
-  --tag-success-text: #065f46;
-  --tag-danger-bg: #ffe4e6;
-  --tag-danger-text: #9f1239;
-  --tag-warning-bg: #fef3c7;
-  --tag-warning-text: #92400e;
-  --tag-info-bg: #ffe4e6;
-  --tag-info-text: #9f1239;
-}
-
-[data-theme="cream"] {
-  /* ========================================================
-     WARM CREAM - Vintage, Classic, Amber
-     ======================================================== */
-  --bg-app: #fffbeb;
-  --bg-header: #ffffff;
-  --bg-sidebar: #451a03;
-  
-  --bg-panel: #ffffff;
-  --bg-banner: #92400e;
-
-  --border-layout: #fde68a;
-  --border-sidebar: #78350f;
-  --border-panel: #fef3c7;
-
-  --text-header: #78350f;
-  --text-header-muted: #b45309;
-  --text-main: #78350f;
-  --text-muted: #b45309;
-
-  --text-sidebar-default: #fcd34d;
-  --text-sidebar-hover: #fef3c7;
-  --text-sidebar-active: #ffffff;
-
-  --bg-sidebar-hover: #78350f;
-  --tag-success-bg: #d1fae5;
-  --tag-success-text: #065f46;
-  --tag-danger-bg: #ffe4e6;
-  --tag-danger-text: #9f1239;
-  --tag-warning-bg: #fef3c7;
-  --tag-warning-text: #92400e;
-  --tag-info-bg: #fef3c7;
-  --tag-info-text: #92400e;
+  /* Input/Form specific */
+  --bg-input: #ffffff;
+  --border-input: #cccccc;
+  --text-input: #000000;
+  --text-placeholder: #999999;
 }
 
 [data-theme="dark"] {
@@ -217,43 +79,54 @@
   --tag-warning-text: #fbbf24;
   --tag-info-bg: rgba(99, 102, 241, 0.15);
   --tag-info-text: #818cf8;
+
+  /* Input/Form specific */
+  --bg-input: #2a2a2a;
+  --border-input: #444444;
+  --text-input: #ffffff;
+  --text-placeholder: #777777;
 }
 
-[data-theme="light"] {
-  /* ========================================================
-     WINDOWS LIGHT - Pure White/Gray (Windows OS Style)
-     ======================================================== */
-  --bg-app: #f3f3f3;
-  --bg-header: #ffffff;
-  --bg-sidebar: #ffffff;
-  
-  --bg-panel: #ffffff;
-  --bg-banner: #e5e5e5;
+/* Auto-detect Windows system theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-app: #111111;
+    --bg-header: #1c1c1c;
+    --bg-sidebar: #1c1c1c;
+    
+    --bg-panel: #202020;
+    --bg-banner: #2d2d2d;
 
-  --border-layout: #cccccc;
-  --border-sidebar: #cccccc;
-  --border-panel: #cccccc;
+    --border-layout: #333333;
+    --border-sidebar: #333333;
+    --border-panel: #333333;
 
-  --text-header: #000000;
-  --text-header-muted: #5c5c5c;
-  --text-main: #000000;
-  --text-muted: #5c5c5c;
+    --text-header: #ffffff;
+    --text-header-muted: #a0a0a0;
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
 
-  --text-sidebar-default: #5c5c5c;
-  --text-sidebar-hover: #000000;
-  --text-sidebar-active: #000000;
+    --text-sidebar-default: #a0a0a0;
+    --text-sidebar-hover: #ffffff;
+    --text-sidebar-active: #ffffff;
 
-  --bg-sidebar-hover: #e5e5e5;
-  --bg-sidebar-active: #d4d4d4;
+    --bg-sidebar-hover: #2d2d2d;
+    --bg-sidebar-active: #3b3b3b;
 
-  --tag-success-bg: #d1fae5;
-  --tag-success-text: #065f46;
-  --tag-danger-bg: #ffe4e6;
-  --tag-danger-text: #9f1239;
-  --tag-warning-bg: #fef3c7;
-  --tag-warning-text: #92400e;
-  --tag-info-bg: #e5e5e5;
-  --tag-info-text: #171717;
+    --tag-success-bg: rgba(16, 185, 129, 0.15);
+    --tag-success-text: #34d399;
+    --tag-danger-bg: rgba(244, 63, 94, 0.15);
+    --tag-danger-text: #fb7185;
+    --tag-warning-bg: rgba(245, 158, 11, 0.15);
+    --tag-warning-text: #fbbf24;
+    --tag-info-bg: rgba(99, 102, 241, 0.15);
+    --tag-info-text: #818cf8;
+
+    --bg-input: #2a2a2a;
+    --border-input: #444444;
+    --text-input: #ffffff;
+    --text-placeholder: #777777;
+  }
 }
 
 @theme inline {
@@ -283,7 +156,7 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: var(--bg-app, #f8fafc);
-  color: var(--text-main, #0f172a);
-  transition: background-color 0.4s ease, color 0.4s ease;
+  background: var(--bg-app, #f3f3f3);
+  color: var(--text-main, #000000);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

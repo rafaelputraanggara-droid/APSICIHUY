@@ -122,7 +122,7 @@ export default function KategoriBarangPage() {
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
               Kategori Barang
             </h1>
-            <p className="text-indigo-100 max-w-2xl text-sm sm:text-base">
+            <p className="text-white/80 max-w-2xl text-sm sm:text-base">
               Kelola kategori dan klasifikasi inventaris barang untuk memudahkan pencarian dan pelaporan.
             </p>
           </div>

@@ -102,7 +102,7 @@ export default function MahasiswaScanPage() {
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       <div className="relative overflow-hidden bg-[var(--bg-banner)] transition-colors duration-400 text-white p-8 rounded-3xl shadow-lg text-center">
         <h1 className="text-3xl font-extrabold tracking-tight">Scan QR Kerusakan</h1>
-        <p className="text-indigo-100 mt-2 text-sm">
+        <p className="text-white/80 mt-2 text-sm">
           Arahkan kamera ke QR Code label barang untuk melaporkan kerusakan.
         </p>
       </div>

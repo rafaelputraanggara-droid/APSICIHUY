@@ -127,7 +127,7 @@ export default function MaintenancePage() {
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
             Maintenance Barang
           </h1>
-          <p className="text-[var(--text-muted)] max-w-2xl text-sm sm:text-base font-medium">
+          <p className="text-white/80 max-w-2xl text-sm sm:text-base font-medium">
             Kelola perbaikan barang dari laporan kerusakan yang telah disetujui, dan konfirmasi penyelesaian.
           </p>
         </div>

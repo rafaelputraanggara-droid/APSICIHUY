@@ -272,7 +272,7 @@ export default function MasterBarang() {
             Admin Fakultas Role
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Master Barang</h1>
-          <p className="text-blue-100 max-w-2xl text-sm sm:text-base">
+          <p className="text-white/80 max-w-2xl text-sm sm:text-base">
             Kelola data barang milik negara, registrasi barang baru, dan cetak label QR Code secara langsung.
           </p>
         </div>

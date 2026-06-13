@@ -112,7 +112,7 @@ function RegisterContent() {
 
         <div className="text-center mb-8 relative z-10">
           <h1 className="text-2xl font-black tracking-tight text-white">Buat Akun {role}</h1>
-          <p className="text-sm text-[var(--text-muted)] mt-2">
+          <p className="text-sm text-white/70 mt-2">
             Isi formulir di bawah ini dengan lengkap untuk mendaftar ke SIPRABU.
           </p>
         </div>
@@ -165,7 +165,7 @@ function RegisterContent() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 px-3 flex items-center text-[var(--text-muted)] hover:text-white transition-colors"
+                  className="absolute inset-y-0 right-0 px-3 flex items-center text-white/50 hover:text-white transition-colors"
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -195,7 +195,7 @@ function RegisterContent() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 px-3 flex items-center text-[var(--text-muted)] hover:text-white transition-colors"
+                  className="absolute inset-y-0 right-0 px-3 flex items-center text-white/50 hover:text-white transition-colors"
                 >
                   {showConfirmPassword ? (
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -258,7 +258,7 @@ function RegisterContent() {
             </button>
 
             <div className="text-center mt-4">
-              <Link href="/login" className="text-xs text-[var(--text-muted)] hover:text-white underline">
+              <Link href="/login" className="text-xs text-white/60 hover:text-white underline">
                 Sudah punya akun? Kembali ke Login
               </Link>
             </div>

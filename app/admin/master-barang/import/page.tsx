@@ -279,7 +279,7 @@ export default function ImportBarang() {
             Admin Fakultas Area
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Import SAKTI CSV</h1>
-          <p className="text-indigo-100 max-w-xl text-sm">
+          <p className="text-white/80 max-w-xl text-sm">
             Lakukan registrasi aset secara massal menggunakan file CSV hasil ekspor data SAKTI BMN. Sistem akan memvalidasi data dan menggunakan transaksi database terenkripsi.
           </p>
         </div>

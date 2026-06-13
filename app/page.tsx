@@ -165,7 +165,7 @@ export default function Home() {
             </Link>
           )}
           <Link
-            className="px-5 py-2.5 bg-[var(--bg-panel)] transition-colors duration-400 hover:bg-[var(--bg-app)] transition-colors duration-400 text-indigo-700 rounded-xl font-bold shadow-sm transition-all text-sm"
+            className="px-5 py-2.5 bg-[var(--bg-panel)] hover:opacity-90 text-[var(--text-main)] rounded-xl font-bold shadow-sm transition-all text-sm"
             href="/admin/master-barang/database-barang"
           >
             Lihat Database Barang

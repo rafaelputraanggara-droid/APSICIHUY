@@ -420,7 +420,7 @@ export default function StockOpnamePage() {
         <div className="max-w-xl mx-auto space-y-8 animate-fade-in print:hidden">
           <div className="relative overflow-hidden bg-[var(--bg-banner)] transition-colors duration-400 text-white p-8 rounded-3xl shadow-lg text-center">
             <h1 className="text-3xl font-extrabold tracking-tight">Sesi Stok Opname Baru</h1>
-            <p className="text-indigo-100 mt-2 text-sm">
+            <p className="text-white/80 mt-2 text-sm">
               Pilih lokasi ruangan dan masukkan nama Anda selaku petugas auditor BMN untuk memulai verifikasi fisik.
             </p>
           </div>

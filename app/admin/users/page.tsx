@@ -57,7 +57,7 @@ export default function DatabaseAkunPage() {
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
             Database Akun
           </h1>
-          <p className="text-[var(--text-muted)] max-w-2xl text-sm sm:text-base">
+          <p className="text-white/80 max-w-2xl text-sm sm:text-base">
             Kelola semua pengguna terdaftar di dalam sistem SIPRABU. Anda dapat meninjau detail dan menghapus akses jika ditemukan data tidak valid.
           </p>
         </div>
@@ -205,12 +205,12 @@ export default function DatabaseAkunPage() {
             <div className="p-6 space-y-4">
               <div>
                 <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Nama Lengkap</p>
-                <p className="font-semibold text-neutral-800">{detailUser.name}</p>
+                <p className="font-semibold text-[var(--text-main)]">{detailUser.name}</p>
               </div>
               
               <div>
                 <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Email</p>
-                <p className="font-semibold text-neutral-800">{detailUser.email}</p>
+                <p className="font-semibold text-[var(--text-main)]">{detailUser.email}</p>
               </div>
 
               {detailUser.nim && (
