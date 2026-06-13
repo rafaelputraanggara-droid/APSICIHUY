@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 
+import RiwayatLaporanPage from "../riwayat-laporan/page";
+
 export default function NotifikasiPage() {
-  const [activeTab, setActiveTab] = useState<"kerusakan" | "hilang" | "pendaftaran">("kerusakan");
+  const [activeTab, setActiveTab] = useState<"kerusakan" | "hilang" | "pendaftaran" | "riwayat">("kerusakan");
   
   const [pendingAccounts, setPendingAccounts] = useState<any[]>([]);
   const [pendingKerusakan, setPendingKerusakan] = useState<any[]>([]);
@@ -168,6 +170,18 @@ export default function NotifikasiPage() {
                 Laporan Barang Hilang
               </button>
             )}
+            {(userRole === "Mahasiswa/Dosen" || userRole === "Mahasiswa") && (
+              <button
+                onClick={() => setActiveTab("riwayat")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                  activeTab === "riwayat"
+                    ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
+                    : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                }`}
+              >
+                Riwayat Laporan Saya
+              </button>
+            )}
             {userRole === "Admin Fakultas" && (
               <button
                 onClick={() => setActiveTab("pendaftaran")}
@@ -260,6 +274,11 @@ export default function NotifikasiPage() {
             <div className="text-center">
               <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400 mb-2">Daftar Laporan Barang Hilang</h3>
               <p>Belum ada laporan barang hilang yang tercatat.</p>
+            </div>
+          )}
+          {activeTab === "riwayat" && (userRole === "Mahasiswa/Dosen" || userRole === "Mahasiswa") && (
+            <div className="mt-[-1rem]">
+              <RiwayatLaporanPage />
             </div>
           )}
           {activeTab === "pendaftaran" && userRole === "Admin Fakultas" && (

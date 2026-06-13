@@ -97,10 +97,42 @@ export async function PUT(request: Request) {
             [status, id]
           );
         }
-        return NextResponse.json({ success: true, message: 'Status berhasil diperbarui setelah auto-migrate.' });
+        return NextResponse.json({ success: true, message: 'Status berhasil diperbarui setelah auto-migrate kolom.' });
       } catch (retryError: any) {
         return NextResponse.json(
-          { success: false, error: 'Gagal auto-migrate: ' + retryError.message },
+          { success: false, error: 'Gagal auto-migrate kolom: ' + retryError.message },
+          { status: 500 }
+        );
+      }
+    }
+
+    // AUTO-MIGRATE: Fix ENUM definition if status is invalid
+    if (error.message && error.message.includes("Data truncated for column 'status_laporan'")) {
+      try {
+        console.log("Auto-migrating: Updating ENUM for status_laporan...");
+        await pool.query("ALTER TABLE laporan_kerusakans MODIFY status_laporan ENUM('Menunggu', 'Diproses', 'Diterima', 'Sedang Diperbaiki', 'Selesai', 'Ditolak') DEFAULT 'Menunggu'");
+        
+        // Retry the update after migration
+        if (status === 'Selesai') {
+          await pool.query(
+            "UPDATE laporan_kerusakans SET status_laporan = ?, nama_teknisi = ?, bukti_penyelesaian_pdf = ? WHERE id = ?",
+            [status, nama_teknisi, bukti_penyelesaian_pdf, id]
+          );
+        } else if (catatan !== undefined) {
+          await pool.query(
+            "UPDATE laporan_kerusakans SET status_laporan = ?, catatan_pj = ? WHERE id = ?",
+            [status, catatan, id]
+          );
+        } else {
+          await pool.query(
+            "UPDATE laporan_kerusakans SET status_laporan = ? WHERE id = ?",
+            [status, id]
+          );
+        }
+        return NextResponse.json({ success: true, message: 'Status berhasil diperbarui setelah auto-migrate ENUM.' });
+      } catch (retryError: any) {
+        return NextResponse.json(
+          { success: false, error: 'Gagal auto-migrate ENUM: ' + retryError.message },
           { status: 500 }
         );
       }
