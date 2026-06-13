@@ -213,20 +213,22 @@ export default function NotifikasiPage() {
                         </div>
                       </div>
 
-                      <div className="flex gap-3 mt-4">
-                        <button 
-                          onClick={() => handleUpdateKerusakan(laporan.id, "Ditolak")}
-                          className="flex-1 py-2.5 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold rounded-xl text-sm transition-all shadow-sm"
-                        >
-                          Tolak
-                        </button>
-                        <button 
-                          onClick={() => handleUpdateKerusakan(laporan.id, "Diterima")}
-                          className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm"
-                        >
-                          Terima Laporan
-                        </button>
-                      </div>
+                      {userRole === "Laboran" && (
+                        <div className="flex gap-3 mt-4">
+                          <button 
+                            onClick={() => handleUpdateKerusakan(laporan.id, "Ditolak")}
+                            className="flex-1 py-2.5 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold rounded-xl text-sm transition-all shadow-sm"
+                          >
+                            Tolak
+                          </button>
+                          <button 
+                            onClick={() => handleUpdateKerusakan(laporan.id, "Diterima")}
+                            className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm"
+                          >
+                            Terima Laporan
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

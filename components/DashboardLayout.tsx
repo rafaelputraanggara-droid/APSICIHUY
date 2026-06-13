@@ -63,7 +63,7 @@ export default function DashboardLayout({
       if (typeof window !== "undefined") {
         const saved = sessionStorage.getItem("simulated_user");
         if (!saved) {
-          if (pathname !== "/login" && pathname !== "/register") {
+          if (pathname !== "/login" && pathname !== "/register" && !pathname.endsWith("/cetak-label")) {
             window.location.href = "/login";
           }
         } else {
@@ -98,8 +98,8 @@ export default function DashboardLayout({
     }
   };
 
-  // 1. Bypass layout shell entirely for the login & register pages
-  if (pathname === '/login' || pathname === '/register') {
+  // 1. Bypass layout shell entirely for the login & register pages & print
+  if (pathname === '/login' || pathname === '/register' || pathname.endsWith('/cetak-label')) {
     return (
       <div className="min-h-screen bg-neutral-900 flex flex-col font-sans text-gray-100">
         {children}
@@ -273,7 +273,7 @@ export default function DashboardLayout({
 
                           {isMobileMasterOpen && (
                             <div className="pl-9 space-y-1">
-                              {subMenus.map((sub, sIdx) => {
+                              {subMenus.filter(sub => !sub.roles || sub.roles.includes(activeRole)).map((sub, sIdx) => {
                                 const isSubActive = pathname === sub.href;
                                 return (
                                   <Link

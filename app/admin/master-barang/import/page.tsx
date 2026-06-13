@@ -28,7 +28,7 @@ export default function ImportBarang() {
   useEffect(() => {
     const checkUser = () => {
       if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem('simulated_user');
+        const saved = sessionStorage.getItem('simulated_user');
         if (saved) {
           try {
             setCurrentUser(JSON.parse(saved));

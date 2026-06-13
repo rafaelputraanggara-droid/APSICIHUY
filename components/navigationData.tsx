@@ -10,6 +10,7 @@ export interface MenuItem {
 export interface SubMenuItem {
   name: string;
   href: string;
+  roles?: string[];
 }
 
 export const getMappedRole = (role: string) => {
@@ -22,7 +23,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "Dashboard",
     href: "/",
-    roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek"],
+    roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek", "Laboran"],
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
@@ -42,7 +43,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "Master Barang",
     href: "/master-barang",
-    roles: ["Admin"],
+    roles: ["Admin", "PJ_Ruangan", "Laboran"],
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -87,7 +88,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "Notifikasi",
     href: "/notifikasi",
-    roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek", "Mahasiswa/Dosen"],
+    roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek", "Mahasiswa/Dosen", "Laboran"],
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -98,7 +99,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "About",
     href: "/about",
-    roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek", "Mahasiswa/Dosen"],
+    roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek", "Mahasiswa/Dosen", "Laboran"],
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -108,13 +109,9 @@ export const menuItems: MenuItem[] = [
 ];
 
 export const subMenus: SubMenuItem[] = [
-  { name: "Tambah Data Barang", href: "/admin/master-barang/tambah" },
-  { name: "Import SAKTI CSV", href: "/admin/master-barang/import" },
-  { name: "Daftar Database Barang", href: "/admin/master-barang/database-barang" },
-  { name: "Kategori Barang", href: "/admin/master-barang/kategori" }
+  { name: "Tambah Data Barang", href: "/admin/master-barang/tambah", roles: ["Admin"] },
+  { name: "Import SAKTI CSV", href: "/admin/master-barang/import", roles: ["Admin"] },
+  { name: "Daftar Database Barang", href: "/admin/master-barang/database-barang", roles: ["Admin", "PJ_Ruangan", "Laboran"] },
+  { name: "Kategori Barang", href: "/admin/master-barang/kategori", roles: ["Admin", "PJ_Ruangan", "Laboran"] }
 ];
 
-export const maintenanceSubMenus: SubMenuItem[] = [
-  { name: "Daftar Barang Rusak", href: "/maintenance/daftar" },
-  { name: "Konfirmasi Penyelesaian", href: "/maintenance/konfirmasi" }
-];
