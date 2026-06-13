@@ -33,9 +33,23 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  let body: any;
+  let kode_barang: string = '';
+  let no_urut_pendaft: any;
+  let dilaporkan_oleh: string = '';
+  let deskripsi_kerusakan: string = '';
+  let foto_url: string = '';
+  let pelapor_id: number | null = null;
+  let nup: number = 0;
+
   try {
-    const body = await request.json();
-    const { kode_barang, no_urut_pendaft, dilaporkan_oleh, deskripsi_kerusakan, foto_url, pelapor_id } = body;
+    body = await request.json();
+    kode_barang = body.kode_barang;
+    no_urut_pendaft = body.no_urut_pendaft;
+    dilaporkan_oleh = body.dilaporkan_oleh;
+    deskripsi_kerusakan = body.deskripsi_kerusakan;
+    foto_url = body.foto_url;
+    pelapor_id = body.pelapor_id;
 
     if (!kode_barang || no_urut_pendaft === undefined || !dilaporkan_oleh || !deskripsi_kerusakan) {
       return NextResponse.json(
@@ -44,7 +58,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const nup = parseInt(no_urut_pendaft);
+    nup = parseInt(no_urut_pendaft);
     if (isNaN(nup)) {
       return NextResponse.json(
         { success: false, error: 'no_urut_pendaft harus berupa angka.' },
@@ -74,6 +88,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, data: { id: insertId } });
   } catch (error: any) {
     console.error('Database query error (POST /api/laporan-masuk):', error);
+    // AUTO-MIGRATE: Fix foto_url column size if it's too long
+    if (error.message && error.message.includes("Data too long for column 'foto_url'")) {
+      try {
+        console.log("Auto-migrating: Changing foto_url column type to LONGTEXT...");
+        await pool.query("ALTER TABLE laporan_kerusakans MODIFY foto_url LONGTEXT NULL");
+        
+        // Retry insertion
+        const [retryResult]: any = await pool.query(
+          `INSERT INTO laporan_kerusakans (kode_barang, no_urut_pendaft, dilaporkan_oleh, deskripsi_kerusakan, foto_url, status_laporan, pelapor_id) 
+           VALUES (?, ?, ?, ?, ?, 'Menunggu', ?)`,
+          [kode_barang, nup, dilaporkan_oleh.trim(), deskripsi_kerusakan.trim(), (foto_url || '').trim(), pelapor_id || null]
+        );
+        
+        const retryInsertId = retryResult.insertId;
+        try {
+          await pool.query(`INSERT INTO sla_logs (laporan_id, tahap) VALUES (?, 'Pelaporan')`, [retryInsertId]);
+        } catch (slaErr) { }
+
+        return NextResponse.json({ success: true, data: { id: retryInsertId } });
+      } catch (retryErr: any) {
+        return NextResponse.json(
+          { success: false, error: 'Gagal auto-migrate kolom foto_url: ' + retryErr.message },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { success: false, error: 'Terjadi kesalahan internal server: ' + (error?.message || 'Unknown error') },
       { status: 500 }

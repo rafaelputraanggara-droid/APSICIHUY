@@ -360,11 +360,24 @@ export default function LaporKerusakanPage() {
 
                     {fotoUrl && (
                       <div className="border border-[var(--border-panel)] rounded-2xl p-2 bg-[var(--bg-app)] inline-block w-full">
-                        <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase block mb-2">Pratinjau Dokumen Bukti</span>
-                        <div className="h-64 w-full rounded-xl overflow-hidden border border-[var(--border-panel)] bg-neutral-100">
-                          <object data={fotoUrl} type="application/pdf" className="w-full h-full">
-                            <div className="flex items-center justify-center h-full">
-                              <span className="text-sm text-[var(--text-muted)]">Pratinjau PDF tidak didukung di browser ini.</span>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase">Pratinjau Dokumen Bukti</span>
+                          <a 
+                            href={fotoUrl} 
+                            download="Bukti_Kerusakan.pdf"
+                            className="text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-lg transition-colors"
+                          >
+                            Unduh / Buka PDF
+                          </a>
+                        </div>
+                        <div className="h-64 w-full rounded-xl overflow-hidden border border-[var(--border-panel)] bg-neutral-100 relative">
+                          <object data={fotoUrl} type="application/pdf" className="w-full h-full absolute inset-0 z-10">
+                            <div className="flex flex-col items-center justify-center h-full p-4 text-center z-0">
+                              <svg className="w-10 h-10 text-neutral-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              <span className="text-sm font-semibold text-[var(--text-muted)] mb-1">Browser ini tidak mendukung pratinjau PDF langsung.</span>
+                              <span className="text-xs text-[var(--text-muted)]">Silakan tekan tombol "Unduh / Buka PDF" di atas untuk melihat dokumen.</span>
                             </div>
                           </object>
                         </div>
