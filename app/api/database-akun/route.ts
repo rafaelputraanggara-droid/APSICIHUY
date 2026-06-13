@@ -50,8 +50,17 @@ export async function DELETE(request: Request) {
       // Hapus permanen dari pendaftaran_akun agar bisa mendaftar ulang
       await pool.query("DELETE FROM pendaftaran_akun WHERE id = ?", [id]);
     } else {
+      // Dapatkan email terlebih dahulu
+      const [userRows] = await pool.query("SELECT email FROM users WHERE id = ?", [id]);
+      const email = (userRows as any[])[0]?.email;
+
       // Hapus dari tabel users
       await pool.query("DELETE FROM users WHERE id = ?", [id]);
+
+      // Hapus juga riwayat pendaftaran di pendaftaran_akun agar constraint unik tidak menghalangi pendaftaran ulang
+      if (email) {
+        await pool.query("DELETE FROM pendaftaran_akun WHERE email_sso = ?", [email]);
+      }
     }
 
     return NextResponse.json({ success: true, message: 'Akun berhasil dihapus.' });
