@@ -3,6 +3,17 @@ import pool from '@/lib/db';
 
 export async function GET(request: Request) {
   try {
+    // AUTO-CLEANUP: Hapus data yatim (orphaned) di pendaftaran_akun 
+    // akibat bug penghapusan versi lama (hanya terhapus di users tapi tersisa di pendaftaran_akun).
+    // Ini menyelesaikan masalah ER_DUP_ENTRY untuk akun yang "aksesnya udah dicabut" di masa lalu.
+    await pool.query(`
+      DELETE p FROM pendaftaran_akun p
+      LEFT JOIN users u ON p.email_sso = u.email
+      WHERE p.status_pendaftaran = 'Disetujui' 
+        AND p.peran_pengaju = 'PJ_Ruangan' 
+        AND u.id IS NULL
+    `);
+
     const { searchParams } = new URL(request.url);
     const role = searchParams.get('role'); // 'admin', 'pj', or 'mahasiswa'
 
