@@ -197,41 +197,29 @@ export default function NotifikasiPage() {
                 Laporan Barang Hilang
               </button>
             )}
-            {(userRole === "Mahasiswa/Dosen" || userRole === "Mahasiswa") && (
+            {userRole === "Admin Fakultas" && (
               <button
-                onClick={() => setActiveTab("riwayat")}
+                onClick={() => setActiveTab("pendaftaran")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-                  activeTab === "riwayat"
+                  activeTab === "pendaftaran"
                     ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
                     : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
                 }`}
               >
-                Riwayat Laporan Saya
+                Laporan Pendaftaran Akun Baru
               </button>
             )}
-            {userRole === "Admin Fakultas" && (
-              <>
-                <button
-                  onClick={() => setActiveTab("pendaftaran")}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-                    activeTab === "pendaftaran"
-                      ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
-                      : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
-                  }`}
-                >
-                  Laporan Pendaftaran Akun Baru
-                </button>
-                <button
-                  onClick={() => setActiveTab("riwayat-maintenance")}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
-                    activeTab === "riwayat-maintenance"
-                      ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
-                      : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
-                  }`}
-                >
-                  Riwayat Maintenance
-                </button>
-              </>
+            {(userRole === "Admin Fakultas" || userRole === "Laboran" || userRole === "PJ_Ruangan") && (
+              <button
+                onClick={() => setActiveTab("riwayat-maintenance")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                  activeTab === "riwayat-maintenance"
+                    ? "border-indigo-600 text-indigo-600 dark:border-indigo-400"
+                    : "border-transparent text-[var(--text-muted)] hover:text-neutral-700 hover:border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-300"
+                }`}
+              >
+                Riwayat Maintenance
+              </button>
             )}
           </nav>
         </div>
@@ -287,7 +275,7 @@ export default function NotifikasiPage() {
                         )}
                       </div>
 
-                      {(userRole === "Laboran" || userRole === "PJ_Ruangan") && (
+                      {userRole === "Laboran" && (
                         <div className="flex gap-3 mt-4">
                           <button 
                             onClick={() => handleUpdateKerusakan(laporan.id, "Ditolak")}
@@ -397,7 +385,7 @@ export default function NotifikasiPage() {
               )}
             </div>
           )}
-          {activeTab === "riwayat-maintenance" && userRole === "Admin Fakultas" && (
+          {activeTab === "riwayat-maintenance" && (userRole === "Admin Fakultas" || userRole === "Laboran" || userRole === "PJ_Ruangan") && (
             <div>
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400">Riwayat Perbaikan Barang Selesai</h3>
@@ -439,10 +427,22 @@ export default function NotifikasiPage() {
                       </div>
 
                       <div className="flex flex-col sm:flex-row gap-3 border-t border-[var(--border-panel)] pt-4">
+                        {laporan.foto_url && (
+                          <button 
+                            onClick={() => setPdfToView(laporan.foto_url)}
+                            className="flex-1 py-2.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-[var(--text-main)] font-bold rounded-xl text-xs transition-all shadow-sm flex justify-center items-center gap-2"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            Bukti Kerusakan Awal
+                          </button>
+                        )}
                         {laporan.bukti_penyelesaian_pdf && (
                           <button 
                             onClick={() => setPdfToView(laporan.bukti_penyelesaian_pdf)}
-                            className="flex-1 py-2.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 font-bold rounded-xl text-sm transition-all shadow-sm flex justify-center items-center gap-2"
+                            className="flex-1 py-2.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 font-bold rounded-xl text-xs transition-all shadow-sm flex justify-center items-center gap-2"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -451,10 +451,10 @@ export default function NotifikasiPage() {
                             Bukti Lokasi
                           </button>
                         )}
-                        {laporan.bukti_administrasi_pdf && (
+                        {laporan.bukti_administrasi_pdf && (userRole === "Admin Fakultas" || userRole === "Laboran") && (
                           <button 
                             onClick={() => setPdfToView(laporan.bukti_administrasi_pdf)}
-                            className="flex-1 py-2.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 font-bold rounded-xl text-sm transition-all shadow-sm flex justify-center items-center gap-2"
+                            className="flex-1 py-2.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 font-bold rounded-xl text-xs transition-all shadow-sm flex justify-center items-center gap-2"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
