@@ -116,8 +116,8 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
           </div>
         ) : (
           <div 
-            className="grid grid-cols-2 gap-4 print:gap-2 print:transform-none transform-gpu origin-top-left"
-            style={{ transform: `scale(${zoom / 100})`, width: `${100 / (zoom / 100)}%` }}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 print:gap-2 print:!zoom-100"
+            style={{ zoom: zoom / 100 }}
           >
             {filteredItems.map((item, idx) => {
               // Define the destination URL for scanning
@@ -127,30 +127,34 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
               return (
                 <div 
                   key={idx} 
-                  className="border-[1.5px] border-black rounded-lg p-3 flex flex-row items-center gap-3 bg-white text-black transition-colors duration-400 print:break-inside-avoid relative overflow-hidden"
+                  className="border-[1.5px] border-black rounded-lg p-3 flex flex-row items-center gap-2 sm:gap-3 bg-white text-black transition-colors duration-400 print:break-inside-avoid relative overflow-hidden h-full"
                 >
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-600 print:bg-black"></div>
                   
-                  <div className="flex-1 min-w-0 space-y-1.5 pl-2">
-                    <div className="border-b-[1.5px] border-black pb-1 mb-1">
-                      <p className="text-[10px] uppercase font-bold tracking-wider text-black">Univ. Sebelas Maret</p>
-                      <p className="text-[8px] font-semibold text-neutral-800">Fakultas Teknik - SIPRABU</p>
+                  <div className="flex-1 min-w-0 flex flex-col justify-between h-full pl-2">
+                    <div>
+                      <div className="border-b-[1.5px] border-black pb-1 mb-1.5">
+                        <p className="text-[10px] uppercase font-extrabold tracking-wider text-black leading-tight">Univ. Sebelas Maret</p>
+                        <p className="text-[9px] font-bold text-neutral-800 leading-tight">Fakultas Teknik - SIPRABU</p>
+                      </div>
+                      <h3 className="font-black text-[13px] text-black leading-tight uppercase truncate" title={item.nama_barang}>{item.nama_barang}</h3>
+                      <div className="bg-black text-white px-2 py-1 mt-1.5 inline-block rounded-md max-w-full">
+                        <p className="text-[10px] font-mono font-bold tracking-wide break-words">
+                          {item.kode_barang} <span className="text-neutral-300">| NUP {item.no_urut_pendaft}</span>
+                        </p>
+                      </div>
                     </div>
-                    <h3 className="font-extrabold text-[12px] text-black leading-tight uppercase truncate" title={item.nama_barang}>{item.nama_barang}</h3>
-                    <div className="bg-black text-white px-1.5 py-0.5 inline-block rounded-sm">
-                      <p className="text-[10px] font-mono font-bold tracking-wider">{item.kode_barang} <span className="text-neutral-300">| NUP {item.no_urut_pendaft}</span></p>
-                    </div>
-                    <div className="flex items-center gap-1 text-[9px] text-black pt-1">
-                      <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <div className="flex items-center gap-1 text-[10px] text-black pt-2 mt-auto">
+                      <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <span className="font-bold truncate uppercase">{decodedRoomName}</span>
+                      <span className="font-extrabold truncate uppercase tracking-wide">{decodedRoomName}</span>
                     </div>
                   </div>
                   
-                  <div className="flex-shrink-0 flex flex-col items-center gap-1 justify-center border-l-[1.5px] border-dashed border-neutral-300 pl-3">
-                    <div className="p-1 bg-white transition-colors duration-400">
+                  <div className="flex-shrink-0 flex flex-col items-center gap-1.5 justify-center border-l-[1.5px] border-dashed border-neutral-300 pl-2 sm:pl-3 h-full">
+                    <div className="p-1 bg-white">
                       <QRCodeSVG 
                         value={scanUrl} 
                         size={64}
@@ -158,7 +162,7 @@ export default function CetakLabelPage({ params }: { params: Promise<{ roomName:
                         includeMargin={false}
                       />
                     </div>
-                    <span className="text-[8px] font-mono bg-black text-white px-1.5 rounded-sm font-bold tracking-widest uppercase">SCAN ASET</span>
+                    <span className="text-[9px] font-mono bg-black text-white px-1.5 py-0.5 rounded-sm font-bold tracking-widest uppercase text-center w-full">SCAN ASET</span>
                   </div>
                 </div>
               );
