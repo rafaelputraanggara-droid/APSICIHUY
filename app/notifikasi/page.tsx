@@ -435,6 +435,5 @@ export default function NotifikasiPage() {
         )}
 
       </div>
-    </div>
   );
 }
