@@ -4,13 +4,17 @@ import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 
 export async function POST(request: Request) {
+  let username = '';
+  let email_sso = '';
+  let nim = '';
+
   try {
     const formData = await request.formData();
     
-    const username = formData.get('username') as string;
+    username = formData.get('username') as string;
     const password = formData.get('password') as string;
-    const email_sso = formData.get('email_sso') as string;
-    const nim = formData.get('nim') as string;
+    email_sso = formData.get('email_sso') as string;
+    nim = formData.get('nim') as string;
     const peran_pengaju = formData.get('peran_pengaju') as string;
     const file_pdf = formData.get('file_pdf') as File;
 
