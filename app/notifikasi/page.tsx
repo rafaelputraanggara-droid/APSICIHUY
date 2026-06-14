@@ -15,6 +15,8 @@ export default function NotifikasiPage() {
   const [userRole, setUserRole] = useState<string>("");
   const [kerusakanModal, setKerusakanModal] = useState<{ isOpen: boolean; id: number; action: "Diterima" | "Ditolak"; catatan: string } | null>(null);
   const [selectedMaintenanceRoom, setSelectedMaintenanceRoom] = useState<string | null>(null);
+  const [barangHilang, setBarangHilang] = useState<any[]>([]);
+  const [selectedHilangRoom, setSelectedHilangRoom] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -57,6 +59,9 @@ export default function NotifikasiPage() {
     } else if (activeTab === "riwayat-maintenance") {
       setSelectedMaintenanceRoom(null);
       fetchMaintenanceHistory();
+    } else if (activeTab === "hilang") {
+      setSelectedHilangRoom(null);
+      fetchBarangHilang();
     }
   }, [activeTab]);
 
@@ -100,6 +105,21 @@ export default function NotifikasiPage() {
       }
     } catch (error) {
       console.error("Gagal mengambil histori maintenance", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchBarangHilang = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/barang-hilang");
+      const data = await res.json();
+      if (data.success) {
+        setBarangHilang(data.data);
+      }
+    } catch (error) {
+      console.error("Gagal mengambil data barang hilang", error);
     } finally {
       setIsLoading(false);
     }
@@ -300,9 +320,78 @@ export default function NotifikasiPage() {
             </div>
           )}
           {activeTab === "hilang" && (
-            <div className="text-center">
-              <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400 mb-2">Daftar Laporan Barang Hilang</h3>
-              <p>Belum ada laporan barang hilang yang tercatat.</p>
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-bold text-[var(--text-main)] transition-colors duration-400">Daftar Laporan Barang Hilang (Dari Stok Opname)</h3>
+              </div>
+              
+              {isLoading ? (
+                <p className="text-center py-8">Memuat data barang hilang...</p>
+              ) : barangHilang.length === 0 ? (
+                <p className="text-center py-8">Tidak ada barang hilang yang tercatat dari sesi stok opname.</p>
+              ) : selectedHilangRoom ? (
+                <div className="space-y-6 animate-fade-in">
+                  <div className="flex items-center gap-4 border-b border-[var(--border-panel)] pb-4">
+                    <button 
+                      onClick={() => setSelectedHilangRoom(null)} 
+                      className="p-2 bg-[var(--bg-panel)] transition-colors duration-400 border border-[var(--border-panel)] rounded-xl hover:bg-[var(--bg-app)]"
+                    >
+                      <svg className="w-5 h-5 text-neutral-600 dark:text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                      </svg>
+                    </button>
+                    <div>
+                      <h4 className="font-bold text-[var(--text-main)] text-xl transition-colors duration-400">Ruangan: {selectedHilangRoom}</h4>
+                      <p className="text-sm text-[var(--text-muted)]">
+                        {barangHilang.filter(b => b.lokasi_ruangan === selectedHilangRoom).length} Barang Hilang
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-6">
+                    {barangHilang.filter(b => b.lokasi_ruangan === selectedHilangRoom).map((barang, idx) => (
+                      <div key={idx} className="border border-rose-200 dark:border-rose-900/50 rounded-xl p-6 relative overflow-hidden bg-rose-50/30 dark:bg-rose-900/10 transition-colors duration-400">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h4 className="font-bold text-[var(--text-main)] text-lg transition-colors duration-400">{barang.nama_barang || "Barang Tidak Diketahui"}</h4>
+                            <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold">{barang.kode_barang} - {barang.no_urut_pendaft}</p>
+                          </div>
+                          <span className="px-3 py-1 bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400 transition-colors duration-400 text-xs font-bold rounded-full">
+                            Hilang
+                          </span>
+                        </div>
+                        <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400 mt-2">Dinyatakan hilang pada Stock Opname selesai tanggal: {new Date(barang.tanggal_selesai).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {Array.from(new Set(barangHilang.map(b => b.lokasi_ruangan).filter(Boolean))).map((room) => {
+                    const count = barangHilang.filter(b => b.lokasi_ruangan === room).length;
+                    return (
+                      <button 
+                        key={room as string}
+                        onClick={() => setSelectedHilangRoom(room as string)}
+                        className="group flex flex-col items-center justify-center p-8 bg-[var(--bg-app)] border border-[var(--border-panel)] rounded-2xl hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:border-rose-300 dark:hover:border-rose-700 transition-all duration-300 shadow-sm relative"
+                      >
+                        <div className="absolute top-3 right-3 bg-rose-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md animate-pulse">
+                          {count}
+                        </div>
+                        <div className="w-16 h-16 bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                        </div>
+                        <h4 className="text-xl font-bold text-[var(--text-main)] mb-2 group-hover:text-rose-700 dark:group-hover:text-rose-400 transition-colors">{room as string}</h4>
+                        <span className="px-3 py-1 bg-neutral-100 dark:bg-neutral-800 text-[var(--text-muted)] text-sm font-bold rounded-full">
+                          Ada Barang Hilang
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
           {activeTab === "riwayat" && (userRole === "Mahasiswa/Dosen" || userRole === "Mahasiswa") && (

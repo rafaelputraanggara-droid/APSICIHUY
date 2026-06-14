@@ -61,6 +61,11 @@ C. Alur Pelaporan Kerusakan (Maintenance Tracking)
   2. PJ Ruangan: Laporan muncul di "Riwayat Maintenance" (yang kini dikelompokkan berdasarkan Ruangan terlebih dahulu) dan mendapat akses 2 PDF yang sama seperti mahasiswa.
   3. Admin Fakultas & Laboran: Memiliki arsip lengkap di "Riwayat Maintenance" (dikelompokkan berdasarkan Ruangan) dengan akses ke ke-3 dokumen PDF (Termasuk Bukti Administrasi/Nota).
 
+E. Laporan Barang Hilang
+- Pusat Notifikasi kini memiliki tab "Laporan Barang Hilang".
+- Fitur ini secara otomatis menampilkan daftar barang yang hilang dari sesi Stok Opname terakhir (barang dengan status "Tidak Ditemukan" pada Stok Opname bersatus "Selesai").
+- Laporan dikelompokkan berdasarkan Ruangan dengan indikator notifikasi jumlah barang yang hilang.
+
 D. Alur Mutasi Barang (Perpindahan Aset)
 - PJ Ruangan mengajukan form perpindahan (Mutasi) sebuah barang ke ruangan lain beserta alasannya.
 - Mutasi direkam dengan status "Menunggu".
