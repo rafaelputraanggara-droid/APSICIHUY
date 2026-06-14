@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { menuItems, subMenus, getMappedRole } from "./navigationData";
+import { menuItems, subMenus, riwayatSubMenus, getMappedRole } from "./navigationData";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -16,6 +16,7 @@ export default function Sidebar() {
   });
 
   const [isMasterBarangOpen, setIsMasterBarangOpen] = useState(false);
+  const [isRiwayatOpen, setIsRiwayatOpen] = useState(false);
   const [pendingMutasiCount, setPendingMutasiCount] = useState(0);
 
   useEffect(() => {
@@ -56,8 +57,13 @@ export default function Sidebar() {
 
   // Sync accordion state with current route path
   useEffect(() => {
-    if (pathname && pathname.startsWith("/admin/master-barang")) {
-      setIsMasterBarangOpen(true);
+    if (pathname) {
+      if (pathname.startsWith("/admin/master-barang")) {
+        setIsMasterBarangOpen(true);
+      }
+      if (pathname.startsWith("/riwayat")) {
+        setIsRiwayatOpen(true);
+      }
     }
   }, [pathname]);
 
@@ -166,6 +172,67 @@ export default function Sidebar() {
                 );
               }
 
+              // Riwayat dropdown rendering
+              if (item.name === "Riwayat") {
+                return (
+                  <div key={idx} className="space-y-1">
+                    <button
+                      onClick={() => setIsRiwayatOpen(!isRiwayatOpen)}
+                      className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group cursor-pointer text-left focus:outline-none ${
+                        pathname && pathname.startsWith("/riwayat")
+                          ? "bg-[var(--bg-sidebar-active)] text-[var(--text-sidebar-active)] shadow-sm"
+                          : "text-[var(--text-sidebar-default)] hover:bg-[var(--bg-sidebar-hover)] hover:text-[var(--text-sidebar-hover)]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={`transition-colors duration-200 ${
+                          pathname && pathname.startsWith("/riwayat")
+                            ? "text-[var(--text-sidebar-active)]"
+                            : "text-[var(--text-sidebar-default)] group-hover:text-[var(--text-sidebar-hover)]"
+                        }`}>
+                          {item.icon}
+                        </span>
+                        <span>{item.name}</span>
+                      </div>
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-250 ${
+                          pathname && pathname.startsWith("/riwayat") ? "text-[var(--text-sidebar-active)]" : "text-[var(--text-sidebar-default)]"
+                        } ${isRiwayatOpen ? "transform rotate-180" : ""}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {/* Sub-menus */}
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-in-out pl-9 space-y-1 ${
+                        isRiwayatOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                    >
+                      {riwayatSubMenus.filter(sub => !sub.roles || sub.roles.includes(activeRole)).map((sub, sIdx) => {
+                        const isSubActive = pathname === sub.href;
+                        return (
+                          <Link
+                            key={sIdx}
+                            href={sub.href}
+                            className={`flex items-center py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all border-l-2 ${
+                              isSubActive
+                                ? "border-[var(--text-sidebar-active)] bg-[var(--bg-sidebar-active)] text-[var(--text-sidebar-active)]"
+                                : "border-transparent text-[var(--text-sidebar-default)] hover:bg-[var(--bg-sidebar-hover)] hover:text-[var(--text-sidebar-hover)]"
+                            }`}
+                          >
+                            {sub.name}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              }
 
               const isActive = pathname === item.href;
               return (

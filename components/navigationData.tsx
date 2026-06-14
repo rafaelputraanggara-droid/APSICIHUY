@@ -108,6 +108,17 @@ export const menuItems: MenuItem[] = [
   },
 
   {
+    name: "Riwayat",
+    href: "/riwayat",
+    roles: ["Admin", "PJ_Ruangan", "Laboran", "Mahasiswa/Dosen", "Mahasiswa"],
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    )
+  },
+
+  {
     name: "About",
     href: "/about",
     roles: ["Admin", "PJ_Ruangan", "Koorprodi", "Wadek", "Mahasiswa/Dosen", "Laboran"],
@@ -123,7 +134,14 @@ export const subMenus: SubMenuItem[] = [
   { name: "Tambah Data Barang", href: "/admin/master-barang/tambah", roles: ["Admin"] },
   { name: "Import SAKTI CSV", href: "/admin/master-barang/import", roles: ["Admin"] },
   { name: "Daftar Database Barang", href: "/admin/master-barang/database-barang", roles: ["Admin", "PJ_Ruangan", "Laboran"] },
-  { name: "Kategori Barang", href: "/admin/master-barang/kategori", roles: ["Admin", "PJ_Ruangan", "Laboran"] },
-  { name: "Riwayat Stock Opname", href: "/admin/master-barang/riwayat-stock-opname", roles: ["Admin"] }
+  { name: "Kategori Barang", href: "/admin/master-barang/kategori", roles: ["Admin", "PJ_Ruangan", "Laboran"] }
+];
+
+export const riwayatSubMenus: SubMenuItem[] = [
+  { name: "Cetak Laporan", href: "/riwayat/cetak", roles: ["Admin", "PJ_Ruangan", "Laboran"] },
+  { name: "Riwayat Stock Opname", href: "/riwayat/stock-opname", roles: ["Admin"] },
+  { name: "Riwayat Maintenance", href: "/riwayat/maintenance", roles: ["Admin", "PJ_Ruangan", "Laboran"] },
+  { name: "Riwayat Mutasi", href: "/riwayat/mutasi", roles: ["Admin", "PJ_Ruangan", "Laboran", "Mahasiswa/Dosen", "Mahasiswa"] },
+  { name: "Riwayat Laporan Saya", href: "/riwayat/laporan-saya", roles: ["Mahasiswa/Dosen", "Mahasiswa"] }
 ];
 

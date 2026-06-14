@@ -56,7 +56,7 @@ export default function MutasiPage() {
   }, []);
 
   useEffect(() => {
-    if (currentUser && (activeTab === "antrean" || activeTab === "riwayat")) {
+    if (currentUser && activeTab === "antrean") {
       fetchMutasiData();
     }
   }, [activeTab, currentUser]);
@@ -201,7 +201,7 @@ export default function MutasiPage() {
         setFoundItem(null);
         setRuanganTujuan("");
         setAlasanMutasi("");
-        setActiveTab("riwayat");
+        setActiveTab("antrean");
       } else {
         alert(data.error || "Gagal mengajukan mutasi.");
       }
@@ -242,7 +242,6 @@ export default function MutasiPage() {
   const isAdmin = currentUser.role === "Admin Fakultas";
 
   const antreanData = mutasiData.filter(m => m.status_mutasi === "Menunggu");
-  const riwayatData = mutasiData.filter(m => m.status_mutasi !== "Menunggu");
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
@@ -292,16 +291,6 @@ export default function MutasiPage() {
               )}
             </button>
           )}
-          <button
-            onClick={() => setActiveTab("riwayat")}
-            className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all ${
-              activeTab === "riwayat"
-                ? "border-emerald-600 text-[var(--tag-success-text)] transition-colors duration-400"
-                : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
-            }`}
-          >
-            Riwayat Mutasi
-          </button>
         </nav>
       </div>
 
@@ -547,79 +536,6 @@ export default function MutasiPage() {
                         >
                           Validasi
                         </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* TAB CONTENT: RIWAYAT MUTASI */}
-      {activeTab === "riwayat" && (
-        <div className="bg-[var(--bg-panel)] transition-colors duration-400 border border-[var(--border-panel)] rounded-2xl shadow-sm overflow-hidden animate-fade-in">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-neutral-200">
-              <thead className="bg-[var(--bg-app)] transition-colors duration-400">
-                <tr>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                    Data Barang
-                  </th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                    Pergerakan
-                  </th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                    Pengaju
-                  </th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                    Status Validasi
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-neutral-200">
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={3} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">Memuat data...</td>
-                  </tr>
-                ) : riwayatData.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">Belum ada riwayat mutasi.</td>
-                  </tr>
-                ) : (
-                  riwayatData.map((m) => (
-                    <tr key={m.id_mutasi} className="hover:bg-[var(--bg-app)] transition-colors duration-400">
-                      <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-[var(--text-main)]">{m.nama_barang}</p>
-                        <p className="text-xs text-[var(--text-muted)] font-mono mt-1">{m.kode_barang}_{m.no_urut_pendaft}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="font-semibold text-[var(--text-muted)]">{m.ruangan_asal}</span>
-                          <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
-                          <span className="font-semibold text-[var(--text-main)]">{m.id_ruangan_tujuan}</span>
-                        </div>
-                        <p className="text-xs text-[var(--text-muted)] mt-1">Diajukan: {new Date(m.tanggal_mutasi).toLocaleDateString('id-ID')}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm text-[var(--text-main)]">{m.id_user_pengaju}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col items-start gap-1">
-                          <span className={`px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${
-                            m.status_mutasi === 'Disetujui' ? 'bg-[var(--tag-success-bg)] text-[var(--tag-success-text)] transition-colors duration-400' : 'bg-[var(--tag-danger-bg)] text-[var(--tag-danger-text)] transition-colors duration-400'
-                          }`}>
-                            {m.status_mutasi}
-                          </span>
-                          {m.catatan_validasi && (
-                            <p className="text-xs text-[var(--text-muted)] italic mt-1 max-w-[200px] truncate">
-                              "{m.catatan_validasi}"
-                            </p>
-                          )}
-                        </div>
                       </td>
                     </tr>
                   ))

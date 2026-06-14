@@ -58,7 +58,7 @@ export default function RiwayatStockOpnamePage() {
               }
               
               return (
-              <Link key={room} href={`/admin/master-barang/riwayat-stock-opname/${encodeURIComponent(room)}`} className="group">
+              <Link key={room} href={`/riwayat/stock-opname/${encodeURIComponent(room)}`} className="group">
                 <div className={`border rounded-2xl p-5 transition-all cursor-pointer h-full flex flex-col justify-center items-center text-center gap-3 relative ${
                   warning 
                     ? 'border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-900/10 hover:bg-rose-100 dark:hover:bg-rose-900/30' 

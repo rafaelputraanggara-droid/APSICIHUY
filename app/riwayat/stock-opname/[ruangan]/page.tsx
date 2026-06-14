@@ -94,7 +94,7 @@ export default function RiwayatRuanganPage() {
                   </div>
                 </div>
                 
-                <Link href={`/admin/master-barang/riwayat-stock-opname/laporan/${session.id}`}>
+                <Link href={`/riwayat/stock-opname/laporan/${session.id}`}>
                   <button className="whitespace-nowrap px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition shadow-sm flex items-center gap-2">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
