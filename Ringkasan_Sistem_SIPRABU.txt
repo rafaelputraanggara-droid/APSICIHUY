@@ -1,0 +1,86 @@
+RINGKASAN KESELURUHAN SISTEM SIPRABU FT UNS
+=========================================================
+
+1. DESKRIPSI UMUM SISTEM
+SIPRABU (Sistem Inventarisasi dan Pemeliharaan Barang Terpadu) adalah platform manajemen aset yang diperuntukkan bagi lingkungan Fakultas Teknik UNS. Sistem ini bertujuan untuk mendigitalisasi pengelolaan data inventaris barang (BMN), pelacakan perpindahan barang (Mutasi), pelaporan kerusakan barang (Maintenance), serta pelaksanaan inventarisasi fisik (Stok Opname). SIPRABU menggunakan teknologi QR Code untuk memudahkan identifikasi dan aksi langsung pada setiap unit barang di berbagai ruangan.
+
+---------------------------------------------------------
+2. PENGELOLAAN HAK AKSES (ROLES)
+Aplikasi ini memiliki beberapa peran (Role) pengguna dengan wewenang yang berbeda-beda, yaitu:
+
+A. Admin Fakultas
+- Memiliki kontrol penuh terhadap sistem master (Database Barang, Ruangan, Kategori).
+- Mengelola persetujuan pendaftaran akun baru (Mahasiswa dan PJ Ruangan).
+- Mengakses laporan keseluruhan operasi maintenance (Riwayat Maintenance) yang berisi Bukti Laporan Awal, Bukti Perbaikan di Lokasi, dan Bukti Administrasi/Nota perbaikan.
+- Menginisiasi/Membuat sesi kegiatan Stok Opname.
+
+B. Laboran (Teknisi)
+- Pihak yang bertanggung jawab untuk menerima, menolak, dan mengeksekusi laporan kerusakan barang.
+- Saat laporan berstatus selesai, Laboran wajib mengunggah dokumen Bukti Perbaikan di Lokasi dan Bukti Administrasi (Nota pengeluaran perbaikan).
+- Memiliki akses melihat daftar lengkap Riwayat Maintenance beserta dokumen pendukung (termasuk Nota Administrasi).
+
+C. PJ Ruangan (Penanggung Jawab Ruangan)
+- Bertanggung jawab atas pengelolaan barang dan pelaporan di ruangan tertentu.
+- Berhak mengajukan mutasi barang antar ruangan.
+- Menerima penugasan dan menjalankan proses pemindaian (scan) Stok Opname menggunakan perangkatnya.
+- Memantau laporan kerusakan yang diajukan pada barang-barang di ruangannya melalui tab Laporan Kerusakan, namun TIDAK MEMILIKI hak untuk menerima/menolak laporan tersebut (wewenang laboran).
+- Memantau Riwayat Maintenance (Laporan Selesai) dengan hak lihat 2 dokumen (Bukti Awal & Bukti Lokasi).
+
+D. Mahasiswa
+- Pengguna umum yang dapat melakukan pendaftaran akun mandiri untuk mendapat persetujuan admin.
+- Hanya dapat melakukan pemindaian (Scan) QR Code pada barang untuk melaporkan kerusakan.
+- Memiliki tab "Riwayat Laporan Saya" secara eksklusif yang memuat seluruh riwayat laporan kerusakan spesifik yang pernah ia ajukan sendiri.
+- Hanya mendapatkan pratinjau Bukti Laporan Awal dan Bukti Telah Diperbaiki (Bukti Lokasi) setelah barang selesai ditangani Laboran.
+
+E. Koordinator Prodi & Wakil Dekan
+- Peran pengawas (Eksekutif) yang dikhususkan untuk melihat Dashboard ringkasan statistik (seperti metrik kondisi barang, status pelaporan, SLA, dll) guna menunjang pengambilan keputusan.
+
+---------------------------------------------------------
+3. ALUR KERJA (WORKFLOW) UTAMA SISTEM
+
+A. Alur Manajemen Master Data & Labeling
+- Admin Fakultas memasukkan data barang secara manual atau impor dari Excel/CSV.
+- Sistem otomatis menghasilkan (generate) QR Code untuk setiap unit barang yang memuat parameter `kode_barang` dan `no_urut_pendaft`.
+- Admin mencetak label (PDF) dan menempelkannya secara fisik pada barang di ruangan.
+- Data barang bisa diedit dan dihapus oleh Admin di menu Database Barang ruangan bersangkutan.
+
+B. Alur Pendaftaran Akun (Registrasi)
+- Pengguna (Mahasiswa / Calon PJ) mengisi formulir pendaftaran di halaman utama dan mengunggah dokumen identitas (KTM/SK).
+- Akun berstatus "Menunggu Verifikasi".
+- Admin Fakultas membuka menu "Notifikasi -> Laporan Pendaftaran Akun Baru". Admin memeriksa dokumen PDF yang dilampirkan, lalu menekan Setuju atau Tolak.
+- Jika disetujui, akun baru diizinkan untuk Login ke dalam sistem.
+
+C. Alur Pelaporan Kerusakan (Maintenance Tracking)
+- Pelapor (Mahasiswa/PJ Ruangan) melakukan Scan QR Code barang fisik yang rusak.
+- Pelapor diarahkan ke form pelaporan. Mereka wajib mendeskripsikan kerusakan dan mengunggah foto Bukti Kerusakan Awal. Laporan berstatus "Menunggu".
+- Laboran membuka tab "Notifikasi -> Laporan Kerusakan" lalu melihat laporan yang masuk beserta foto bukti awal. Laboran bisa "Tolak" (disertai alasan) atau "Terima" laporan.
+- Jika diterima, laporan berstatus "Diproses" / "Sedang Diperbaiki".
+- Setelah diperbaiki secara fisik, Laboran akan menekan tombol penyelesaian dan WAJIB mengunggah: Bukti Lokasi (Foto perbaikan selesai) & Bukti Administrasi (Nota Biaya). Status berubah menjadi "Selesai".
+- Hasilnya:
+  1. Mahasiswa Pelapor: Laporan muncul di "Riwayat Laporan Saya" dan mereka bisa menekan tombol PDF Bukti Awal & Bukti Lokasi (Selesai).
+  2. PJ Ruangan: Laporan muncul di "Riwayat Maintenance" (yang kini dikelompokkan berdasarkan Ruangan terlebih dahulu) dan mendapat akses 2 PDF yang sama seperti mahasiswa.
+  3. Admin Fakultas & Laboran: Memiliki arsip lengkap di "Riwayat Maintenance" (dikelompokkan berdasarkan Ruangan) dengan akses ke ke-3 dokumen PDF (Termasuk Bukti Administrasi/Nota).
+
+D. Alur Mutasi Barang (Perpindahan Aset)
+- PJ Ruangan mengajukan form perpindahan (Mutasi) sebuah barang ke ruangan lain beserta alasannya.
+- Mutasi direkam dengan status "Menunggu".
+- Sistem memvalidasi dan memindahkan status barang tersebut apabila sudah disetujui (segera terintegrasi penuh).
+- Sistem memelihara log asal ruangan, ruangan tujuan, dan riwayat perpindahan tersebut agar pergerakan aset tetap terkendali secara historis.
+
+E. Alur Stok Opname (Pengecekan Fisik)
+- Admin Fakultas masuk ke menu "Stok Opname -> Buat Sesi Baru" dan memilih target ruangan. Status sesi "Berjalan".
+- PJ Ruangan login dan melihat tugas Stok Opname yang "Berjalan" untuk ruangannya.
+- PJ Ruangan berkeliling ruangan secara fisik dan melakukan Scan QR Code pada setiap barang yang ia temukan.
+- Saat di-scan, status keberadaan barang secara real-time berubah dari "Tidak Ditemukan" menjadi "Ditemukan" lengkap dengan Timestamp pencatatan.
+- Jika sudah selesai, sesi Stok Opname bisa ditutup/diselesaikan. Laporan rincian aset yang hilang vs yang ada akan dicetak ke dalam arsip "Riwayat Stok Opname".
+
+---------------------------------------------------------
+4. SISTEM DATABASE (TABEL UTAMA)
+Secara teknis, aplikasi ini berjalan menggunakan database relasional (MySQL/TiDB) dengan relasi sebagai berikut:
+- `users` / `pendaftaran_akun`: Penyimpanan kredensial dan alur verifikasi login.
+- `barangs`: Core master tabel yang memuat seluruh atribut fisik barang dan ruangan. Unik berdasarkan kombinasi (kode_barang, no_urut_pendaft).
+- `laporan_kerusakans`: Menyimpan data komplain maintenance, menghubungkan ID pengguna pelapor (`pelapor_id`) dengan entitas barangs. File PDF diunggah dan disimpan ke dalam bucket Cloud/Local, dengan Path URL-nya dicatat ke kolom (foto_url, bukti_penyelesaian_pdf, bukti_administrasi_pdf).
+- `mutasi_barang`: Entitas rekaman log perpindahan.
+- `stok_opnames` & `stok_opname_details`: Menyimpan sesi event (header) dan relasi rincian masing-masing item saat discan (detail).
+
+Semua alur di atas bekerja secara terpadu melalui sebuah Single Page Interface berbasis framework moderen, menjamin efisiensi alur informasi dari Mahasiswa, ke level Operasional (PJ & Laboran), hingga pelaporan Eksekutif (Admin Fakultas & Pejabat).
