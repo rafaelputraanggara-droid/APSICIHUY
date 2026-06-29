@@ -150,9 +150,9 @@ export default function NotifikasiPage() {
       const data = await res.json();
       if (data.success) {
         if (action === "approve") {
-          alert(`[SIMULASI EMAIL TERKIRIM KE ${email}]\n\nHalo ${username},\nAkun Anda telah DIVERIFIKASI. Anda sekarang bisa masuk ke SIPRABU.\n\nLink Login: http://localhost:3000/login`);
+          alert(`Pendaftaran ${username} berhasil disetujui.`);
         } else {
-          alert(`[SIMULASI EMAIL TERKIRIM KE ${email}]\n\nHalo ${username},\nMohon maaf, pendaftaran akun Anda DITOLAK.`);
+          alert(`Pendaftaran ${username} telah ditolak.`);
         }
         fetchPendingAccounts();
       } else {
