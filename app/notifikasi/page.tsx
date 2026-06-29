@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import RiwayatLaporanPage from "../riwayat/laporan-saya/page";
 import LoadingDots from "@/components/LoadingDots";
 import TableSkeleton from "@/components/TableSkeleton";
+import { openDocument } from "@/lib/openDocument";
 
 export default function NotifikasiPage() {
   const [activeTab, setActiveTab] = useState<"kerusakan" | "hilang" | "pendaftaran" | "riwayat">("kerusakan");
@@ -267,13 +268,13 @@ export default function NotifikasiPage() {
                         {laporan.foto_url && (
                           <div className="pt-2 mt-2 border-t border-[var(--border-panel)]">
                             <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400 mb-2 mt-2">Bukti Kerusakan (PDF)</p>
-                            <a href={laporan.foto_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-[var(--text-main)] font-bold rounded-xl text-xs transition-all shadow-sm">
+                            <button onClick={() => openDocument(laporan.foto_url)} className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-[var(--text-main)] font-bold rounded-xl text-xs transition-all shadow-sm">
                               <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                               </svg>
                               Buka / Unduh Dokumen
-                            </a>
+                            </button>
                           </div>
                         )}
                       </div>
@@ -478,10 +479,7 @@ export default function NotifikasiPage() {
                   Pratinjau Dokumen PDF
                 </h3>
                 <div className="flex items-center gap-3">
-                  <a 
-                    href={pdfToView}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button onClick={() => openDocument(pdfToView)}
                     className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

@@ -1,6 +1,7 @@
 "use client";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { openDocument } from "@/lib/openDocument";
 const MySwal = withReactContent(Swal);
 
 
@@ -196,10 +197,7 @@ export default function ListBarangRusakPage() {
                 Pratinjau Dokumen
               </h3>
               <div className="flex items-center gap-3">
-                <a 
-                  href={pdfToView}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button onClick={() => openDocument(pdfToView)}
                   className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

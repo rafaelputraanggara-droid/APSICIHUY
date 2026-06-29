@@ -293,9 +293,7 @@ export default function DatabaseAkunPage() {
                   {detailUser.foto_ktm ? (
                     <div className="space-y-3">
                       <div className="flex justify-end">
-                        <a 
-                          href={detailUser.foto_ktm} 
-                          target="_blank" 
+                        <button onClick={() => openDocument(detailUser.foto_ktm)} 
                           rel="noreferrer" 
                           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
                         >

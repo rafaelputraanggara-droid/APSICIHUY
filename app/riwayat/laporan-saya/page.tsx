@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { openDocument } from "@/lib/openDocument";
 export default function RiwayatLaporanPage() {
   const router = useRouter();
   const [laporans, setLaporans] = useState<any[]>([]);
@@ -119,7 +120,7 @@ export default function RiwayatLaporanPage() {
                     {laporan.foto_url && (
                       <div>
                         <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-bold mb-2">Bukti Kerusakan (Dikirim oleh Anda)</p>
-                        <a href={laporan.foto_url} target="_blank" rel="noopener noreferrer" className="inline-block px-3 py-1.5 bg-[var(--bg-panel)] hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-[var(--border-panel)] rounded-lg text-xs font-bold text-[var(--text-main)] transition-colors">
+                        <button onClick={() => openDocument(laporan.foto_url)} className="inline-block px-3 py-1.5 bg-[var(--bg-panel)] hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-[var(--border-panel)] rounded-lg text-xs font-bold text-[var(--text-main)] transition-colors">
                           Buka Pratinjau Bukti
                         </a>
                       </div>
@@ -127,7 +128,7 @@ export default function RiwayatLaporanPage() {
                     {laporan.status_laporan === 'Selesai' && laporan.bukti_penyelesaian_pdf && (
                       <div>
                         <p className="text-xs text-emerald-600 uppercase tracking-wider font-bold mb-2">Bukti Telah Diperbaiki (Oleh Laboran)</p>
-                        <a href={laporan.bukti_penyelesaian_pdf} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 transition-colors">
+                        <button onClick={() => openDocument(laporan.bukti_penyelesaian_pdf)} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 transition-colors">
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
