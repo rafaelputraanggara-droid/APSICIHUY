@@ -27,12 +27,26 @@ export default function MaintenancePage() {
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        setUserRole(user.role);
-      } catch (e) {}
+    if (typeof window !== "undefined") {
+      const savedUser = sessionStorage.getItem("simulated_user");
+      if (savedUser) {
+        try {
+          const role = JSON.parse(savedUser).role;
+          setUserRole(role);
+        } catch (e) {}
+      }
+      
+      const handleUserChange = () => {
+        const updated = sessionStorage.getItem("simulated_user");
+        if (updated) {
+          try {
+            setUserRole(JSON.parse(updated).role);
+          } catch (e) {}
+        }
+      };
+      
+      window.addEventListener("simulated_user_change", handleUserChange);
+      return () => window.removeEventListener("simulated_user_change", handleUserChange);
     }
   }, []);
 
