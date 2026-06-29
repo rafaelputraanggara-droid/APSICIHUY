@@ -22,7 +22,13 @@ export async function POST(request: Request) {
       const pendaftaran = pendRows[0];
       if (pendaftaran.status_pendaftaran === 'Menunggu') {
         return NextResponse.json(
-          { success: false, error: 'Akun Anda sedang menunggu verifikasi dari Admin Fakultas.' },
+          { success: false, error: 'Akun Anda sedang menunggu persetujuan dari Admin Fakultas.' },
+          { status: 403 }
+        );
+      }
+      if (pendaftaran.status_pendaftaran === 'Menunggu Verifikasi Email') {
+        return NextResponse.json(
+          { success: false, error: 'Akun disetujui, tetapi email belum diverifikasi. Silakan cek kotak masuk email Anda dan klik link verifikasi.' },
           { status: 403 }
         );
       }

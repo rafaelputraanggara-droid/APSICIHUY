@@ -1,0 +1,1 @@
+const mysql = require('mysql2/promise'); const pool = mysql.createPool({ host: 'localhost', user: 'root', password: '', database: 'apsi2026' }); async function run() { try { await pool.query('ALTER TABLE pendaftaran_akun ADD COLUMN verification_token VARCHAR(255) NULL;'); console.log('success'); } catch(e) { console.log(e.message); } process.exit(); } run();
