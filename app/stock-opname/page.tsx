@@ -635,13 +635,12 @@ export default function StockOpnamePage() {
                       <tr>
                         <th className="px-3 py-2 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Aset</th>
                         <th className="px-3 py-2 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Status Keberadaan</th>
-                        <th className="px-3 py-2 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Uji (Simulasi)</th>
                       </tr>
                     </thead>
                     <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-gray-200">
                       {filteredItems.length === 0 ? (
                         <tr>
-                          <td colSpan={3} className="px-4 py-8 text-center text-xs text-gray-400">
+                          <td colSpan={2} className="px-4 py-8 text-center text-xs text-gray-400">
                             Barang tidak ditemukan di ruangan ini.
                           </td>
                         </tr>
@@ -682,22 +681,6 @@ export default function StockOpnamePage() {
                                     </>
                                   )}
                                 </span>
-                              </td>
-                              <td className="px-3 py-3 text-right">
-                                <button
-                                  onClick={() => handleSimulateScan(item)}
-                                  disabled={isFound}
-                                  className={`px-3 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer flex items-center gap-1 ml-auto ${
-                                    isFound
-                                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                                      : 'bg-emerald-50 hover:bg-[var(--tag-success-bg)] text-[var(--tag-success-text)] transition-colors duration-400 border border-emerald-250'
-                                  }`}
-                                >
-                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-4v-4m-2 4h-2m-2-4h-2m8 0h2m-2 2h2m-4-6h4M6 6h4v4H6V6zm10 0h4v4h-4V6zM6 16h4v4H6v-4z" />
-                                  </svg>
-                                  Simulasi
-                                </button>
                               </td>
                             </tr>
                           );
