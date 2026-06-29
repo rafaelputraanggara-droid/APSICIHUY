@@ -78,7 +78,7 @@ export async function POST(request: Request) {
 
     if (existingReports.length > 0) {
       return NextResponse.json(
-        { success: false, error: 'Barang ini sedang dalam status perbaikan atau pelaporan aktif.' },
+        { success: false, error: `Admin sudah menerima laporan terkait barang yang dilaporkan dengan kode ${kode_barang}` },
         { status: 400 }
       );
     }

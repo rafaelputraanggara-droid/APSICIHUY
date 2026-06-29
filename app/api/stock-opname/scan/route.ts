@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         { 
           success: false, 
           error_type: 'MISPLACED', 
-          error: `Barang salah lokasi! Aset ini terdaftar di Ruang: ${masterRows[0].lokasi_ruangan}.`,
+          error: `Barang ini bukan berada di ruangan ini dan seharusnya di ruang ${masterRows[0].lokasi_ruangan}`,
           data: {
             nama_barang: masterRows[0].nama_barang,
             lokasi_terdaftar: masterRows[0].lokasi_ruangan

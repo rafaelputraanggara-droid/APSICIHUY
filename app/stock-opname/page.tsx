@@ -259,7 +259,7 @@ export default function StockOpnamePage() {
       if (!kode_barang || !no_urut_pendaft) {
         // Not a recognized QR format
         playBeep('error');
-        addToast('Format QR Code tidak dikenali!', 'error');
+        addToast('QR tidak valid', 'error');
         return;
       }
 

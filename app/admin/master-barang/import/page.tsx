@@ -227,9 +227,10 @@ export default function ImportBarang() {
   const handleDownloadTemplate = () => {
     const csvContent =
       "Kode Barang;NUP;Nama Barang;Merk Type;Tahun Perolehan;Kondisi;Lokasi Ruangan\n" +
-      "1.02.01.01.004;4;Monitor LG IPS 24 Inch;24MP400 Full HD;2024;Baik;LAB-RPL-301\n" +
-      "1.02.01.01.005;5;Printer Epson L3210;L3210 EcoTank;2023;Baik;LAB-JAS-302\n" +
-      "1.02.01.01.006;6;Switch Cisco 16 Port;SG95-16 Compact;2022;Rusak Ringan;LAB-KOD-303";
+      "1.02.01.01.004;4;Monitor LG IPS 24 Inch;24MP400 Full HD;2024;Baik;Laboratorium LPPD\n" +
+      "1.02.01.01.005;5;Printer Epson L3210;L3210 EcoTank;2023;Baik;Laboratorium LPSKE\n" +
+      "1.02.01.01.006;6;Switch Cisco 16 Port;SG95-16 Compact;2022;Rusak Ringan;Laboratorium RSAKI\n" +
+      "1.02.01.01.007;7;Proyektor Epson EB-X51;EB-X51;2024;Baik;1101-5412";
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');

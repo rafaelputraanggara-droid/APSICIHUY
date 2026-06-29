@@ -249,7 +249,7 @@ export default function NotifikasiPage() {
                 Laporan Kerusakan
               </button>
             )}
-            {userRole !== "Laboran" && userRole !== "Mahasiswa/Dosen" && userRole !== "Mahasiswa" && (
+            {userRole !== "Mahasiswa/Dosen" && userRole !== "Mahasiswa" && (
               <button
                 onClick={() => setActiveTab("hilang")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
