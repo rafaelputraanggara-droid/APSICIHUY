@@ -1,4 +1,8 @@
 'use client';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -302,11 +306,11 @@ export default function StockOpnamePage() {
   const handleStartSession = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedRoom || !pjName.trim()) {
-      alert('Ruangan dan Nama PJ Auditor wajib diisi!');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Ruangan dan Nama PJ Auditor wajib diisi!'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
     if (!rooms.includes(selectedRoom)) {
-      alert('Ruangan tidak valid. Silakan ketik dan pilih ruangan yang tersedia dari daftar dropdown.');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Ruangan tidak valid. Silakan ketik dan pilih ruangan yang tersedia dari daftar dropdown.'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
 
@@ -329,11 +333,11 @@ export default function StockOpnamePage() {
           startCameraScanner();
         }, 300);
       } else {
-        alert('Gagal memulai sesi: ' + data.error);
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String('Gagal memulai sesi: ' + data.error), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (err) {
       console.error(err);
-      alert('Terjadi kesalahan jaringan.');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Terjadi kesalahan jaringan.'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 
@@ -341,7 +345,7 @@ export default function StockOpnamePage() {
   const handleFinishSession = async () => {
     if (!session) return;
     
-    const confirmFinish = window.confirm('Apakah Anda yakin ingin menyelesaikan sesi Stock Opname ini? Barang yang belum di-scan akan dianggap hilang/selisih.');
+    const confirmFinish = (await MySwal.fire({ title: 'Konfirmasi', text: String('Apakah Anda yakin ingin menyelesaikan sesi Stock Opname ini? Barang yang belum di-scan akan dianggap hilang/selisih.'), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed
     if (!confirmFinish) return;
 
     // Stop camera stream first
@@ -362,13 +366,13 @@ export default function StockOpnamePage() {
         setReport(data.data);
         setPhase('report');
       } else {
-        alert('Gagal mengakhiri sesi: ' + data.error);
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String('Gagal mengakhiri sesi: ' + data.error), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         // Restart camera if it failed to finish
         startCameraScanner();
       }
     } catch (err) {
       console.error(err);
-      alert('Terjadi kesalahan sistem.');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Terjadi kesalahan sistem.'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setFinishing(false);
     }

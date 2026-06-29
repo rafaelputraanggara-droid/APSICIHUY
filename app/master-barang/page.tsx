@@ -1,4 +1,8 @@
 'use client';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
@@ -74,7 +78,7 @@ export default function MasterBarang() {
       image.src = blobURL;
     } catch (error) {
       console.error('Failed to download QR code image:', error);
-      alert('Gagal mengunduh gambar QR Code.');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Gagal mengunduh gambar QR Code.'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 
@@ -130,7 +134,7 @@ export default function MasterBarang() {
     
     // Strict SAKTI pattern validation
     if (!kode_barang.match(/^\d\.\d{2}\.\d{2}\.\d{2}\.\d{3}$/)) {
-      alert("Format Kode Barang belum lengkap (X.XX.XX.XX.XXX)");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Format Kode Barang belum lengkap (X.XX.XX.XX.XXX)"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
 
@@ -152,7 +156,7 @@ export default function MasterBarang() {
 
       const data = await res.json();
       if (data.success) {
-        alert('Data barang berhasil didaftarkan!');
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String('Data barang berhasil didaftarkan!'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         // Reset form
         setKodePart1(''); 
         setKodePart2(''); 
@@ -168,11 +172,11 @@ export default function MasterBarang() {
         
         fetchBarangs();
       } else {
-        alert('Gagal menyimpan: ' + data.error);
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String('Gagal menyimpan: ' + data.error), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
       console.error(error);
-      alert('Terjadi kesalahan sistem');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Terjadi kesalahan sistem'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -54,11 +58,11 @@ export default function DatabaseBarangPage() {
         fetchRooms();
         setEditingRoom(null);
       } else {
-        alert(json.error || "Gagal mengubah nama ruangan");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(json.error || "Gagal mengubah nama ruangan"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
       console.error("Failed to update room:", error);
-      alert("Terjadi kesalahan saat menyimpan perubahan.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan saat menyimpan perubahan."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 
@@ -68,7 +72,7 @@ export default function DatabaseBarangPage() {
       confirmMsg = `PERINGATAN: Masih ada ${itemCount} barang di ruangan "${roomName}".\n\nJika Anda menghapus ruangan ini, barang-barang tersebut akan kehilangan data lokasinya. Apakah Anda tetap yakin ingin menghapusnya?`;
     }
 
-    if (!window.confirm(confirmMsg)) {
+    if (!(await MySwal.fire({ title: 'Konfirmasi', text: String(confirmMsg), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed) {
       return;
     }
 
@@ -80,11 +84,11 @@ export default function DatabaseBarangPage() {
       if (json.success) {
         fetchRooms();
       } else {
-        alert(json.error || "Gagal menghapus ruangan");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(json.error || "Gagal menghapus ruangan"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
       console.error("Failed to delete room:", error);
-      alert("Terjadi kesalahan saat menghapus ruangan.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan saat menghapus ruangan."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 

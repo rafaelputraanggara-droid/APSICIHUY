@@ -1,4 +1,8 @@
 'use client';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from 'react';
 
@@ -95,12 +99,12 @@ export default function TambahBarang() {
 
     // Validate Kode Barang format X.XX.XX.XX.XXX
     if (!kode_barang.match(/^\d\.\d{2}\.\d{2}\.\d{2}\.\d{3}$/)) {
-      alert('Format Kode Barang BMN SAKTI belum lengkap (harus X.XX.XX.XX.XXX)');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Format Kode Barang BMN SAKTI belum lengkap (harus X.XX.XX.XX.XXX)'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
 
     if (!kategori.trim()) {
-      alert('Kategori wajib diisi!');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Kategori wajib diisi!'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
 
@@ -109,7 +113,7 @@ export default function TambahBarang() {
     let finalKategori = existingKategori || kategori.trim();
 
     if (!existingKategori) {
-      const confirmAdd = window.confirm(`Kategori "${finalKategori}" belum ditemukan di sistem. Apakah Anda ingin membuat kategori baru ini?`);
+      const confirmAdd = (await MySwal.fire({ title: 'Konfirmasi', text: String(`Kategori "${finalKategori}" belum ditemukan di sistem. Apakah Anda ingin membuat kategori baru ini?`), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed
       if (!confirmAdd) return;
 
       setSaving(true);
@@ -121,13 +125,13 @@ export default function TambahBarang() {
         });
         const catData = await resCat.json();
         if (!catData.success) {
-          alert('Gagal menambahkan kategori baru: ' + catData.error);
+          MySwal.fire({ title: 'Notifikasi Sistem', text: String('Gagal menambahkan kategori baru: ' + catData.error), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
           setSaving(false);
           return;
         }
         setKategoriList([...kategoriList, finalKategori]);
       } catch (err) {
-        alert('Terjadi kesalahan saat menambahkan kategori.');
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String('Terjadi kesalahan saat menambahkan kategori.'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         setSaving(false);
         return;
       }
@@ -168,11 +172,11 @@ export default function TambahBarang() {
         setKondisi('Baik');
         setThPerolehan(new Date().getFullYear().toString());
       } else {
-        alert('Gagal menyimpan barang: ' + data.error);
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String('Gagal menyimpan barang: ' + data.error), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (err) {
       console.error(err);
-      alert('Terjadi kesalahan koneksi sistem.');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Terjadi kesalahan koneksi sistem.'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setSaving(false);
     }

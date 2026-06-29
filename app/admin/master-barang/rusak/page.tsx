@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -29,7 +33,7 @@ export default function ListBarangRusakPage() {
 
   const handleUpdateStatus = async (id: number, action: string) => {
     let confirmMsg = action === "Menunggu Perbaikan" ? "Teruskan laporan ini ke Teknisi (Sarpras/Laboran)?" : "Batalkan laporan ini?";
-    if (!window.confirm(confirmMsg)) return;
+    if (!(await MySwal.fire({ title: 'Konfirmasi', text: String(confirmMsg), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed) return;
 
     try {
       const res = await fetch("/api/maintenance", {
@@ -39,18 +43,18 @@ export default function ListBarangRusakPage() {
       });
       const data = await res.json();
       if (data.success) {
-        alert("Status laporan berhasil diperbarui.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String("Status laporan berhasil diperbarui."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         fetchLaporan();
       } else {
-        alert(data.error || "Gagal memperbarui status.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(data.error || "Gagal memperbarui status."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem saat memperbarui laporan.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem saat memperbarui laporan."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 
   const handleHapusBarang = async (laporanId: number, kode_barang: string, no_urut_pendaft: number) => {
-    if (!window.confirm(`Hapus barang secara permanen dari database (Kode: ${kode_barang}, NUP: ${no_urut_pendaft})?`)) return;
+    if (!(await MySwal.fire({ title: 'Konfirmasi', text: String(`Hapus barang secara permanen dari database (Kode: ${kode_barang}, NUP: ${no_urut_pendaft})?`), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed) return;
 
     try {
       // 1. Delete from barangs
@@ -60,7 +64,7 @@ export default function ListBarangRusakPage() {
       const dataBarang = await resBarang.json();
       
       if (!dataBarang.success) {
-        alert(dataBarang.error || "Gagal menghapus barang dari database.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(dataBarang.error || "Gagal menghapus barang dari database."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         return;
       }
 
@@ -71,10 +75,10 @@ export default function ListBarangRusakPage() {
         body: JSON.stringify({ id: laporanId, status: "Ditolak", catatan: "Barang dihapus dari sistem oleh Admin." }),
       });
 
-      alert("Barang berhasil dihapus dan laporan dibatalkan.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Barang berhasil dihapus dan laporan dibatalkan."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       fetchLaporan();
     } catch (error) {
-      alert("Terjadi kesalahan saat menghapus barang.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan saat menghapus barang."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 

@@ -1,4 +1,8 @@
 'use client';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -88,11 +92,11 @@ export default function LaporKerusakanPage() {
     const file = e.target.files?.[0];
     if (file) {
       if (file.type !== "application/pdf") {
-        alert("Harap unggah file PDF.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String("Harap unggah file PDF."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        alert("Ukuran file maksimal 2MB.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String("Ukuran file maksimal 2MB."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         return;
       }
       const reader = new FileReader();
@@ -127,11 +131,11 @@ export default function LaporKerusakanPage() {
       if (data.success) {
         setIsSuccess(true);
       } else {
-        alert('Gagal mengirimkan laporan: ' + data.error);
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String('Gagal mengirimkan laporan: ' + data.error), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (err) {
       console.error(err);
-      alert('Terjadi kesalahan jaringan/sistem.');
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String('Terjadi kesalahan jaringan/sistem.'), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setSubmitting(false);
     }

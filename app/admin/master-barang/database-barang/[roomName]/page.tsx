@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -82,16 +86,16 @@ export default function RoomItemsPage() {
         setEditingItem(null);
         fetchItems();
       } else {
-        alert(json.error || "Gagal mengubah data barang");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(json.error || "Gagal mengubah data barang"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
       console.error("Failed to update item:", error);
-      alert("Terjadi kesalahan saat menyimpan perubahan.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan saat menyimpan perubahan."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 
   const handleDeleteClick = async (item: Barang) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus barang ${item.nama_barang} (${item.kode_barang}/${item.no_urut_pendaft})?`)) {
+    if (!(await MySwal.fire({ title: 'Konfirmasi', text: String(`Apakah Anda yakin ingin menghapus barang ${item.nama_barang} (${item.kode_barang}/${item.no_urut_pendaft})?`), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed) {
       return;
     }
 
@@ -103,11 +107,11 @@ export default function RoomItemsPage() {
       if (json.success) {
         fetchItems();
       } else {
-        alert(json.error || "Gagal menghapus barang");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(json.error || "Gagal menghapus barang"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
       console.error("Failed to delete item:", error);
-      alert("Terjadi kesalahan saat menghapus barang.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan saat menghapus barang."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 

@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from "react";
 
@@ -56,10 +60,10 @@ export default function KategoriBarangPage() {
         setShowAddModal(false);
         fetchCategories();
       } else {
-        alert(json.error || "Gagal menambah kategori");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(json.error || "Gagal menambah kategori"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setSaving(false);
     }
@@ -67,7 +71,7 @@ export default function KategoriBarangPage() {
 
   const handleDelete = async (categoriesToDelete: string[]) => {
     if (categoriesToDelete.length === 0) return;
-    const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus ${categoriesToDelete.length} kategori terpilih?\n\nPerhatian: Barang yang berada di kategori ini akan kehilangan data kategorinya.`);
+    const confirmDelete = (await MySwal.fire({ title: 'Konfirmasi', text: String(`Apakah Anda yakin ingin menghapus ${categoriesToDelete.length} kategori terpilih?\n\nPerhatian: Barang yang berada di kategori ini akan kehilangan data kategorinya.`), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed
     if (!confirmDelete) return;
 
     setDeleting(true);
@@ -82,10 +86,10 @@ export default function KategoriBarangPage() {
         setSelectedCategories([]);
         fetchCategories();
       } else {
-        alert(json.error || "Gagal menghapus kategori");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(json.error || "Gagal menghapus kategori"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan saat menghapus");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan saat menghapus"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setDeleting(false);
     }

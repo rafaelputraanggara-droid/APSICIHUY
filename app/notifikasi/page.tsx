@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from "react";
 
@@ -118,7 +122,7 @@ export default function NotifikasiPage() {
     const { id, action, catatan } = kerusakanModal;
     
     if (action === "Ditolak" && !catatan.trim()) {
-      alert("Alasan penolakan wajib diisi!");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Alasan penolakan wajib diisi!"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
 
@@ -133,10 +137,10 @@ export default function NotifikasiPage() {
         setKerusakanModal(null);
         fetchPendingKerusakan();
       } else {
-        alert(data.error || "Gagal memperbarui status.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(data.error || "Gagal memperbarui status."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem saat memperbarui laporan kerusakan.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem saat memperbarui laporan kerusakan."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 
@@ -150,16 +154,16 @@ export default function NotifikasiPage() {
       const data = await res.json();
       if (data.success) {
         if (action === "approve") {
-          alert(`Pendaftaran ${username} berhasil disetujui.`);
+          MySwal.fire({ title: 'Notifikasi Sistem', text: String(`Pendaftaran ${username} berhasil disetujui.`), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         } else {
-          alert(`Pendaftaran ${username} telah ditolak.`);
+          MySwal.fire({ title: 'Notifikasi Sistem', text: String(`Pendaftaran ${username} telah ditolak.`), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         }
         fetchPendingAccounts();
       } else {
-        alert("Gagal memverifikasi akun.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String("Gagal memverifikasi akun."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem saat memverifikasi.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem saat memverifikasi."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 

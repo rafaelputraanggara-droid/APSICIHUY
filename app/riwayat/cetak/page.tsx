@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from "react";
 
@@ -29,10 +33,10 @@ export default function CetakLaporanPage() {
 
   const handleCari = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!startDate || !endDate) return alert("Pilih rentang tanggal terlebih dahulu.");
+    if (!startDate || !endDate) await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Pilih rentang tanggal terlebih dahulu."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return;
     
     if (new Date(startDate) > new Date(endDate)) {
-      return alert("Tanggal mulai tidak boleh lebih besar dari tanggal akhir.");
+      await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Tanggal mulai tidak boleh lebih besar dari tanggal akhir."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return;
     }
 
     setIsLoading(true);
@@ -43,10 +47,10 @@ export default function CetakLaporanPage() {
       if (data.success) {
         setReportData(data.data);
       } else {
-        alert("Gagal mengambil data");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String("Gagal mengambil data"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (err) {
-      alert("Terjadi kesalahan koneksi");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan koneksi"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setIsLoading(false);
     }

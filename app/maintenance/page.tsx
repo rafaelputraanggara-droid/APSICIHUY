@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect, useRef } from "react";
 
@@ -69,10 +73,10 @@ export default function MaintenancePage() {
       if (data.success) {
         fetchReports();
       } else {
-        alert(data.error || "Gagal memperbarui status.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(data.error || "Gagal memperbarui status."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 
@@ -101,17 +105,17 @@ export default function MaintenancePage() {
   const handleSubmitKonfirmasi = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedReportId || !namaTeknisi || !pdfFile || !pdfAdminFile) {
-      alert("Harap lengkapi semua data dan unggah kedua file PDF.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Harap lengkapi semua data dan unggah kedua file PDF."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
 
     if (pdfFile.type !== "application/pdf" || pdfAdminFile.type !== "application/pdf") {
-      alert("Hanya file berformat PDF yang diperbolehkan.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Hanya file berformat PDF yang diperbolehkan."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
 
     if (pdfFile.size > 2 * 1024 * 1024 || pdfAdminFile.size > 2 * 1024 * 1024) {
-      alert("Ukuran masing-masing file PDF tidak boleh lebih dari 2MB.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Ukuran masing-masing file PDF tidak boleh lebih dari 2MB."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       return;
     }
 
@@ -136,10 +140,10 @@ export default function MaintenancePage() {
         setShowModal(false);
         fetchReports();
       } else {
-        alert(data.error || "Gagal memperbarui status.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(data.error || "Gagal memperbarui status."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem saat menyimpan penyelesaian.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem saat menyimpan penyelesaian."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setIsSubmitting(false);
     }

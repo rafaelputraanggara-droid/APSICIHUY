@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from "react";
 import TableSkeleton from '@/components/TableSkeleton';
@@ -104,7 +108,7 @@ export default function MutasiPage() {
   const handleSearchBarang = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const kodeBarang = `${part1}.${part2}.${part3}.${part4}.${part5}_${nup}`;
-    if (!part1 || !part2 || !part3 || !part4 || !part5 || !nup) return alert("Lengkapi format Kode Barang BMN dan NUP terlebih dahulu.");
+    if (!part1 || !part2 || !part3 || !part4 || !part5 || !nup) await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Lengkapi format Kode Barang BMN dan NUP terlebih dahulu."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return;
 
     setIsSearching(true);
     try {
@@ -113,11 +117,11 @@ export default function MutasiPage() {
       if (data.success) {
         setFoundItem(data.data);
       } else {
-        alert(data.error || "Barang tidak ditemukan.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(data.error || "Barang tidak ditemukan."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         setFoundItem(null);
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem saat mencari barang.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem saat mencari barang."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setIsSearching(false);
     }
@@ -157,7 +161,7 @@ export default function MutasiPage() {
           .then(res => res.json())
           .then(data => {
             if (data.success) setFoundItem(data.data);
-            else alert("Barang simulasi tidak ditemukan di database. Pastikan barang ini sudah diinput di Master Barang.");
+            else MySwal.fire({ title: 'Notifikasi Sistem', text: String("Barang simulasi tidak ditemukan di database. Pastikan barang ini sudah diinput di Master Barang."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
           });
       }, 300);
     }, 2500); // 2.5 seconds to "scan"
@@ -173,9 +177,9 @@ export default function MutasiPage() {
 
   const handleSubmitPengajuan = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!foundItem) return alert("Cari dan pilih barang terlebih dahulu.");
+    if (!foundItem) await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Cari dan pilih barang terlebih dahulu."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return;
     if (!rooms.includes(ruanganTujuan)) {
-      return alert("Ruangan tujuan tidak valid. Silakan ketik dan pilih ruangan yang tersedia dari daftar dropdown.");
+      await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Ruangan tujuan tidak valid. Silakan ketik dan pilih ruangan yang tersedia dari daftar dropdown."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return;
     }
     
     setIsSubmitting(true);
@@ -192,7 +196,7 @@ export default function MutasiPage() {
       });
       const data = await res.json();
       if (data.success) {
-        alert("Pengajuan mutasi berhasil dikirim!");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String("Pengajuan mutasi berhasil dikirim!"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         setPart1("");
         setPart2("");
         setPart3("");
@@ -204,10 +208,10 @@ export default function MutasiPage() {
         setAlasanMutasi("");
         setActiveTab("antrean");
       } else {
-        alert(data.error || "Gagal mengajukan mutasi.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(data.error || "Gagal mengajukan mutasi."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     } finally {
       setIsSubmitting(false);
     }
@@ -226,15 +230,15 @@ export default function MutasiPage() {
       });
       const data = await res.json();
       if (data.success) {
-        alert(`Mutasi berhasil ${status.toLowerCase()}!`);
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(`Mutasi berhasil ${status.toLowerCase()}!`), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
         setValidateModal(null);
         setCatatanValidasi("");
         fetchMutasiData();
       } else {
-        alert(data.error || "Gagal memvalidasi.");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String(data.error || "Gagal memvalidasi."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem.");
+      MySwal.fire({ title: 'Notifikasi Sistem', text: String("Terjadi kesalahan sistem."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
     }
   };
 

@@ -1,4 +1,8 @@
 "use client";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -86,7 +90,7 @@ function RegisterContent() {
           "Pendaftaran berhasil! Silakan tunggu sampai akun Anda disetujui oleh admin Fakultas."
         );
         // Alert as requested
-        alert("Sistem telah menerima permintaan pendaftaran\n\nTunggu admin menyetujui pedaftaran akun yang kamu ajukan");
+        MySwal.fire({ title: 'Notifikasi Sistem', text: String("Sistem telah menerima permintaan pendaftaran\n\nTunggu admin menyetujui pedaftaran akun yang kamu ajukan"), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
       } else {
         setErrorMsg(data.error || "Gagal melakukan pendaftaran.");
       }
