@@ -40,7 +40,7 @@ export default function DatabaseAkunPage() {
       });
       const data = await res.json();
       if (data.success) {
-        alert(`Akun ${name} berhasil dihapus.`);
+        alert(`Notifikasi Sistem\nAkses Akun atas username ${name} berhasil dihapus`);
         fetchUsers(activeTab); // Refresh data
         if (detailUser && detailUser.id === id) setDetailUser(null);
       } else {
