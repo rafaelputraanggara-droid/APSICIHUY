@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import TableSkeleton from "@/components/TableSkeleton";
+import { openDocument } from '@/lib/openDocument';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
