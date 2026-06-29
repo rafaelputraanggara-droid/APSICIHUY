@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
-import { menuItems, subMenus, getMappedRole } from './navigationData';
+import { menuItems, subMenus, getMappedRole, riwayatSubMenus } from './navigationData';
 
 export default function DashboardLayout({
   children,
@@ -15,6 +15,7 @@ export default function DashboardLayout({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileMasterOpen, setIsMobileMasterOpen] = useState(false);
+  const [isMobileRiwayatOpen, setIsMobileRiwayatOpen] = useState(false);
 
   // Auto-detect system theme (Windows light/dark)
   useEffect(() => {
@@ -271,6 +272,56 @@ export default function DashboardLayout({
                                 return (
                                   <Link
                                     key={sIdx}
+                                    href={sub.href}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={`flex items-center py-2 px-3 rounded-lg text-xs font-semibold tracking-wide border-l-2 ${
+                                      isSubActive
+                                        ? "border-[var(--text-main)] bg-[var(--bg-sidebar-active)] text-[var(--text-main)]"
+                                        : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                                    }`}
+                                  >
+                                    {sub.name}
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+
+                    if (item.name === "Riwayat") {
+                      return (
+                        <div key={idx} className="space-y-1">
+                          <button
+                            onClick={() => setIsMobileRiwayatOpen(!isMobileRiwayatOpen)}
+                            className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
+                              pathname && pathname.startsWith("/riwayat") ? "bg-[var(--bg-sidebar-active)] text-[var(--text-main)]" : "text-[var(--text-muted)]"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className={pathname && pathname.startsWith("/riwayat") ? "text-[var(--text-main)]" : "text-[var(--text-muted)]"}>
+                                {item.icon}
+                              </span>
+                              <span>{item.name}</span>
+                            </div>
+                            <svg
+                              className={`w-4 h-4 text-[var(--text-muted)] transition-transform ${isMobileRiwayatOpen ? "transform rotate-180" : ""}`}
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+
+                          {isMobileRiwayatOpen && (
+                            <div className="pl-9 space-y-1">
+                              {riwayatSubMenus.filter(sub => !sub.roles || sub.roles.includes(activeRole)).map((sub, sIdx) => {
+                                const isSubActive = pathname === sub.href;
+                                return (
+                                  <Link
+                                    key={`riwayat-mob-${sIdx}`}
                                     href={sub.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={`flex items-center py-2 px-3 rounded-lg text-xs font-semibold tracking-wide border-l-2 ${
