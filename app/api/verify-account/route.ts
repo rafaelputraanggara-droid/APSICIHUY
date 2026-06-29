@@ -26,31 +26,36 @@ export async function POST(request: Request) {
       const [rows] = await pool.query(`SELECT * FROM pendaftaran_akun WHERE id = ?`, [id]);
       const pendaftaran = (rows as any[])[0];
 
-      // Kirim Email via Ethereal (Nodemailer otomatis)
-      const testAccount = await nodemailer.createTestAccount();
-      const transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, 
-        auth: {
-          user: testAccount.user,
-          pass: testAccount.pass,
-        },
-      });
+      const verificationLink = `https://apsicihuy-git-main-rafaelputraanggara-droids-projects.vercel.app/verify-email?token=${token}`;
 
-      const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
-      
-      const info = await transporter.sendMail({
-        from: '"Admin SIPRABU FT UNS" <admin@siprabu.uns.ac.id>',
-        to: pendaftaran.email_sso,
-        subject: "Verifikasi Akun SIPRABU FT UNS",
-        text: `Halo ${pendaftaran.username},\n\nAkun Anda telah disetujui oleh Admin. Silakan klik link berikut untuk memverifikasi email Anda dan mengaktifkan akun:\n\n${verificationLink}\n\nTerima kasih.`,
-        html: `<p>Halo <b>${pendaftaran.username}</b>,</p><p>Akun Anda telah disetujui oleh Admin.</p><p>Silakan klik link berikut untuk memverifikasi email Anda dan mengaktifkan akun:</p><p><a href="${verificationLink}">${verificationLink}</a></p><p>Terima kasih.</p>`,
-      });
+      try {
+        // Kirim Email via Ethereal (Nodemailer otomatis)
+        // Vercel serverless mungkin lambat/memblokir port 587, jadi kita bungkus try-catch
+        const testAccount = await nodemailer.createTestAccount();
+        const transporter = nodemailer.createTransport({
+          host: "smtp.ethereal.email",
+          port: 587,
+          secure: false, 
+          auth: {
+            user: testAccount.user,
+            pass: testAccount.pass,
+          },
+        });
+        
+        const info = await transporter.sendMail({
+          from: '"Admin SIPRABU FT UNS" <admin@siprabu.uns.ac.id>',
+          to: pendaftaran.email_sso,
+          subject: "Verifikasi Akun SIPRABU FT UNS",
+          text: `Halo ${pendaftaran.username},\n\nAkun Anda telah disetujui oleh Admin. Silakan klik link berikut untuk memverifikasi email Anda dan mengaktifkan akun:\n\n${verificationLink}\n\nTerima kasih.`,
+          html: `<p>Halo <b>${pendaftaran.username}</b>,</p><p>Akun Anda telah disetujui oleh Admin.</p><p>Silakan klik link berikut untuk memverifikasi email Anda dan mengaktifkan akun:</p><p><a href="${verificationLink}">${verificationLink}</a></p><p>Terima kasih.</p>`,
+        });
 
-      console.log("Preview URL Email Verifikasi: %s", nodemailer.getTestMessageUrl(info));
+        console.log("Preview URL Email Verifikasi: %s", nodemailer.getTestMessageUrl(info));
+      } catch (emailError) {
+        console.error("Gagal mengirim email simulasi (mungkin karena limitasi Vercel), link verifikasi:", verificationLink);
+      }
 
-      return NextResponse.json({ success: true, message: 'Pendaftaran berhasil disetujui dan email verifikasi telah dikirim.' });
+      return NextResponse.json({ success: true, message: 'Pendaftaran disetujui. (Jika email gagal terkirim, admin tetap bisa melihat link di console)' });
     }
   } catch (error) {
     console.error('API Verify Account Error:', error);

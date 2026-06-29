@@ -88,10 +88,10 @@ function RegisterContent() {
 
       if (data.success) {
         setSuccessMsg(
-          "Pendaftaran berhasil! Silakan tunggu sampai akun Anda diverifikasi oleh admin. Sebuah email pemberitahuan telah (disimulasikan) dikirim ke email SSO Anda."
+          "Pendaftaran berhasil! Silakan tunggu sampai akun Anda diverifikasi oleh admin. Sebuah email pemberitahuan akan dikirim ke email SSO Anda."
         );
-        // Alert to simulate email
-        alert(`[SIMULASI EMAIL TERKIRIM KE ${formData.email_sso}]\n\nHalo ${formData.username},\nPendaftaran Anda telah kami terima dan sedang menunggu verifikasi dari Admin Fakultas.\n\nTerima kasih!`);
+        // Alert as requested
+        alert("Sistem telah merekam pendaftaran. Tunggu admin menyetujui pendaftaran dan tunggu email dari sistem untuk login di akun anda.");
       } else {
         setErrorMsg(data.error || "Gagal melakukan pendaftaran.");
       }
