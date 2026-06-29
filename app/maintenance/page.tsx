@@ -5,6 +5,7 @@ const MySwal = withReactContent(Swal);
 
 
 import React, { useState, useEffect, useRef } from "react";
+import LoadingDots from "@/components/LoadingDots";
 
 export default function MaintenancePage() {
   const [activeTab, setActiveTab] = useState("daftar");
@@ -188,7 +189,7 @@ export default function MaintenancePage() {
 
       <div className="bg-[var(--bg-panel)] border border-[var(--border-panel)] rounded-2xl shadow-sm overflow-hidden p-6 transition-colors duration-400">
         {isLoading ? (
-          <p className="text-center py-8 text-[var(--text-muted)]">Memuat data...</p>
+          <LoadingDots text="Memuat data..." />
         ) : reports.length === 0 ? (
           <p className="text-center py-8 text-[var(--text-muted)]">
             {activeTab === "daftar" 
