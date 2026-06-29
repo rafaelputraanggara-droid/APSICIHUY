@@ -216,7 +216,20 @@ export default function StockOpnamePage() {
     if (!session) return;
 
     try {
-      // 1. Extract Kode Barang & NUP
+      const now = Date.now();
+      const rawScanKey = scannedText;
+
+      // 1. Debounce Check: Prevent double-read within 3 seconds for the same asset
+      if (lastScannedRef.current && lastScannedRef.current.key === rawScanKey) {
+        if (now - lastScannedRef.current.time < 3000) {
+          return;
+        }
+      }
+
+      // Update last scan ref
+      lastScannedRef.current = { key: rawScanKey, time: now };
+
+      // 2. Extract Kode Barang & NUP
       let kode_barang = '';
       let no_urut_pendaft = '';
 
@@ -237,22 +250,11 @@ export default function StockOpnamePage() {
       }
 
       if (!kode_barang || !no_urut_pendaft) {
-        // Ignored or invalid format scanned
+        // Not a recognized QR format
+        playBeep('error');
+        addToast('Format QR Code tidak dikenali!', 'error');
         return;
       }
-
-      const scanKey = `${kode_barang}-${no_urut_pendaft}`;
-      const now = Date.now();
-
-      // 2. Debounce Check: Prevent double-read within 3 seconds for the same asset
-      if (lastScannedRef.current && lastScannedRef.current.key === scanKey) {
-        if (now - lastScannedRef.current.time < 3000) {
-          return;
-        }
-      }
-
-      // Update last scan ref
-      lastScannedRef.current = { key: scanKey, time: now };
 
       // 3. Send Scan Request to Backend
       const res = await fetch('/api/stock-opname/scan', {
@@ -342,11 +344,14 @@ export default function StockOpnamePage() {
   };
 
   // Finish Session handler
-  const handleFinishSession = async () => {
+  const handleFinishSession = async (isAuto: boolean | any = false) => {
     if (!session) return;
     
-    const confirmFinish = (await MySwal.fire({ title: 'Konfirmasi', text: String('Apakah Anda yakin ingin menyelesaikan sesi Stock Opname ini? Barang yang belum di-scan akan dianggap hilang/selisih.'), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed
-    if (!confirmFinish) return;
+    const auto = isAuto === true;
+    if (!auto) {
+      const confirmFinish = (await MySwal.fire({ title: 'Konfirmasi', text: String('Apakah Anda yakin ingin menyelesaikan sesi Stock Opname ini? Barang yang belum di-scan akan dianggap hilang/selisih.'), icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'Ya', cancelButtonText: 'Batal', background: '#1a1a1a', color: '#ffffff' })).isConfirmed
+      if (!confirmFinish) return;
+    }
 
     // Stop camera stream first
     await stopCameraScanner();
@@ -392,6 +397,20 @@ export default function StockOpnamePage() {
     : 0;
 
   const totalCount = session ? session.items.length : 0;
+
+  // Auto-finish monitor
+  useEffect(() => {
+    if (phase === 'scanning' && session && totalCount > 0) {
+      if (verifiedCount === totalCount) {
+        // Prevent multiple fires
+        if (!finishing) {
+          setTimeout(() => {
+            handleFinishSession(true);
+          }, 1000);
+        }
+      }
+    }
+  }, [verifiedCount, totalCount, phase, session, finishing]);
 
   return (
     <div className="space-y-8 pb-12 max-w-6xl mx-auto print:space-y-4 print:pb-0">

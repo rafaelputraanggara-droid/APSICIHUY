@@ -22,6 +22,9 @@ export default function NotifikasiPage() {
   const [kerusakanModal, setKerusakanModal] = useState<{ isOpen: boolean; id: number; action: string; catatan: string } | null>(null);
   const [barangHilang, setBarangHilang] = useState<any[]>([]);
   const [selectedHilangRoom, setSelectedHilangRoom] = useState<string | null>(null);
+  
+  const [hilangModal, setHilangModal] = useState<{ isOpen: boolean; barang: any; file: File | null } | null>(null);
+  const fileHilangInputRef = React.useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -168,6 +171,56 @@ export default function NotifikasiPage() {
     }
   };
 
+  const submitResolusiHilang = async () => {
+    if (!hilangModal || !hilangModal.file) {
+      MySwal.fire({ title: 'Peringatan', text: 'Dokumen bukti wajib diunggah!', icon: 'warning', background: '#1a1a1a', color: '#ffffff' });
+      return;
+    }
+
+    try {
+      const fileToDataUrl = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      };
+      
+      const base64pdf = await fileToDataUrl(hilangModal.file);
+
+      const res = await fetch("/api/barang-hilang", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          kode_barang: hilangModal.barang.kode_barang, 
+          no_urut_pendaft: hilangModal.barang.no_urut_pendaft, 
+          bukti_ditemukan_pdf: base64pdf 
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setHilangModal(null);
+        fetchBarangHilang();
+        MySwal.fire({ title: 'Berhasil', text: 'Barang berhasil ditandai telah ditemukan!', icon: 'success', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' });
+      } else {
+        MySwal.fire({ title: 'Gagal', text: data.error || 'Terjadi kesalahan', icon: 'error', background: '#1a1a1a', color: '#ffffff' });
+      }
+    } catch (e) {
+      MySwal.fire({ title: 'Gagal', text: 'Terjadi kesalahan jaringan', icon: 'error', background: '#1a1a1a', color: '#ffffff' });
+    }
+  };
+
+  const visibleBarangHilang = barangHilang.filter(b => {
+    if (userRole === "Laboran") {
+      return b.lokasi_ruangan && (b.lokasi_ruangan.startsWith("6") || b.lokasi_ruangan.toLowerCase().includes("laboratorium"));
+    }
+    if (userRole === "PJ_Ruangan") {
+      return b.lokasi_ruangan && (b.lokasi_ruangan.match(/^[1-5]/) && !b.lokasi_ruangan.toLowerCase().includes("laboratorium"));
+    }
+    return true; 
+  });
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
         <div className="relative overflow-hidden bg-[var(--bg-banner)] p-8 rounded-3xl text-white shadow-xl transition-colors duration-400">
@@ -309,7 +362,7 @@ export default function NotifikasiPage() {
               
               {isLoading ? (
                 <LoadingDots text="Memuat data barang hilang..." />
-              ) : barangHilang.length === 0 ? (
+              ) : visibleBarangHilang.length === 0 ? (
                 <p className="text-center py-8">Tidak ada barang hilang yang tercatat dari sesi stok opname.</p>
               ) : selectedHilangRoom ? (
                 <div className="space-y-6 animate-fade-in">
@@ -325,13 +378,13 @@ export default function NotifikasiPage() {
                     <div>
                       <h4 className="font-bold text-[var(--text-main)] text-xl transition-colors duration-400">Ruangan: {selectedHilangRoom}</h4>
                       <p className="text-sm text-[var(--text-muted)]">
-                        {barangHilang.filter(b => b.lokasi_ruangan === selectedHilangRoom).length} Barang Hilang
+                        {visibleBarangHilang.filter(b => b.lokasi_ruangan === selectedHilangRoom).length} Barang Hilang
                       </p>
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-1 gap-6">
-                    {barangHilang.filter(b => b.lokasi_ruangan === selectedHilangRoom).map((barang, idx) => (
+                    {visibleBarangHilang.filter(b => b.lokasi_ruangan === selectedHilangRoom).map((barang, idx) => (
                       <div key={idx} className="border border-rose-200 dark:border-rose-900/50 rounded-xl p-6 relative overflow-hidden bg-rose-50/30 dark:bg-rose-900/10 transition-colors duration-400">
                         <div className="flex justify-between items-start mb-2">
                           <div>
@@ -343,14 +396,25 @@ export default function NotifikasiPage() {
                           </span>
                         </div>
                         <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400 mt-2">Dinyatakan hilang pada Stock Opname selesai tanggal: {new Date(barang.tanggal_selesai).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</p>
+                        
+                        {(userRole === "PJ_Ruangan" || userRole === "Laboran") && (
+                          <div className="pt-4 mt-4 border-t border-rose-200 dark:border-rose-900/30">
+                            <button 
+                              onClick={() => setHilangModal({ isOpen: true, barang: barang, file: null })}
+                              className="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-sm shadow-sm transition-all"
+                            >
+                              Tandai Telah Ditemukan
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Array.from(new Set(barangHilang.map(b => b.lokasi_ruangan).filter(Boolean))).map((room) => {
-                    const count = barangHilang.filter(b => b.lokasi_ruangan === room).length;
+                  {Array.from(new Set(visibleBarangHilang.map(b => b.lokasi_ruangan).filter(Boolean))).map((room) => {
+                    const count = visibleBarangHilang.filter(b => b.lokasi_ruangan === room).length;
                     return (
                       <button 
                         key={room as string}
@@ -550,6 +614,50 @@ export default function NotifikasiPage() {
           </div>
         )}
 
-      </div>
+      {/* Hilang Action Modal */}
+      {hilangModal && hilangModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-[var(--bg-panel)] rounded-3xl p-8 max-w-md w-full shadow-2xl relative transition-all animate-scale-in border border-[var(--border-panel)]">
+            <h3 className="text-xl font-bold text-[var(--text-main)] mb-2">Barang Ditemukan</h3>
+            <p className="text-sm text-[var(--text-muted)] mb-6">Unggah bukti (foto/PDF) bahwa barang <b>{hilangModal.barang.nama_barang}</b> telah ditemukan kembali.</p>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-semibold text-[var(--text-muted)] mb-2">Unggah Bukti Dokumen</label>
+                <input
+                  type="file"
+                  accept="application/pdf,image/*"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0] || null;
+                    if (f && f.size > 2 * 1024 * 1024) {
+                      MySwal.fire({ title: 'Gagal', text: 'Ukuran file maksimal 2MB', icon: 'error', background: '#1a1a1a', color: '#ffffff' });
+                      if (fileHilangInputRef.current) fileHilangInputRef.current.value = "";
+                      return;
+                    }
+                    setHilangModal({ ...hilangModal, file: f });
+                  }}
+                  ref={fileHilangInputRef}
+                  className="block w-full text-sm text-[var(--text-main)]
+                    file:mr-4 file:py-2.5 file:px-4
+                    file:rounded-xl file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-indigo-50 file:text-indigo-700
+                    dark:file:bg-indigo-900/30 dark:file:text-indigo-400
+                    hover:file:bg-indigo-100 dark:hover:file:bg-indigo-900/50 cursor-pointer"
+                />
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setHilangModal(null)} className="flex-1 py-3 bg-[var(--bg-app)] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-[var(--text-main)] font-bold rounded-xl transition-colors">
+                Batal
+              </button>
+              <button onClick={submitResolusiHilang} className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition-all">
+                Kirim Bukti
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
   );
 }
