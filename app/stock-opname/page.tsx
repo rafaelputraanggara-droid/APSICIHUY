@@ -78,6 +78,12 @@ export default function StockOpnamePage() {
   const html5QrCodeRef = useRef<any>(null);
   const lastScannedRef = useRef<{ key: string; time: number } | null>(null);
   const toastIdCounterRef = useRef(0);
+  const sessionRef = useRef<SessionData | null>(null);
+
+  // Sync session state to ref for callbacks
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
 
   // Fetch rooms list on mount
   useEffect(() => {
@@ -213,7 +219,8 @@ export default function StockOpnamePage() {
 
   // Process Scanned Text (URL or raw input)
   const handleQrScanInput = async (scannedText: string) => {
-    if (!session) return;
+    const currentSession = sessionRef.current;
+    if (!currentSession) return;
 
     try {
       const now = Date.now();
@@ -261,7 +268,7 @@ export default function StockOpnamePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          stok_opname_id: session.sessionId,
+          stok_opname_id: currentSession.sessionId,
           kode_barang,
           no_urut_pendaft
         })
