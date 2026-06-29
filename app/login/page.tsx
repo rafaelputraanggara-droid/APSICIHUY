@@ -20,7 +20,7 @@ export default function LoginPage() {
     }
   }, []);
 
-  const handleQuickLogin = (roleType: "admin" | "pj" | "laboran") => {
+  const handleQuickLogin = (roleType: "admin" | "pj" | "laboran" | "sarpras") => {
     if (roleType === "admin") {
       const user = {
         name: "Admin Fakultas",
@@ -35,6 +35,15 @@ export default function LoginPage() {
         name: "Laboran (Teknisi)",
         email: "laboran@ft.uns.ac.id",
         role: "Laboran",
+      };
+      sessionStorage.setItem("simulated_user", JSON.stringify(user));
+      window.dispatchEvent(new Event("simulated_user_change"));
+      window.location.href = "/";
+    } else if (roleType === "sarpras") {
+      const user = {
+        name: "Sarpras (Teknisi Gd 1-5)",
+        email: "sarpras@ft.uns.ac.id",
+        role: "Sarpras",
       };
       sessionStorage.setItem("simulated_user", JSON.stringify(user));
       window.dispatchEvent(new Event("simulated_user_change"));
@@ -164,7 +173,13 @@ export default function LoginPage() {
               onClick={() => handleQuickLogin("laboran")}
               className="w-full py-4 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl text-sm font-bold shadow-lg transition-all cursor-pointer"
             >
-              Login sebagai Laboran (Maintenance)
+              Login sebagai Laboran (Gd 6)
+            </button>
+            <button
+              onClick={() => handleQuickLogin("sarpras")}
+              className="w-full py-4 bg-amber-600 hover:bg-amber-500 text-white rounded-2xl text-sm font-bold shadow-lg transition-all cursor-pointer"
+            >
+              Login sebagai Sarpras (Gd 1-5)
             </button>
             <button
               onClick={() => setLoginMode("pj")}
