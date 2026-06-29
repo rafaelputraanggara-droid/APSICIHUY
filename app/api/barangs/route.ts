@@ -64,3 +64,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: 'Terjadi kesalahan internal server saat menyimpan data.' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const kode_barang = searchParams.get('kode_barang');
+    const no_urut_pendaft = searchParams.get('no_urut_pendaft');
+
+    if (!kode_barang || !no_urut_pendaft) {
+      return NextResponse.json({ success: false, error: 'Kode Barang dan NUP diperlukan.' }, { status: 400 });
+    }
+
+    const nupInt = parseInt(no_urut_pendaft);
+    if (isNaN(nupInt)) {
+      return NextResponse.json({ success: false, error: 'NUP tidak valid.' }, { status: 400 });
+    }
+
+    const [result]: any = await pool.query(
+      "DELETE FROM barangs WHERE kode_barang = ? AND no_urut_pendaft = ?",
+      [kode_barang, nupInt]
+    );
+
+    if (result.affectedRows === 0) {
+      return NextResponse.json({ success: false, error: 'Barang tidak ditemukan.' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: 'Barang berhasil dihapus.' });
+  } catch (error: any) {
+    console.error('Database query error (DELETE /api/barangs):', error);
+    return NextResponse.json({ success: false, error: 'Terjadi kesalahan internal server saat menghapus data.' }, { status: 500 });
+  }
+}
+

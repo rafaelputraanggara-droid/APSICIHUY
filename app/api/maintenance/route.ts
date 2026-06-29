@@ -47,7 +47,10 @@ export async function PUT(request: Request) {
       );
     }
 
-    const validStatuses = ['Menunggu', 'Diterima', 'Sedang Diperbaiki', 'Selesai', 'Ditolak'];
+    const validStatuses = [
+      'Menunggu', 'Diterima', 'Sedang Diperbaiki', 'Selesai', 'Ditolak',
+      'Menunggu Konfirmasi PJ', 'Menunggu Tindakan Admin', 'Menunggu Perbaikan'
+    ];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
         { success: false, error: 'Status tidak valid.' },
@@ -111,7 +114,7 @@ export async function PUT(request: Request) {
     if (error.message && (error.message.includes("Data truncated for column 'status_laporan'") || error.message.includes("Data truncated for column '%s'"))) {
       try {
         console.log("Auto-migrating: Updating ENUM for status_laporan...");
-        await pool.query("ALTER TABLE laporan_kerusakans MODIFY status_laporan ENUM('Menunggu', 'Diproses', 'Diterima', 'Sedang Diperbaiki', 'Selesai', 'Ditolak') DEFAULT 'Menunggu'");
+        await pool.query("ALTER TABLE laporan_kerusakans MODIFY status_laporan ENUM('Menunggu Konfirmasi PJ', 'Menunggu Tindakan Admin', 'Menunggu Perbaikan', 'Sedang Diperbaiki', 'Selesai', 'Ditolak', 'Menunggu', 'Diproses', 'Diterima') DEFAULT 'Menunggu Konfirmasi PJ'");
         
         // Retry the update after migration
         if (status === 'Selesai') {

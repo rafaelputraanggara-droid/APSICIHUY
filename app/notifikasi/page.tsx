@@ -12,7 +12,7 @@ export default function NotifikasiPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [pdfToView, setPdfToView] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string>("");
-  const [kerusakanModal, setKerusakanModal] = useState<{ isOpen: boolean; id: number; action: "Diterima" | "Ditolak"; catatan: string } | null>(null);
+  const [kerusakanModal, setKerusakanModal] = useState<{ isOpen: boolean; id: number; action: string; catatan: string } | null>(null);
   const [barangHilang, setBarangHilang] = useState<any[]>([]);
   const [selectedHilangRoom, setSelectedHilangRoom] = useState<string | null>(null);
 
@@ -78,7 +78,7 @@ export default function NotifikasiPage() {
   const fetchPendingKerusakan = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/maintenance?status=Menunggu");
+      const res = await fetch("/api/maintenance?status=Menunggu Konfirmasi PJ");
       const data = await res.json();
       if (data.success) {
         setPendingKerusakan(data.data);
@@ -107,7 +107,7 @@ export default function NotifikasiPage() {
     }
   };
 
-  const handleUpdateKerusakan = (id: number, status: "Diterima" | "Ditolak") => {
+  const handleUpdateKerusakan = (id: number, status: string) => {
     setKerusakanModal({ isOpen: true, id, action: status, catatan: "" });
   };
 
@@ -177,7 +177,7 @@ export default function NotifikasiPage() {
         {/* Tabs Navigation */}
         <div className="border-b border-[var(--border-panel)]">
           <nav className="flex space-x-8 overflow-x-auto" aria-label="Tabs">
-            {userRole !== "Mahasiswa/Dosen" && userRole !== "Mahasiswa" && (
+            {userRole === "PJ_Ruangan" && (
               <button
                 onClick={() => setActiveTab("kerusakan")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
@@ -259,16 +259,20 @@ export default function NotifikasiPage() {
                           <p className="text-sm font-medium text-[var(--text-main)] transition-colors duration-400 mt-1">{laporan.deskripsi_kerusakan}</p>
                         </div>
                         {laporan.foto_url && (
-                          <div className="pt-2">
-                            <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400 mb-2">Bukti Kerusakan</p>
-                            <a href={laporan.foto_url} target="_blank" rel="noopener noreferrer" className="inline-block border border-[var(--border-panel)] rounded-xl overflow-hidden shadow-sm hover:opacity-80 transition-opacity">
-                              <img src={laporan.foto_url} alt="Bukti Kerusakan" className="h-32 w-auto object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                          <div className="pt-2 mt-2 border-t border-[var(--border-panel)]">
+                            <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold transition-colors duration-400 mb-2 mt-2">Bukti Kerusakan (PDF)</p>
+                            <a href={laporan.foto_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-[var(--text-main)] font-bold rounded-xl text-xs transition-all shadow-sm">
+                              <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              Buka / Unduh Dokumen
                             </a>
                           </div>
                         )}
                       </div>
 
-                      {userRole === "Laboran" && (
+                      {userRole === "PJ_Ruangan" && (
                         <div className="flex gap-3 mt-4">
                           <button 
                             onClick={() => handleUpdateKerusakan(laporan.id, "Ditolak")}
@@ -277,10 +281,10 @@ export default function NotifikasiPage() {
                             Tolak
                           </button>
                           <button 
-                            onClick={() => handleUpdateKerusakan(laporan.id, "Diterima")}
+                            onClick={() => handleUpdateKerusakan(laporan.id, "Menunggu Tindakan Admin")}
                             className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm"
                           >
-                            Terima Laporan
+                            Teruskan ke Admin
                           </button>
                         </div>
                       )}

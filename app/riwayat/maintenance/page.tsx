@@ -53,7 +53,7 @@ export default function RiwayatMaintenancePage() {
     }
   };
 
-  if (userRole !== "Admin Fakultas" && userRole !== "Laboran" && userRole !== "PJ_Ruangan") {
+  if (userRole !== "Admin Fakultas" && userRole !== "Laboran" && userRole !== "PJ_Ruangan" && userRole !== "Sarpras") {
     return <div className="p-8 text-center">Anda tidak memiliki akses ke halaman ini.</div>;
   }
 
@@ -149,7 +149,19 @@ export default function RiwayatMaintenancePage() {
                         Bukti Lokasi
                       </button>
                     )}
-                    {laporan.bukti_administrasi_pdf && (userRole === "Admin Fakultas" || userRole === "Laboran") && (
+                    {laporan.foto_url && (
+                      <button 
+                        onClick={() => setPdfToView(laporan.foto_url)}
+                        className="flex-1 py-2.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/30 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-400 font-bold rounded-xl text-xs transition-all shadow-sm flex justify-center items-center gap-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Bukti Kerusakan
+                      </button>
+                    )}
+                    {laporan.bukti_administrasi_pdf && (userRole === "Admin Fakultas" || userRole === "Laboran" || userRole === "Sarpras") && (
                       <button 
                         onClick={() => setPdfToView(laporan.bukti_administrasi_pdf)}
                         className="flex-1 py-2.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 font-bold rounded-xl text-xs transition-all shadow-sm flex justify-center items-center gap-2"

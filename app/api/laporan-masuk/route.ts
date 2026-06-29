@@ -40,6 +40,7 @@ export async function POST(request: Request) {
   let deskripsi_kerusakan: string = '';
   let foto_url: string = '';
   let pelapor_id: number | null = null;
+  let pelapor_role: string = '';
   let nup: number = 0;
 
   try {
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
     deskripsi_kerusakan = body.deskripsi_kerusakan;
     foto_url = body.foto_url;
     pelapor_id = body.pelapor_id;
+    pelapor_role = body.pelapor_role || '';
 
     if (!kode_barang || no_urut_pendaft === undefined || !dilaporkan_oleh || !deskripsi_kerusakan) {
       return NextResponse.json(
@@ -66,11 +68,19 @@ export async function POST(request: Request) {
       );
     }
 
+    // Determine status based on role
+    let initialStatus = 'Menunggu Konfirmasi PJ'; // Default for Mahasiswa
+    if (pelapor_role === 'PJ_Ruangan' || pelapor_role === 'Laboran') {
+      initialStatus = 'Menunggu Tindakan Admin';
+    } else if (!pelapor_role) {
+      initialStatus = 'Menunggu Konfirmasi PJ';
+    }
+
     // Insert to database
     const [result]: any = await pool.query(
       `INSERT INTO laporan_kerusakans (kode_barang, no_urut_pendaft, dilaporkan_oleh, deskripsi_kerusakan, foto_url, status_laporan, pelapor_id) 
-       VALUES (?, ?, ?, ?, ?, 'Menunggu', ?)`,
-      [kode_barang, nup, dilaporkan_oleh.trim(), deskripsi_kerusakan.trim(), (foto_url || '').trim(), pelapor_id || null]
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [kode_barang, nup, dilaporkan_oleh.trim(), deskripsi_kerusakan.trim(), (foto_url || '').trim(), initialStatus, pelapor_id || null]
     );
 
     const insertId = result.insertId;
@@ -97,8 +107,8 @@ export async function POST(request: Request) {
         // Retry insertion
         const [retryResult]: any = await pool.query(
           `INSERT INTO laporan_kerusakans (kode_barang, no_urut_pendaft, dilaporkan_oleh, deskripsi_kerusakan, foto_url, status_laporan, pelapor_id) 
-           VALUES (?, ?, ?, ?, ?, 'Menunggu', ?)`,
-          [kode_barang, nup, dilaporkan_oleh.trim(), deskripsi_kerusakan.trim(), (foto_url || '').trim(), pelapor_id || null]
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [kode_barang, nup, dilaporkan_oleh.trim(), deskripsi_kerusakan.trim(), (foto_url || '').trim(), 'Menunggu Konfirmasi PJ', pelapor_id || null]
         );
         
         const retryInsertId = retryResult.insertId;

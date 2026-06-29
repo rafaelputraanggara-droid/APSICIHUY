@@ -84,7 +84,7 @@ export default function DatabaseAkunPage() {
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-neutral-300"
             }`}
           >
-            PJ Ruangan Terdaftar
+            PJ Ruangan & Teknisi
           </button>
           <button
             onClick={() => setActiveTab("mahasiswa")}
@@ -189,7 +189,7 @@ export default function DatabaseAkunPage() {
       {/* Modal Detail User */}
       {detailUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden relative">
+          <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
             <div className="p-6 border-b border-[var(--border-panel)] flex justify-between items-center bg-[var(--bg-app)] transition-colors duration-400/50">
               <h3 className="text-lg font-black text-[var(--text-main)] tracking-tight">Detail Pengguna</h3>
               <button 
@@ -202,7 +202,7 @@ export default function DatabaseAkunPage() {
               </button>
             </div>
             
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-4 flex-1 overflow-y-auto">
               <div>
                 <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Nama Lengkap</p>
                 <p className="font-semibold text-[var(--text-main)]">{detailUser.name}</p>

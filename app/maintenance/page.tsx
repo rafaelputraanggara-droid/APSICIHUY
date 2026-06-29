@@ -18,18 +18,38 @@ export default function MaintenancePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const adminFileInputRef = useRef<HTMLInputElement>(null);
 
+  const [userRole, setUserRole] = useState<string | null>(null);
+
   useEffect(() => {
-    fetchReports();
-  }, [activeTab]);
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        setUserRole(user.role);
+      } catch (e) {}
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userRole !== null) {
+      fetchReports();
+    }
+  }, [activeTab, userRole]);
 
   const fetchReports = async () => {
     setIsLoading(true);
     try {
-      const status = activeTab === "daftar" ? "Diterima" : "Sedang Diperbaiki";
+      const status = activeTab === "daftar" ? "Menunggu Perbaikan" : "Sedang Diperbaiki";
       const res = await fetch(`/api/maintenance?status=${encodeURIComponent(status)}`);
       const data = await res.json();
       if (data.success) {
-        setReports(data.data);
+        let filteredData = data.data;
+        if (userRole === "Laboran") {
+          filteredData = filteredData.filter((r: any) => r.ruangan_asal && (r.ruangan_asal.startsWith("6") || r.ruangan_asal.toLowerCase().includes("laboratorium")));
+        } else if (userRole === "Sarpras") {
+          filteredData = filteredData.filter((r: any) => !r.ruangan_asal || (!r.ruangan_asal.startsWith("6") && !r.ruangan_asal.toLowerCase().includes("laboratorium")));
+        }
+        setReports(filteredData);
       }
     } catch (error) {
       console.error("Gagal mengambil data", error);
@@ -185,7 +205,7 @@ export default function MaintenancePage() {
                       ? "bg-indigo-100 text-indigo-700" 
                       : "bg-[var(--tag-info-bg)] text-[var(--tag-info-text)]"
                   }`}>
-                    {activeTab === "daftar" ? "Diterima" : "Sedang Diperbaiki"}
+                    {activeTab === "daftar" ? "Menunggu Perbaikan" : "Sedang Diperbaiki"}
                   </span>
                 </div>
 
@@ -199,10 +219,14 @@ export default function MaintenancePage() {
                     <p className="text-sm font-medium text-[var(--text-main)] mt-0.5">{report.deskripsi_kerusakan}</p>
                   </div>
                   {report.foto_url && (
-                    <div className="pt-2">
-                      <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2">Bukti Kerusakan</p>
-                      <a href={report.foto_url} target="_blank" rel="noopener noreferrer" className="inline-block w-full border border-[var(--border-panel)] rounded-xl overflow-hidden shadow-sm hover:opacity-80 transition-opacity">
-                        <img src={report.foto_url} alt="Foto Kerusakan" className="w-full h-40 object-cover bg-black/5" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                    <div className="pt-2 mt-2 border-t border-[var(--border-panel)]">
+                      <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2 mt-2">Bukti Kerusakan (PDF)</p>
+                      <a href={report.foto_url} target="_blank" rel="noopener noreferrer" className="inline-flex w-full justify-center items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-[var(--text-main)] font-bold rounded-xl text-xs transition-all shadow-sm">
+                        <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Buka / Unduh Dokumen
                       </a>
                     </div>
                   )}

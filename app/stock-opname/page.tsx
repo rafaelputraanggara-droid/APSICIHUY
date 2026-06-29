@@ -82,9 +82,11 @@ export default function StockOpnamePage() {
         const res = await fetch('/api/stock-opname/rooms');
         const data = await res.json();
         if (data.success) {
-          setRooms(data.data);
-          if (data.data.length > 0) {
-            setSelectedRoom(data.data[0]);
+          // data.data is an array of { room: '...', last_opname: '...' }
+          const stringRooms = data.data.map((r: any) => typeof r === 'string' ? r : r.room);
+          setRooms(stringRooms);
+          if (stringRooms.length > 0) {
+            setSelectedRoom(stringRooms[0]);
           }
         }
       } catch (err) {

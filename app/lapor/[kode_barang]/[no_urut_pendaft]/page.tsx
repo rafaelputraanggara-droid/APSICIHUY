@@ -39,13 +39,16 @@ export default function LaporKerusakanPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
+  const [pelaporRole, setPelaporRole] = useState<string>('');
+
   useEffect(() => {
     const saved = sessionStorage.getItem("simulated_user");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.role === "Mahasiswa/Dosen" || parsed.role === "Mahasiswa") {
+        if (["Mahasiswa/Dosen", "Mahasiswa", "PJ_Ruangan", "Laboran"].includes(parsed.role)) {
           setIsAuthorized(true);
+          setPelaporRole(parsed.role);
           // Autofill name if possible
           if (parsed.name) setNamaPelapor(parsed.name);
           if (parsed.id) setPelaporId(parsed.id);
@@ -115,7 +118,8 @@ export default function LaporKerusakanPage() {
           dilaporkan_oleh: namaPelapor,
           deskripsi_kerusakan: deskripsi,
           foto_url: fotoUrl,
-          pelapor_id: pelaporId
+          pelapor_id: pelaporId,
+          pelapor_role: pelaporRole
         })
       });
 
@@ -157,7 +161,7 @@ export default function LaporKerusakanPage() {
             </div>
             <h2 className="text-xl font-bold text-[var(--text-main)] mb-2">Akses Ditolak</h2>
             <p className="text-sm text-[var(--text-muted)] mb-6">
-              Halaman pelaporan kerusakan ini hanya dapat diakses oleh Mahasiswa yang sudah terdaftar. Silakan login sebagai Mahasiswa terlebih dahulu.
+              Halaman pelaporan kerusakan ini hanya dapat diakses oleh Mahasiswa, PJ Ruangan, atau Laboran. Silakan login terlebih dahulu.
             </p>
             <button 
               onClick={() => router.push('/')} 
@@ -285,7 +289,7 @@ export default function LaporKerusakanPage() {
                     <div className="space-y-2">
                       <h3 className="text-xl font-extrabold text-[var(--text-main)]">Laporan Berhasil Terkirim!</h3>
                       <p className="text-sm text-[var(--text-muted)] max-w-md mx-auto leading-relaxed">
-                        Terima kasih telah melaporkan kerusakan aset ini. PJ Ruangan (Laboran) akan segera mengecek dan menindaklanjuti laporan Anda secara real-time.
+                        Terima kasih telah melaporkan kerusakan aset ini. Laporan Anda telah dicatat di sistem dan akan segera ditindaklanjuti.
                       </p>
                     </div>
                     <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">

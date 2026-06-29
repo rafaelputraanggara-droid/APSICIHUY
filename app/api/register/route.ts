@@ -57,14 +57,27 @@ export async function POST(request: Request) {
               { status: 400 }
             );
           } else if (conflict.status_pendaftaran === 'Disetujui') {
-            // Ini adalah "ghost" record jika mereka tidak muncul di UI!
-            return NextResponse.json(
-              { success: false, error: `Akun sudah terdaftar aktif sebagai ${conflict.peran_pengaju}. Jika Anda merasa ini kesalahan sistem (ghost record), lapor ke Admin.` },
-              { status: 400 }
-            );
+            if (conflict.username === username) return NextResponse.json({ success: false, error: 'Maaf, Username ini sudah digunakan oleh akun lain.' }, { status: 400 });
+            if (conflict.email_sso === email_sso) return NextResponse.json({ success: false, error: 'Maaf, Email SSO ini sudah terdaftar di sistem.' }, { status: 400 });
+            if (conflict.nim === nim) return NextResponse.json({ success: false, error: 'Maaf, NIM / ID ini sudah terdaftar di sistem.' }, { status: 400 });
           }
         }
-      } catch (e) {}
+
+        // Cek juga ke tabel users
+        const [userRows] = await pool.query(
+          "SELECT username, email, nim FROM users WHERE username = ? OR email = ? OR nim = ?",
+          [username, email_sso, nim]
+        );
+        const userConflict = (userRows as any[])[0];
+        
+        if (userConflict) {
+            if (userConflict.username === username) return NextResponse.json({ success: false, error: 'Maaf, Username ini sudah digunakan.' }, { status: 400 });
+            if (userConflict.email === email_sso) return NextResponse.json({ success: false, error: 'Maaf, Email SSO ini sudah terdaftar.' }, { status: 400 });
+            if (userConflict.nim === nim) return NextResponse.json({ success: false, error: 'Maaf, NIM / ID ini sudah terdaftar.' }, { status: 400 });
+        }
+      } catch (e) {
+        console.error("Duplicate check error:", e);
+      }
 
       return NextResponse.json(
         { success: false, error: 'Username, Email SSO, atau NIM/NIP sudah terdaftar!' },
