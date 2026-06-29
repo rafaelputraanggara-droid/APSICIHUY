@@ -108,7 +108,7 @@ export default function MutasiPage() {
   const handleSearchBarang = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const kodeBarang = `${part1}.${part2}.${part3}.${part4}.${part5}_${nup}`;
-    if (!part1 || !part2 || !part3 || !part4 || !part5 || !nup) await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Lengkapi format Kode Barang BMN dan NUP terlebih dahulu."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return;
+    if (!part1 || !part2 || !part3 || !part4 || !part5 || !nup) { await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Lengkapi format Kode Barang BMN dan NUP terlebih dahulu."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return; }
 
     setIsSearching(true);
     try {
@@ -223,7 +223,7 @@ export default function MutasiPage() {
 
   const handleSubmitPengajuan = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!foundItem) await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Cari dan pilih barang terlebih dahulu."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return;
+    if (!foundItem) { await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Cari dan pilih barang terlebih dahulu."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return; }
     if (!rooms.includes(ruanganTujuan)) {
       await MySwal.fire({ title: 'Notifikasi Sistem', text: String("Ruangan tujuan tidak valid. Silakan ketik dan pilih ruangan yang tersedia dari daftar dropdown."), icon: 'info', confirmButtonColor: '#4f46e5', background: '#1a1a1a', color: '#ffffff' }); return;
     }
