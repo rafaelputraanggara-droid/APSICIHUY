@@ -100,7 +100,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "Scan QR Barang",
     href: "/mahasiswa/scan",
-    roles: ["Mahasiswa"],
+    roles: ["Mahasiswa", "PJ_Ruangan", "Laboran"],
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-4v-4m-2 4h-2m-2-4h-2m8 0h2m-2 2h2m-4-6h4M6 6h4v4H6V6zm10 0h4v4h-4V6zM6 16h4v4H6v-4z" />
