@@ -2,6 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import TableSkeleton from "@/components/TableSkeleton";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
 
 export default function DatabaseAkunPage() {
   const [activeTab, setActiveTab] = useState<"admin" | "pj" | "laboran" | "sarpras" | "mahasiswa">("mahasiswa");
@@ -29,8 +33,20 @@ export default function DatabaseAkunPage() {
   };
 
   const handleDelete = async (id: number, type: string, name: string) => {
-    const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus akun ${name}? (Jika mahasiswa dihapus, mereka bisa mendaftar ulang)`);
-    if (!confirmDelete) return;
+    const result = await MySwal.fire({
+      title: 'Notifikasi Sistem',
+      text: `Apakah Anda yakin ingin menghapus akun ${name}? (Jika mahasiswa dihapus, mereka bisa mendaftar ulang)`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#4f46e5',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
+      background: '#1a1a1a',
+      color: '#ffffff'
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       const res = await fetch("/api/database-akun", {
@@ -40,14 +56,35 @@ export default function DatabaseAkunPage() {
       });
       const data = await res.json();
       if (data.success) {
-        alert(`Notifikasi Sistem\nAkses Akun atas username ${name} berhasil dihapus`);
+        MySwal.fire({
+          title: 'Notifikasi Sistem',
+          text: `Akses Akun atas username ${name} berhasil dihapus`,
+          icon: 'success',
+          confirmButtonColor: '#4f46e5',
+          background: '#1a1a1a',
+          color: '#ffffff'
+        });
         fetchUsers(activeTab); // Refresh data
         if (detailUser && detailUser.id === id) setDetailUser(null);
       } else {
-        alert(data.error || "Gagal menghapus akun.");
+        MySwal.fire({
+          title: 'Notifikasi Sistem',
+          text: data.error || "Gagal menghapus akun.",
+          icon: 'error',
+          confirmButtonColor: '#4f46e5',
+          background: '#1a1a1a',
+          color: '#ffffff'
+        });
       }
     } catch (error) {
-      alert("Terjadi kesalahan sistem saat menghapus.");
+      MySwal.fire({
+        title: 'Notifikasi Sistem',
+        text: "Terjadi kesalahan sistem saat menghapus.",
+        icon: 'error',
+        confirmButtonColor: '#4f46e5',
+        background: '#1a1a1a',
+        color: '#ffffff'
+      });
     }
   };
 
