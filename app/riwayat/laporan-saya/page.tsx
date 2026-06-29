@@ -121,8 +121,7 @@ export default function RiwayatLaporanPage() {
                       <div>
                         <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-bold mb-2">Bukti Kerusakan (Dikirim oleh Anda)</p>
                         <button onClick={() => openDocument(laporan.foto_url)} className="inline-block px-3 py-1.5 bg-[var(--bg-panel)] hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-[var(--border-panel)] rounded-lg text-xs font-bold text-[var(--text-main)] transition-colors">
-                          Buka Pratinjau Bukti
-                        </a>
+                          Buka Pratinjau Bukti</button>
                       </div>
                     )}
                     {laporan.status_laporan === 'Selesai' && laporan.bukti_penyelesaian_pdf && (
