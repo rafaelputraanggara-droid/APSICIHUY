@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import LoadingDots from '@/components/LoadingDots';
 
 interface RoomData {
   room: string;
@@ -101,7 +102,7 @@ export default function DatabaseBarangPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-10 text-[var(--text-muted)]">Memuat data ruangan...</div>
+        <LoadingDots text="Memuat data ruangan..." />
       ) : rooms.length === 0 ? (
         <div className="text-center py-10 bg-[var(--bg-panel)] transition-colors duration-400 bg-[var(--bg-panel)] rounded-2xl border border-[var(--border-panel)] border-[var(--border-panel)]">
           <p className="text-[var(--text-muted)] dark:text-[var(--text-muted)]">Belum ada data ruangan.</p>

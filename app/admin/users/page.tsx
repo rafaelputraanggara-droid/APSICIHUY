@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import TableSkeleton from "@/components/TableSkeleton";
 
 export default function DatabaseAkunPage() {
   const [activeTab, setActiveTab] = useState<"admin" | "pj" | "mahasiswa">("mahasiswa");
@@ -122,8 +123,8 @@ export default function DatabaseAkunPage() {
             <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-neutral-200">
               {isLoading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">
-                    Memuat data...
+                  <td colSpan={4} className="px-6 py-8">
+                    <TableSkeleton />
                   </td>
                 </tr>
               ) : users.length === 0 ? (
