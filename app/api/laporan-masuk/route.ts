@@ -68,6 +68,21 @@ export async function POST(request: Request) {
       );
     }
 
+    // Cek duplikasi laporan aktif
+    const [existingReports]: any = await pool.query(
+      `SELECT id FROM laporan_kerusakans 
+       WHERE kode_barang = ? AND no_urut_pendaft = ? 
+         AND status_laporan NOT IN ('Selesai', 'Ditolak')`,
+      [kode_barang, nup]
+    );
+
+    if (existingReports.length > 0) {
+      return NextResponse.json(
+        { success: false, error: 'Barang ini sedang dalam status perbaikan atau pelaporan aktif.' },
+        { status: 400 }
+      );
+    }
+
     // Determine status based on role
     let initialStatus = 'Menunggu Konfirmasi PJ'; // Default for Mahasiswa
     if (pelapor_role === 'PJ_Ruangan' || pelapor_role === 'Laboran') {

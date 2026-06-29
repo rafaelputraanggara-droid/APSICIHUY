@@ -105,13 +105,13 @@ export default function RiwayatLaporanPage() {
                     <p className="text-sm text-[var(--text-main)] bg-[var(--bg-panel)] p-3 rounded-xl border border-[var(--border-panel)]">{laporan.deskripsi_kerusakan}</p>
                   </div>
 
-                  {(laporan.status_laporan === 'Ditolak' || (laporan.status_laporan === 'Diterima' && laporan.catatan_pj)) && (
-                    <div className={`p-4 rounded-xl border ${laporan.status_laporan === 'Ditolak' ? 'bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800' : 'bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800'}`}>
-                      <p className={`text-xs uppercase tracking-wider font-bold mb-1.5 ${laporan.status_laporan === 'Ditolak' ? 'text-rose-700 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-400'}`}>
-                        Catatan dari PJ Ruangan
+                  {(laporan.status_laporan === 'Ditolak' || laporan.catatan_pj) && (
+                    <div className={`p-4 rounded-xl border ${laporan.status_laporan === 'Ditolak' ? 'bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800' : 'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800'}`}>
+                      <p className={`text-xs uppercase tracking-wider font-bold mb-1.5 ${laporan.status_laporan === 'Ditolak' ? 'text-rose-700 dark:text-rose-400' : 'text-amber-700 dark:text-amber-400'}`}>
+                        {laporan.status_laporan === 'Ditolak' ? 'Alasan Penolakan' : 'Catatan dari Admin / PJ Ruangan'}
                       </p>
-                      <p className={`text-sm ${laporan.status_laporan === 'Ditolak' ? 'text-rose-900 dark:text-rose-200' : 'text-emerald-900 dark:text-emerald-200'}`}>
-                        {laporan.catatan_pj || "Laporan Anda telah diterima."}
+                      <p className={`text-sm ${laporan.status_laporan === 'Ditolak' ? 'text-rose-900 dark:text-rose-200' : 'text-amber-900 dark:text-amber-200'}`}>
+                        {laporan.catatan_pj || "Laporan Anda ditolak tanpa alasan spesifik."}
                       </p>
                     </div>
                   )}

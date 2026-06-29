@@ -74,6 +74,29 @@ export async function PUT(request: Request) {
         [status, id]
       );
     }
+    // Sync kondisi barang di master data
+    try {
+      const [laporanRows]: any = await pool.query(
+        "SELECT kode_barang, no_urut_pendaft FROM laporan_kerusakans WHERE id = ?",
+        [id]
+      );
+      if (laporanRows.length > 0) {
+        const laporan = laporanRows[0];
+        if (['Menunggu Tindakan Admin', 'Sedang Diperbaiki'].includes(status)) {
+          await pool.query(
+            "UPDATE barangs SET kondisi = 'Rusak' WHERE kode_barang = ? AND no_urut_pendaft = ?", 
+            [laporan.kode_barang, laporan.no_urut_pendaft]
+          );
+        } else if (status === 'Selesai' || status === 'Ditolak') {
+          await pool.query(
+            "UPDATE barangs SET kondisi = 'Baik' WHERE kode_barang = ? AND no_urut_pendaft = ?", 
+            [laporan.kode_barang, laporan.no_urut_pendaft]
+          );
+        }
+      }
+    } catch (syncErr) {
+      console.error("Gagal sinkronisasi kondisi barang:", syncErr);
+    }
 
     return NextResponse.json({ success: true, message: 'Status berhasil diperbarui.' });
   } catch (error: any) {
