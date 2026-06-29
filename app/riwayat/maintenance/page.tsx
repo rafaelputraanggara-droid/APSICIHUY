@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import LoadingDots from "@/components/LoadingDots";
 
 export default function RiwayatMaintenancePage() {
   const [maintenanceHistory, setMaintenanceHistory] = useState<any[]>([]);
@@ -76,7 +77,7 @@ export default function RiwayatMaintenancePage() {
         </div>
         
         {isLoading ? (
-          <p className="text-center py-8">Memuat riwayat maintenance...</p>
+          <LoadingDots text="Memuat riwayat maintenance..." />
         ) : maintenanceHistory.length === 0 ? (
           <p className="text-center py-8">Belum ada riwayat maintenance yang selesai.</p>
         ) : selectedMaintenanceRoom ? (

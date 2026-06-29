@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import LoadingDots from '@/components/LoadingDots';
 
 export default function RiwayatStockOpnamePage() {
   const [rooms, setRooms] = useState<{room: string, last_opname: string | null}[]>([]);
@@ -35,9 +37,7 @@ export default function RiwayatStockOpnamePage() {
 
       <div className="bg-[var(--bg-panel)] transition-colors duration-400 rounded-3xl border border-[var(--border-panel)] p-6 shadow-sm">
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-          </div>
+          <LoadingDots text="Memuat daftar ruangan..." />
         ) : rooms.length === 0 ? (
           <div className="text-center py-12 text-[var(--text-muted)]">
             <svg className="mx-auto h-12 w-12 text-neutral-300 dark:text-neutral-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
