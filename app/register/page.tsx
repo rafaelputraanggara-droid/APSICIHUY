@@ -88,10 +88,10 @@ function RegisterContent() {
 
       if (data.success) {
         setSuccessMsg(
-          "Pendaftaran berhasil! Silakan tunggu sampai akun Anda diverifikasi oleh admin. Sebuah email pemberitahuan akan dikirim ke email SSO Anda."
+          "Pendaftaran berhasil! Silakan tunggu sampai akun Anda disetujui oleh admin Fakultas. Setelah disetujui, akun langsung aktif."
         );
         // Alert as requested
-        alert("Sistem telah merekam pendaftaran. Tunggu admin menyetujui pendaftaran dan tunggu email dari sistem untuk login di akun anda.");
+        alert("Sistem telah merekam pendaftaran. Tunggu admin menyetujui pendaftaran. Setelah disetujui, Anda bisa langsung login tanpa perlu verifikasi email.");
       } else {
         setErrorMsg(data.error || "Gagal melakukan pendaftaran.");
       }
