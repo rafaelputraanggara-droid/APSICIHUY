@@ -33,14 +33,13 @@ export async function POST(request: Request) {
 
     // 1. Cek di tabel users terlebih dahulu
     const [userRows]: any = await pool.query(
-      "SELECT username, email, nim FROM users WHERE username = ? OR email = ? OR nim = ?",
-      [username, email_sso, nim]
+      "SELECT name, email FROM users WHERE name = ? OR email = ?",
+      [username, email_sso]
     );
     if (userRows.length > 0) {
       const user = userRows[0];
-      if (user.username === username) return NextResponse.json({ success: false, error: 'Maaf, Username ini sudah digunakan.' }, { status: 400 });
+      if (user.name === username) return NextResponse.json({ success: false, error: 'Maaf, Username ini sudah digunakan.' }, { status: 400 });
       if (user.email === email_sso) return NextResponse.json({ success: false, error: 'Maaf, Email SSO ini sudah terdaftar.' }, { status: 400 });
-      if (user.nim === nim) return NextResponse.json({ success: false, error: 'Maaf, NIM / ID ini sudah terdaftar.' }, { status: 400 });
     }
 
     // 2. Cek pendaftaran_akun yang masih 'Menunggu'
