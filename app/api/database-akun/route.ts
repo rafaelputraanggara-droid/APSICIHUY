@@ -27,7 +27,23 @@ export async function GET(request: Request) {
         `SELECT u.id, u.name, u.email, u.role, p.dokumen_pdf as foto_ktm, p.nim 
          FROM users u 
          LEFT JOIN pendaftaran_akun p ON u.email = p.email_sso 
-         WHERE u.role IN ('PJ_Ruangan', 'Laboran', 'Sarpras')`
+         WHERE u.role = 'PJ_Ruangan'`
+      );
+      return NextResponse.json({ success: true, data: rows });
+    } else if (role === 'laboran') {
+      const [rows] = await pool.query(
+        `SELECT u.id, u.name, u.email, u.role, p.dokumen_pdf as foto_ktm, p.nim 
+         FROM users u 
+         LEFT JOIN pendaftaran_akun p ON u.email = p.email_sso 
+         WHERE u.role = 'Laboran'`
+      );
+      return NextResponse.json({ success: true, data: rows });
+    } else if (role === 'sarpras') {
+      const [rows] = await pool.query(
+        `SELECT u.id, u.name, u.email, u.role, p.dokumen_pdf as foto_ktm, p.nim 
+         FROM users u 
+         LEFT JOIN pendaftaran_akun p ON u.email = p.email_sso 
+         WHERE u.role = 'Sarpras'`
       );
       return NextResponse.json({ success: true, data: rows });
     } else {

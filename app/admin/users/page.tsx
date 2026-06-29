@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import TableSkeleton from "@/components/TableSkeleton";
 
 export default function DatabaseAkunPage() {
-  const [activeTab, setActiveTab] = useState<"admin" | "pj" | "mahasiswa">("mahasiswa");
+  const [activeTab, setActiveTab] = useState<"admin" | "pj" | "laboran" | "sarpras" | "mahasiswa">("mahasiswa");
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [detailUser, setDetailUser] = useState<any>(null);
@@ -85,7 +85,27 @@ export default function DatabaseAkunPage() {
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-neutral-300"
             }`}
           >
-            PJ Ruangan & Teknisi
+            PJ Ruangan
+          </button>
+          <button
+            onClick={() => setActiveTab("laboran")}
+            className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+              activeTab === "laboran"
+                ? "border-indigo-600 text-[var(--tag-info-text)] transition-colors duration-400"
+                : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-neutral-300"
+            }`}
+          >
+            Laboran
+          </button>
+          <button
+            onClick={() => setActiveTab("sarpras")}
+            className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+              activeTab === "sarpras"
+                ? "border-indigo-600 text-[var(--tag-info-text)] transition-colors duration-400"
+                : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-neutral-300"
+            }`}
+          >
+            Sarpras
           </button>
           <button
             onClick={() => setActiveTab("mahasiswa")}
