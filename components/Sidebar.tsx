@@ -288,28 +288,19 @@ export default function Sidebar() {
             </div>
           </div>
           
-          <div className="flex gap-2 w-full">
-            <button
-              onClick={handleToggleUser}
-              title="Ganti Peran Simulasi"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[var(--bg-sidebar-active)] hover:bg-[var(--bg-sidebar-hover)] text-[var(--text-main)] border border-[var(--border-panel)] rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer hover:shadow"
-            >
-              <svg className="w-4 h-4 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-              </svg>
-              Ganti Role
-            </button>
+          <div className="flex gap-2 w-full mt-2">
             <button
               onClick={() => {
                 sessionStorage.removeItem("simulated_user");
                 window.location.href = "/login";
               }}
               title="Logout / Hapus Sesi"
-              className="flex-none inline-flex items-center justify-center px-3 py-2 bg-[var(--tag-danger-bg)] hover:opacity-80 text-[var(--tag-danger-text)] border border-[var(--border-panel)] rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-[var(--tag-danger-bg)] hover:opacity-80 text-[var(--tag-danger-text)] border border-[var(--border-panel)] rounded-xl text-sm font-bold shadow-sm transition-all cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
+              Logout
             </button>
           </div>
         </div>

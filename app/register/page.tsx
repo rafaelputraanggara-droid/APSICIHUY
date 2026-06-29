@@ -9,15 +9,6 @@ function RegisterContent() {
   const searchParams = useSearchParams();
   const [role, setRole] = useState("Mahasiswa");
 
-  useEffect(() => {
-    const roleParam = searchParams.get("role");
-    if (roleParam === "PJ_Ruangan") {
-      setRole("PJ Ruangan");
-    } else {
-      setRole("Mahasiswa");
-    }
-  }, [searchParams]);
-
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -77,7 +68,11 @@ function RegisterContent() {
       dataToSend.append("password", formData.password);
       dataToSend.append("email_sso", formData.email_sso);
       dataToSend.append("nim", formData.nim);
-      dataToSend.append("peran_pengaju", role === "PJ Ruangan" ? "PJ_Ruangan" : "Mahasiswa");
+      let backendRole = "Mahasiswa";
+      if (role === "PJ Ruangan") backendRole = "PJ_Ruangan";
+      if (role === "Laboran") backendRole = "Laboran";
+      if (role === "Sarpras") backendRole = "Sarpras";
+      dataToSend.append("peran_pengaju", backendRole);
       dataToSend.append("file_pdf", fileToUpload);
 
       const res = await fetch("/api/register", {
@@ -138,6 +133,19 @@ function RegisterContent() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">Peran / Jabatan</label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              >
+                <option value="Mahasiswa" className="text-black">Mahasiswa</option>
+                <option value="PJ Ruangan" className="text-black">PJ Ruangan</option>
+                <option value="Laboran" className="text-black">Laboran</option>
+                <option value="Sarpras" className="text-black">Sarpras</option>
+              </select>
+            </div>
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">Username</label>
               <input
@@ -211,7 +219,9 @@ function RegisterContent() {
               </div>
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">Alamat Email SSO</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">
+                {role === "Mahasiswa" ? "Alamat Email SSO" : "Email"}
+              </label>
               <input
                 type="email"
                 name="email_sso"
@@ -219,12 +229,12 @@ function RegisterContent() {
                 value={formData.email_sso}
                 onChange={handleChange}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                placeholder="contoh@student.uns.ac.id"
+                placeholder={role === "Mahasiswa" ? "contoh@student.uns.ac.id" : "contoh@staff.uns.ac.id"}
               />
             </div>
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">
-                {role === "PJ Ruangan" ? "NIP / NUP / ID Pegawai" : "NIM"}
+                {role === "Mahasiswa" ? "NIM" : "NIP / ID Pegawai"}
               </label>
               <input
                 type="text"
@@ -233,12 +243,12 @@ function RegisterContent() {
                 value={formData.nim}
                 onChange={handleChange}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                placeholder={role === "PJ Ruangan" ? "Masukkan ID Pegawai Anda" : "I032xxxx"}
+                placeholder={role === "Mahasiswa" ? "I032xxxx" : "Masukkan NIP/ID Anda"}
               />
             </div>
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-350 mb-1">
-                Berkas Identitas {role === "PJ Ruangan" ? "Pegawai" : "KTM"} (PDF, Maks 2MB)
+                {role === "Mahasiswa" ? "Berkas Identitas KTM" : "Kartu Tanda Staff"} (PDF, Maks 2MB)
               </label>
               <input
                 type="file"
