@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import TableSkeleton from '@/components/TableSkeleton';
 
 export default function MutasiPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -502,7 +503,9 @@ export default function MutasiPage() {
               <tbody className="bg-[var(--bg-panel)] transition-colors duration-400 divide-y divide-neutral-200">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-[var(--text-muted)] text-sm">Memuat data...</td>
+                    <td colSpan={4} className="px-6 py-8">
+                      <TableSkeleton />
+                    </td>
                   </tr>
                 ) : antreanData.length === 0 ? (
                   <tr>

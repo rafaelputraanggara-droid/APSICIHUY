@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 
 import RiwayatLaporanPage from "../riwayat/laporan-saya/page";
+import LoadingDots from "@/components/LoadingDots";
+import TableSkeleton from "@/components/TableSkeleton";
 
 export default function NotifikasiPage() {
   const [activeTab, setActiveTab] = useState<"kerusakan" | "hilang" | "pendaftaran" | "riwayat">("kerusakan");
@@ -226,7 +228,7 @@ export default function NotifikasiPage() {
               </div>
               
               {isLoading ? (
-                <p className="text-center py-8">Memuat data laporan kerusakan...</p>
+                <LoadingDots text="Memuat data laporan kerusakan..." />
               ) : pendingKerusakan.length === 0 ? (
                 <p className="text-center py-8">Belum ada laporan kerusakan baru yang masuk.</p>
               ) : (
@@ -301,7 +303,7 @@ export default function NotifikasiPage() {
               </div>
               
               {isLoading ? (
-                <p className="text-center py-8">Memuat data barang hilang...</p>
+                <LoadingDots text="Memuat data barang hilang..." />
               ) : barangHilang.length === 0 ? (
                 <p className="text-center py-8">Tidak ada barang hilang yang tercatat dari sesi stok opname.</p>
               ) : selectedHilangRoom ? (
@@ -381,7 +383,7 @@ export default function NotifikasiPage() {
               </div>
               
               {isLoading ? (
-                <p className="text-center py-8">Memuat data pendaftaran...</p>
+                <LoadingDots text="Memuat data pendaftaran..." />
               ) : pendingAccounts.length === 0 ? (
                 <p className="text-center py-8">Belum ada pendaftaran akun baru.</p>
               ) : (
